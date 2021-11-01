@@ -1,2 +1,2 @@
-# Private-Tutor-s-Mediation-Project
+# Private Tutors Mediation Project
 Project in the Software Engineering course. An Android app that mediates between tutors and clients.
