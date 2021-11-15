@@ -1,2 +1,2 @@
-# Private Tutors Mediation Project
-Project in the Software Engineering course. An Android app that mediates between tutors and clients.
+# TutorTime - Private Tutors Mediation Project.
+Android app created using Android Studio. Mediation between teachers and clients.
