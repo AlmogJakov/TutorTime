@@ -56,12 +56,12 @@ public class Register extends AppCompatActivity {
                 String city = mCity.getText().toString().trim();
 
                 if (TextUtils.isEmpty(fName)) {
-                    mEmail.setError("First name is required.");
+                    mFName.setError("First name is required.");
                     return;
                 }
 
                 if (TextUtils.isEmpty(lName)) {
-                    mEmail.setError("Last name is required.");
+                    mLName.setError("Last name is required.");
                     return;
                 }
 
@@ -71,17 +71,17 @@ public class Register extends AppCompatActivity {
                 }
 
                 if (TextUtils.isEmpty(city)) {
-                    mEmail.setError("City is required.");
+                    mCity.setError("City is required.");
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
-                    mEmail.setError("Password is required.");
+                    mPassword.setError("Password is required.");
                     return;
                 }
 
                 if (password.length() < 6) {
-                    mEmail.setError("Password must contains at least 6 digits.");
+                    mPassword.setError("Password must contains at least 6 digits.");
                     return;
                 }
 
