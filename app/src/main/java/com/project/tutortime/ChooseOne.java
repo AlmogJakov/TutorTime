@@ -24,7 +24,7 @@ public class ChooseOne extends AppCompatActivity {
         teacher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), Teacher_card.class));
             }
         });
 

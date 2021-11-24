@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Teacher_card">
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/editSubject"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="76dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Subject"-->
+    <!--        android:inputType="textPersonName"-->
+    <!--        android:minHeight="48dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.502"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/editPlace"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="124dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Select online or frontal"-->
+    <!--        android:inputType="textPersonName"-->
+    <!--        android:minHeight="48dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.502"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/editPrice"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="160dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Price"-->
+    <!--        android:inputType="textPersonName"-->
+    <!--        android:minHeight="48dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.497"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <Spinner-->
+    <!--        android:id="@+id/spinner1"-->
+    <!--        android:layout_width="275dp"-->
+    <!--        android:layout_height="42dp"-->
+    <!--        android:layout_marginTop="528dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.352"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <Spinner-->
+    <!--        android:id="@+id/spinner2"-->
+    <!--        android:layout_width="275dp"-->
+    <!--        android:layout_height="42dp"-->
+    <!--        android:layout_marginTop="468dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.352"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/editPrice"-->
+    <!--        android:layout_width="275dp"-->
+    <!--        android:layout_height="42dp"-->
+    <!--        android:layout_marginBottom="528dp"-->
+    <!--        android:gravity="center"-->
+    <!--        android:hint="Price"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <Button
+        android:id="@+id/buttonProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="Create profile "
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/txtTeacherProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Open teacher profile "
+        android:textColor="#303F9F"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editPhoneNumber"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="36dp"
+        android:ems="10"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editDescription"
+        android:layout_width="200dp"
+        android:layout_height="102dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="36dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="About Me"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editPhoneNumber" />
+
+    <Button
+        android:id="@+id/editSubject"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="448dp"
+        android:text="Add Subject"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ListView
+        android:id="@+id/subList"
+        android:layout_width="329dp"
+        android:layout_height="317dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="36dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editSubject" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

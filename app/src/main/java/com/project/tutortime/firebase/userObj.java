@@ -7,6 +7,8 @@ public class userObj implements Serializable {
     private String lName;
     private String email;
     private String city;
+    private String teacherID;
+
 
     public userObj(){
     }
@@ -49,4 +51,14 @@ public class userObj implements Serializable {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public String getTeacherID() {
+        return teacherID;
+    }
+
+    public void setTeacherID(String teacherID) {
+        this.teacherID = teacherID;
+    }
+
+
 }

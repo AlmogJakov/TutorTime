@@ -21,4 +21,31 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
     <string name="sign_up">Sign Up</string>
+
+    <string-array name="Options1">
+        <item>Select subject</item>
+        <item>Math</item>
+        <item>English</item>
+        <item>physics</item>
+        <item>Biology</item>
+        <item>Literature</item>
+        <item>history</item>
+        <item>chemistry</item>
+        <item>music</item>
+        <item>Computer Science</item>
+        <item>citizenship</item>
+        <item>Bible</item>
+    </string-array>
+
+    <style name="Dialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowNoTitle">false</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+
+    <string-array name="Options2">
+        <item>Select learning form</item>
+        <item>online</item>
+        <item>frontal</item>
+        <item>online/frontal</item>
+    </string-array>
 </resources>
