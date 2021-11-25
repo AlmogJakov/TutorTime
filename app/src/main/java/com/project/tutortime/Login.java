@@ -50,26 +50,27 @@ public class Login extends AppCompatActivity {
 
         /* if the user already logged in */
         if (fAuth.getCurrentUser() != null) {
-            String userID = fAuth.getCurrentUser().getUid();
-            final Integer[] is_teacher = new Integer[1];
-            mDatabase.child("users").child(userID).child("isTeacher").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DataSnapshot> task) {
-                    if (!task.isSuccessful()) {
-                        Toast.makeText(Login.this, "Task not good.", Toast.LENGTH_SHORT).show();
-                        Log.e("firebase", "Error getting data", task.getException());
-                    } else {
-                        Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                        is_teacher[0] = task.getResult().getValue(Integer.class);
-                        //Toast.makeText(Login.this, "IS IT?! " + is_teacher[0], Toast.LENGTH_SHORT).show();
-                        if (is_teacher[0] ==-1) { /* if not set */
-                            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                        } else { /* if set - go to main activity */
-                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                        }
-                    }
-                }
-            });
+//            String userID = fAuth.getCurrentUser().getUid();
+//            final Integer[] is_teacher = new Integer[1];
+//            mDatabase.child("users").child(userID).child("isTeacher").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                    if (!task.isSuccessful()) {
+//                        Toast.makeText(Login.this, "Could not retrieve 'IsTeacher' value from database.", Toast.LENGTH_SHORT).show();
+//                        Log.e("firebase", "Error getting data", task.getException());
+//                    } else {
+//                        Log.d("firebase", String.valueOf(task.getResult().getValue()));
+//                        is_teacher[0] = task.getResult().getValue(Integer.class);
+//                        //Toast.makeText(Login.this, "IS IT?! " + is_teacher[0], Toast.LENGTH_SHORT).show();
+//                        if (is_teacher[0] ==-1) { /* if not set */
+//                            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
+//                        } else { /* if set - go to main activity */
+//                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                        }
+//                    }
+//                }
+//            });
+            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
             finish();
         }
 
@@ -127,24 +128,26 @@ public class Login extends AppCompatActivity {
                                 fAuth.signOut(); /* don't let user in */
                             } else { /* Email Verified! - let user in */
                                 Toast.makeText(Login.this, "Logged in Successfully!", Toast.LENGTH_SHORT).show();
-                                String userID = fAuth.getCurrentUser().getUid();
-                                final Integer[] is_teacher = new Integer[1];
-                                mDatabase.child("users").child(userID).child("isTeacher").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                                        if (!task.isSuccessful()) {
-                                            Log.e("firebase", "Error getting data", task.getException());
-                                        } else {
-                                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
-                                            is_teacher[0] = task.getResult().getValue(Integer.class);
-                                            if (is_teacher[0] ==-1) { /* if not set */
-                                                startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                                            } else { /* if set - go to main activity */
-                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                            }
-                                        }
-                                    }
-                                });
+//                                String userID = fAuth.getCurrentUser().getUid();
+//                                final Integer[] is_teacher = new Integer[1];
+//                                mDatabase.child("users").child(userID).child("isTeacher").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+//                                        if (!task.isSuccessful()) {
+//                                            Toast.makeText(Login.this, "Could not retrieve 'IsTeacher' value from database.", Toast.LENGTH_SHORT).show();
+//                                            Log.e("firebase", "Error getting data", task.getException());
+//                                        } else {
+//                                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
+//                                            is_teacher[0] = task.getResult().getValue(Integer.class);
+//                                            if (is_teacher[0] ==-1) { /* if not set */
+//                                                startActivity(new Intent(getApplicationContext(), ChooseOne.class));
+//                                            } else { /* if set - go to main activity */
+//                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+//                                            }
+//                                        }
+//                                    }
+//                                });
+                                startActivity(new Intent(getApplicationContext(), ChooseOne.class));
                             }
                         } else {
                             Toast.makeText(Login.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
