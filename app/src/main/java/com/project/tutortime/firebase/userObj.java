@@ -8,6 +8,7 @@ public class userObj implements Serializable {
     private String email;
     private String city;
     private String teacherID;
+    private int IsTeacher;
 
 
     public userObj(){
@@ -18,6 +19,7 @@ public class userObj implements Serializable {
         this.lName=lName;
         this.email=email;
         this.city=city;
+        this.IsTeacher=-1;
     }
 
     public String getfName() {
@@ -60,5 +62,11 @@ public class userObj implements Serializable {
         this.teacherID = teacherID;
     }
 
+    public int getIsTeacher() {
+        return IsTeacher;
+    }
 
+    public void setIsTeacher(int teacherInd) {
+        this.IsTeacher = teacherInd;
+    }
 }

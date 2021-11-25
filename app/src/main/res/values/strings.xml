@@ -2,8 +2,8 @@
     <string name="app_name">TutorTime</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Tutor Time</string>
-    <string name="nav_header_subtitle">Pick up your tutor</string>
+    <string name="nav_header_title">Welcome to Tutor Time!</string>
+    <string name="nav_header_subtitle">Email</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 

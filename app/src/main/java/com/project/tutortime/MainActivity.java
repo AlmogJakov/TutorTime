@@ -2,8 +2,10 @@ package com.project.tutortime;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
+import android.widget.TextView;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -16,12 +18,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.project.tutortime.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+    FirebaseAuth fAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        /* get user from firebase */
+        fAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = fAuth.getCurrentUser();
+        /* show hello massage in main with user information */
+        View navHeaderView = navigationView.getHeaderView(0);
+        TextView EmailHello = (TextView)navHeaderView.findViewById(R.id.emailHello);
+        String hello = "";
+        if(user != null) { hello = hello.concat("").concat(user.getEmail()); }
+        EmailHello.setText(hello);
+        /* END show hello massage in main with user information */
     }
 
     public void logout(View view) {

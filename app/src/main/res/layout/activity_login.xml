@@ -13,10 +13,10 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Email"
- 
+
             android:inputType="textEmailAddress"
            />
- 
+
         <EditText
             android:id="@+id/mypass"
             android:layout_width="wrap_content"
@@ -43,6 +43,16 @@
             android:text="Create a new Acount!"
             android:textSize="16sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/resetpass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Reset Password"
+            android:textAlignment="center" />
+
     </LinearLayout>
- 
+
 </androidx.cardview.widget.CardView>
