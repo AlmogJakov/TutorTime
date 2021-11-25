@@ -7,13 +7,15 @@ import java.util.List;
 public class FireBaseTeacher extends firebaseBaseModel{
     FireBaseUser u = new FireBaseUser();
 
-    public void addTeacherToDB(int phoneNum, List<subjectObj> sub){
-        writeNewTeacher(phoneNum,sub);
+    public void addTeacherToDB(String phoneNum, String description, List<subjectObj> sub){
+        writeNewTeacher(phoneNum, description, sub);
     }
-    public void writeNewTeacher(int phoneNum, List<subjectObj> sub){
-        teacherObj teacher = new teacherObj(phoneNum, sub);
+    public void writeNewTeacher(String phoneNum, String description, List<subjectObj> sub){
+        teacherObj teacher = new teacherObj(phoneNum, description, sub);
+        System.out.println(teacher.getDescription());
+
+
         String teacherId= myRef.push().getKey();
-        teacher.setId(teacherId);
         u.getUserRef().child("teacherID").setValue(teacherId);
         myRef.child("teachers").child(teacherId).setValue(teacher);
     }

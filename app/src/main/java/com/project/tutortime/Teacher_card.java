@@ -21,7 +21,10 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.userObj;
@@ -35,7 +38,6 @@ public class Teacher_card extends AppCompatActivity {
     Button profile, addSub;
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
-
 
 
     @Override
@@ -61,11 +63,22 @@ public class Teacher_card extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String lName = PhoneNumber.getText().toString().trim();
-                if (TextUtils.isEmpty(lName)) {
+                String pNum = PhoneNumber.getText().toString().trim();
+                String descrip = description.getText().toString().trim();
+                if (TextUtils.isEmpty(pNum)) {
                     PhoneNumber.setError("PhoneNumber is required.");
                     return;
                 }
+                if (list.isEmpty()) {
+                    Toast.makeText(Teacher_card.this, "You must choose at least one subject",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                FireBaseTeacher t = new FireBaseTeacher();
+                Toast.makeText(Teacher_card.this, descrip,
+                        Toast.LENGTH_SHORT).show();
+                t.addTeacherToDB(pNum, descrip, list);
+
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
@@ -113,12 +126,10 @@ public class Teacher_card extends AppCompatActivity {
                 list.add(s);
                 a.notifyDataSetChanged();
                 d.dismiss();
-
-
             }
         });
         d.show();
     }
-    }
+}
 
 

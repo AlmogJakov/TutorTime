@@ -5,23 +5,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class teacherObj implements Serializable {
-    private int phoneNum;
+    private String phoneNum;
     private List<subjectObj> sub;
-    public String id;
+    private String description;
 
     public teacherObj(){
     }
 
-    public teacherObj(int phoneNum, List<subjectObj> sub) {
+    public teacherObj(String phoneNum, String description, List<subjectObj> sub) {
         this.phoneNum=phoneNum;
-        this.sub= new ArrayList<subjectObj>();
+        this.description=description;
+        this.sub= new ArrayList<subjectObj>(sub);
     }
 
-    public int getPhoneNum() {
+    public String getPhoneNum() {
         return phoneNum;
     }
 
-    public void setPhoneNum(int phoneNum) {
+    public void setPhoneNum(String phoneNum) {
         this.phoneNum = phoneNum;
     }
 
@@ -33,11 +34,11 @@ public class teacherObj implements Serializable {
         this.sub = sub;
     }
 
-    public String getId(String id) {
-        return id;
+    public String getDescription() {
+        return description;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
