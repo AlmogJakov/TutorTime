@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.project.tutortime">
+    package="com.project.tutortime" >
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -10,13 +10,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.TutorTime">
+        android:theme="@style/Theme.TutorTime" >
+        <activity
+            android:name=".Loading"
+            android:exported="false" />
         <activity
             android:name=".Teacher_card"
             android:exported="false" />
         <activity
             android:name=".Welcome"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,7 +28,7 @@
         </activity>
         <activity
             android:name=".Login"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,7 +37,7 @@
         </activity>
         <activity
             android:name=".Register"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -43,7 +46,7 @@
         </activity>
         <activity
             android:name=".ChooseOne"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,7 +57,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.TutorTime.NoActionBar">
+            android:theme="@style/Theme.TutorTime.NoActionBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

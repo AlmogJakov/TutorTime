@@ -28,6 +28,8 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/side_nav_bar.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_choose_one.xml" value="0.2546875" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_empty.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_loading.xml" value="0.26811594202898553" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_login.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_main.xml" value="0.22282608695652173" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_teacher_card.xml" value="0.2546875" />
@@ -38,6 +40,10 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_gallery.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_slideshow.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/nav_header_main.xml" value="0.2546875" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/notifications_fragment.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/search_fragment.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/teacher_card_fragment.xml" value="0.2546875" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/menu/activity_main_drawer.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/menu/main.xml" value="0.2546875" />
       </map>
     </option>

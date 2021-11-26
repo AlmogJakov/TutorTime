@@ -8,8 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +22,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
@@ -50,30 +50,25 @@ public class Login extends AppCompatActivity {
 
         /* if the user already logged in */
         if (fAuth.getCurrentUser() != null) {
-//            String userID = fAuth.getCurrentUser().getUid();
-//            final Integer[] is_teacher = new Integer[1];
-//            mDatabase.child("users").child(userID).child("isTeacher").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                    if (!task.isSuccessful()) {
-//                        Toast.makeText(Login.this, "Could not retrieve 'IsTeacher' value from database.", Toast.LENGTH_SHORT).show();
-//                        Log.e("firebase", "Error getting data", task.getException());
-//                    } else {
-//                        Log.d("firebase", String.valueOf(task.getResult().getValue()));
-//                        is_teacher[0] = task.getResult().getValue(Integer.class);
-//                        //Toast.makeText(Login.this, "IS IT?! " + is_teacher[0], Toast.LENGTH_SHORT).show();
-//                        if (is_teacher[0] ==-1) { /* if not set */
-//                            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-//                        } else { /* if set - go to main activity */
-//                            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                        }
-//                    }
-//                }
-//            });
-            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
+            String userID = fAuth.getCurrentUser().getUid();
+            mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
+                        if (dataSnapshot.getValue(Integer.class) == -1) { /* if not set */
+                            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
+                        } else { startActivity(new Intent(getApplicationContext(), MainActivity.class)); }
+                        finish();
+                    } else {
+                        Toast.makeText(Login.this, "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) { }
+            });
+            startActivity(new Intent(getApplicationContext(), Loading.class));
             finish();
         }
-
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
 
