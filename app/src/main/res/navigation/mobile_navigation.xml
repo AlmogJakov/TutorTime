@@ -20,12 +20,12 @@
     <fragment
         android:id="@+id/nav_search"
         android:name="com.project.tutortime.ui.search.Search"
-        android:label="@string/menu_teacher_card"
+        android:label="@string/menu_search"
         tools:layout="@layout/search_fragment" />
 
     <fragment
         android:id="@+id/nav_notifications"
         android:name="com.project.tutortime.ui.notifications.Notifications"
-        android:label="@string/menu_teacher_card"
+        android:label="@string/menu_notifications"
         tools:layout="@layout/notifications_fragment" />
 </navigation>
