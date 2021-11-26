@@ -47,27 +47,12 @@ public class Login extends AppCompatActivity {
         mResetPass = findViewById(R.id.resetpass);
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
         /* if the user already logged in */
         if (fAuth.getCurrentUser() != null) {
+            /* get user ID */
             String userID = fAuth.getCurrentUser().getUid();
-            mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
-                        if (dataSnapshot.getValue(Integer.class) == -1) { /* if not set */
-                            startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                        } else { startActivity(new Intent(getApplicationContext(), MainActivity.class)); }
-                        finish();
-                    } else {
-                        Toast.makeText(Login.this, "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                @Override
-                public void onCancelled(DatabaseError databaseError) { }
-            });
-            startActivity(new Intent(getApplicationContext(), Loading.class));
-            finish();
+            /* redirects to the appropriate page depending on the user status */
+            getInside(userID);
         }
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -115,34 +100,16 @@ public class Login extends AppCompatActivity {
                                 });
                                 emailVerification.setNegativeButton("Close", new DialogInterface.OnClickListener() {
                                     @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        /* close dialog */
-                                    }
+                                    public void onClick(DialogInterface dialog, int which) {/* close dialog */}
                                 });
                                 emailVerification.create().show();
                                 fAuth.signOut(); /* don't let user in */
                             } else { /* Email Verified! - let user in */
                                 Toast.makeText(Login.this, "Logged in Successfully!", Toast.LENGTH_SHORT).show();
-//                                String userID = fAuth.getCurrentUser().getUid();
-//                                final Integer[] is_teacher = new Integer[1];
-//                                mDatabase.child("users").child(userID).child("isTeacher").get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//                                    @Override
-//                                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                                        if (!task.isSuccessful()) {
-//                                            Toast.makeText(Login.this, "Could not retrieve 'IsTeacher' value from database.", Toast.LENGTH_SHORT).show();
-//                                            Log.e("firebase", "Error getting data", task.getException());
-//                                        } else {
-//                                            Log.d("firebase", String.valueOf(task.getResult().getValue()));
-//                                            is_teacher[0] = task.getResult().getValue(Integer.class);
-//                                            if (is_teacher[0] ==-1) { /* if not set */
-//                                                startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-//                                            } else { /* if set - go to main activity */
-//                                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                                            }
-//                                        }
-//                                    }
-//                                });
-                                startActivity(new Intent(getApplicationContext(), ChooseOne.class));
+                                /* get user ID */
+                                String userID = fAuth.getCurrentUser().getUid();
+                                /* redirects to the appropriate page depending on the user status */
+                                getInside(userID);
                             }
                         } else {
                             Toast.makeText(Login.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -197,5 +164,32 @@ public class Login extends AppCompatActivity {
             }
         }));
         /* END Reset Password Case */
+    }
+
+    /* after confirmed as connected this method redirects to the appropriate page depending on the user status */
+    protected void getInside(String userID) {
+        mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
+                    if (dataSnapshot.getValue(Integer.class) == -1) { /* if not set */
+                        startActivity(new Intent(getApplicationContext(), ChooseOne.class));
+                    } else { /* TODO: go to Teacher/Student main page depending on the status */
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class)); }
+                    finish();
+                } else {
+                    Toast.makeText(Login.this, "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+        /* loading screen section (showing loading screen until data received from FireBase) */
+        Intent intent = new Intent(getApplicationContext(), Loading.class);
+        /* prevent going back to this loading screen (from the next screen) */
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(intent);
+        /* END loading screen section */
+        finish();
     }
 }
