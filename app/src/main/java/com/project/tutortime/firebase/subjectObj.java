@@ -5,17 +5,17 @@ import java.io.Serializable;
 public class subjectObj implements Serializable {
     public enum SubName {
         HINT("Select subject"),
-        ENUM1("Math"),
-        ENUM2("English"),
-        ENUM3("Physics"),
-        ENUM4("Biology"),
-        ENUM5("Literature"),
-        ENUM6("History"),
-        ENUM7("Chemistry"),
-        ENUM8("Music"),
-        ENUM9("Computer Science"),
-        ENUM10("Citizenship"),
-        ENUM11("Bible");
+        Math("Math"),
+        English("English"),
+        Physics("Physics"),
+        Biology("Biology"),
+        Literature("Literature"),
+        History("History"),
+        Chemistry("Chemistry"),
+        Music("Music"),
+        ComputerScience("Computer Science"),
+        Citizenship("Citizenship"),
+        Bible("Bible");
         private String friendlyName;
 
         private SubName(String friendlyName){
@@ -28,9 +28,9 @@ public class subjectObj implements Serializable {
     }
     public enum Type {
         HINT("Select learning type"),
-        ENUM1("online"),
-        ENUM2("frontal"),
-        ENUM3("online/frontal");
+        online("online"),
+        frontal("frontal"),
+        onlinefrontal("online/frontal");
         private String friendlyName;
 
         private Type(String friendlyName){
@@ -90,11 +90,9 @@ public class subjectObj implements Serializable {
 
     @Override
     public String toString() {
-        return "subjectObj{" +
-                "sName='" + sName + '\'' +
-                ", type='" + type + '\'' +
-                ", price=" + price +
-                ", experience='" + experience + '\'' +
-                '}';
+        return "Subject: " + sName + "\n" +
+                "Type: " + type + "\n" +
+                "Price: " + price + "\n" +
+                "Experience: " + experience + "\n" ;
     }
 }

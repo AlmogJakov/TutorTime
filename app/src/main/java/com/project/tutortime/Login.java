@@ -178,6 +178,7 @@ public class Login extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), MainActivity.class)); }
                     finish();
                 } else {
+
                     Toast.makeText(Login.this, "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
                 }
             }

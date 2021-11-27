@@ -14,9 +14,9 @@ public class FireBaseTeacher extends firebaseBaseModel{
         teacherObj teacher = new teacherObj(phoneNum, description, sub);
         System.out.println(teacher.getDescription());
 
-
         String teacherId= myRef.push().getKey();
         u.getUserRef().child("teacherID").setValue(teacherId);
         myRef.child("teachers").child(teacherId).setValue(teacher);
+        //u.getUserRef().child("isTeacher").setValue(1);
     }
 }
