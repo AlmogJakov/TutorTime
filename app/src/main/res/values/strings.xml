@@ -6,7 +6,7 @@
     <string name="nav_header_subtitle">Email</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-
+    <string name="cities_hint">Settings</string>
     <string name="menu_home">Home</string>
     <string name="menu_teacher_card">Teacher Card</string>
     <string name="menu_search">Search</string>
@@ -48,5 +48,82 @@
         <item>online</item>
         <item>frontal</item>
         <item>online/frontal</item>
+    </string-array>
+
+    <string-array name="Cities">
+        <item>Afula</item>
+        <item>Akko</item>
+        <item>Arad</item>
+        <item>Ariel</item>
+        <item>Ashdod</item>
+        <item>Ashkelon</item>
+        <item>Baqa-al-Gharbiyye</item>
+        <item>Bat-Yam</item>
+        <item>Beer-Sheva</item>
+        <item>Beit-Shean</item>
+        <item>Beit-Shemesh</item>
+        <item>Betar-Illit</item>
+        <item>Bnei-Berak</item>
+        <item>Dimona</item>
+        <item>Eilat</item>
+        <item>Elad</item>
+        <item>Givatayim</item>
+        <item>Hadera</item>
+        <item>Haifa</item>
+        <item>Harish</item>
+        <item>Herzliya</item>
+        <item>Hod-HaSharon</item>
+        <item>Holon</item>
+        <item>Jerusalem</item>
+        <item>Karmiel</item>
+        <item>Kfar-Sava</item>
+        <item>Kiryat-Ata</item>
+        <item>Kiryat-Bialik</item>
+        <item>Kiryat-Gat</item>
+        <item>Kiryat-Malachi</item>
+        <item>Kiryat-Motzkin</item>
+        <item>Kiryat-Ono</item>
+        <item>Kiryat-Shemone</item>
+        <item>Kiryat-Yam</item>
+        <item>Lod</item>
+        <item>Maale-Adumim</item>
+        <item>Maalot-Tarshiha</item>
+        <item>Migdal-HaEmek</item>
+        <item>Modiin</item>
+        <item>Nahariya</item>
+        <item>Nazareth</item>
+        <item>Nes-Ziona</item>
+        <item>Nesher</item>
+        <item>Netanya</item>
+        <item>Netivot</item>
+        <item>Nof-Hagalil</item>
+        <item>Ofakim</item>
+        <item>Or-Akiva</item>
+        <item>Or-Yehuda</item>
+        <item>Petah-Tikva</item>
+        <item>Qalansawe</item>
+        <item>Raanana</item>
+        <item>Rahat</item>
+        <item>Ramat-Hasharon</item>
+        <item>Ramat-Gan</item>
+        <item>Ramla</item>
+        <item>Rehovot</item>
+        <item>Rishon-Lezion</item>
+        <item>Rosh-Haayin</item>
+        <item>Sakhnin</item>
+        <item>Sderot</item>
+        <item>Shefaram</item>
+        <item>Taibeh</item>
+        <item>Tamra</item>
+        <item>Tel-Aviv</item>
+        <item>Tiberias</item>
+        <item>Tira</item>
+        <item>Tirat-Carmel</item>
+        <item>Tsfat</item>
+        <item>Umm</item>
+        <item>Yavne</item>
+        <item>Yehud-Monosson</item>
+        <item>Yokneam</item>
+
     </string-array>
 </resources>

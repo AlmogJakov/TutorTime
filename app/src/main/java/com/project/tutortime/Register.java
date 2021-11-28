@@ -4,13 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +29,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.project.tutortime.firebase.FireBaseUser;
 
 public class Register extends AppCompatActivity {
-    EditText mFName, mLName, mEmail, mPassword, mCity;
+    EditText mFName, mLName, mEmail, mPassword; // mCity
     Button mRegisterBtn;
+    Spinner mCityspinner;
     TextView mLoginBtn;
     FirebaseAuth fAuth;
 
@@ -38,7 +44,39 @@ public class Register extends AppCompatActivity {
         mLName = findViewById(R.id.editLName);
         mEmail = findViewById(R.id.editEmail);
         mPassword = findViewById(R.id.editPass);
-        mCity = findViewById(R.id.editCity);
+        mCityspinner = (Spinner)findViewById(R.id.selectCity);
+
+        /* Select City Spinner Code () */
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                if (position == 0) { // Hint
+                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
+                return v; }
+            @Override
+            public int getCount() { return super.getCount(); }
+            @Override /* Disable selection of the Hint (first selection) */
+            public boolean isEnabled(int position) { return ((position == 0) ? false : true); }
+            @Override /* Set the color of the Hint (first selection) to Grey */
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView)view;
+                if (position == 0) { tv.setTextColor(Color.GRAY); } // Set the hint text color gray
+                else { tv.setTextColor(Color.BLACK); }
+                return view; }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        String[] cities = getResources().getStringArray(R.array.Cities);
+        adapter.add("Choose City");
+        adapter.addAll(cities);
+        mCityspinner.setAdapter(adapter);
+        mCityspinner.setSelection(0); //display hint
+        /* END Select City Spinner Code () */
+
+
+
         mRegisterBtn = findViewById(R.id.buttonAcount);
         mLoginBtn = findViewById(R.id.loginPage);
         fAuth = FirebaseAuth.getInstance();
@@ -58,7 +96,8 @@ public class Register extends AppCompatActivity {
                 String lName = mLName.getText().toString().trim();
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-                String city = mCity.getText().toString().trim();
+                //String city = mCity.getText().toString().trim();
+                String city = mCityspinner.getSelectedItem().toString();
 
                 if (TextUtils.isEmpty(fName)) {
                     mFName.setError("First name is required.");
@@ -75,8 +114,13 @@ public class Register extends AppCompatActivity {
                     return;
                 }
 
-                if (TextUtils.isEmpty(city)) {
-                    mCity.setError("City is required.");
+                /* if City Box == City Hint then the user didn't choose city */
+                if (TextUtils.equals(city,"Choose City")) {
+                    Toast.makeText(Register.this, "City is required. ", Toast.LENGTH_SHORT).show();
+                    TextView errorText = (TextView)mCityspinner.getSelectedView();
+                    errorText.setError("City is required.");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    //errorText.setText("City is required");
                     return;
                 }
 
