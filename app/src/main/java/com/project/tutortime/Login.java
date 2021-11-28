@@ -27,6 +27,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
     Button mLoginBtn;
@@ -167,19 +169,20 @@ public class Login extends AppCompatActivity {
     }
 
     /* after confirmed as connected this method redirects to the appropriate page depending on the user status */
+    final ArrayList<Integer> arr = new ArrayList<Integer>();
     protected void getInside(String userID) {
         mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
                     int status = dataSnapshot.getValue(Integer.class);
-                    if (status == -1) { /* if not set */
+                    if (status == -1) { /* if the status is not selected */
                         startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                    } else if (status == 0) { /* simple user */
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                    } else { /* tutor user */
-                        startActivity(new Intent(getApplicationContext(), MainActivityTutor.class));
-                        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    } else { /* status entered - pass the status to Main Activity */
+                        arr.add(dataSnapshot.getValue(Integer.class));
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("status",arr);
+                        startActivity(intent);
                     }
                     finish();
                 } else {
