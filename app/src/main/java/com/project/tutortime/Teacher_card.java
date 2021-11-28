@@ -24,6 +24,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.subjectObj;
@@ -43,13 +45,16 @@ public class Teacher_card extends AppCompatActivity {
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
-
+    FirebaseAuth fAuth;
+    private DatabaseReference mDatabase;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_teacher_card);
+        fAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         PhoneNumber = findViewById(R.id.editPhoneNumber);
         description = findViewById(R.id.editDescription);
         addSub = findViewById(R.id.editSubject);
@@ -92,6 +97,8 @@ public class Teacher_card extends AppCompatActivity {
                 Toast.makeText(Teacher_card.this, descrip,
                         Toast.LENGTH_SHORT).show();
                 t.addTeacherToDB(pNum, descrip, list);
+                String userID = fAuth.getCurrentUser().getUid();
+                mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
