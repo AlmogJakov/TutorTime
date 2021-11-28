@@ -96,8 +96,8 @@ public class Teacher_card extends AppCompatActivity {
                 FireBaseTeacher t = new FireBaseTeacher();
                 Toast.makeText(Teacher_card.this, descrip,
                         Toast.LENGTH_SHORT).show();
-                t.addTeacherToDB(pNum, descrip, list);
                 String userID = fAuth.getCurrentUser().getUid();
+                t.addTeacherToDB(pNum, descrip, userID, list);
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
