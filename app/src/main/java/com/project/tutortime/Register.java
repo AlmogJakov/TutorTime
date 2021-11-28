@@ -63,8 +63,7 @@ public class Register extends AppCompatActivity {
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView)view;
-                if (position == 0) { tv.setTextColor(Color.GRAY); } // Set the hint text color gray
-                else { tv.setTextColor(Color.BLACK); }
+                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
                 return view; }
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -114,16 +113,6 @@ public class Register extends AppCompatActivity {
                     return;
                 }
 
-                /* if City Box == City Hint then the user didn't choose city */
-                if (TextUtils.equals(city,"Choose City")) {
-                    Toast.makeText(Register.this, "City is required. ", Toast.LENGTH_SHORT).show();
-                    TextView errorText = (TextView)mCityspinner.getSelectedView();
-                    errorText.setError("City is required.");
-                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
-                    //errorText.setText("City is required");
-                    return;
-                }
-
                 if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password is required.");
                     return;
@@ -131,6 +120,16 @@ public class Register extends AppCompatActivity {
 
                 if (password.length() < 6) {
                     mPassword.setError("Password must contains at least 6 digits.");
+                    return;
+                }
+
+                /* if City Box == City Hint then the user didn't choose city */
+                if (TextUtils.equals(city,"Choose City")) {
+                    Toast.makeText(Register.this, "City is required. ", Toast.LENGTH_SHORT).show();
+                    TextView errorText = (TextView)mCityspinner.getSelectedView();
+                    errorText.setError("City is required.");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    //errorText.setText("City is required");
                     return;
                 }
 
