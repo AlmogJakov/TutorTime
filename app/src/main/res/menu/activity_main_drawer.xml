@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_teacher_card" />
         <item
+            android:id="@+id/nav_new_teacher_card"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_new_teacher_card" />
+        <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_search" />

@@ -17,6 +17,11 @@
         android:label="@string/menu_teacher_card"
         tools:layout="@layout/teacher_card_fragment" />
 
+    <activity
+        android:id="@+id/nav_new_teacher_card"
+        android:name="com.project.tutortime.Teacher_card"
+        android:label="@string/menu_new_teacher_card" />
+
     <fragment
         android:id="@+id/nav_search"
         android:name="com.project.tutortime.ui.search.Search"

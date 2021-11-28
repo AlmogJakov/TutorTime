@@ -172,10 +172,15 @@ public class Login extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
-                    if (dataSnapshot.getValue(Integer.class) == -1) { /* if not set */
+                    int status = dataSnapshot.getValue(Integer.class);
+                    if (status == -1) { /* if not set */
                         startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                    } else { /* TODO: go to Teacher/Student main page depending on the status */
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class)); }
+                    } else if (status == 0) { /* simple user */
+                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    } else { /* tutor user */
+                        startActivity(new Intent(getApplicationContext(), MainActivityTutor.class));
+                        //startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                    }
                     finish();
                 } else {
                     Toast.makeText(Login.this, "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();

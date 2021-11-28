@@ -23,7 +23,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.project.tutortime.databinding.ActivityMainBinding;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivityTutor extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         /* hide options - Here you can hide options from navigation bar! */
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
-        nav_Menu.findItem(R.id.nav_teacher_card).setVisible(false);
+        nav_Menu.findItem(R.id.nav_new_teacher_card).setVisible(false);
         /* END hide options */
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);

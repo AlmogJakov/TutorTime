@@ -99,7 +99,7 @@ public class Teacher_card extends AppCompatActivity {
                 String userID = fAuth.getCurrentUser().getUid();
                 t.addTeacherToDB(pNum, descrip, userID, list);
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivityTutor.class));
             }
         });
     }
