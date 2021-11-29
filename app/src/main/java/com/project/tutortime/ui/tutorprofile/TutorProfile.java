@@ -1,4 +1,4 @@
-package com.project.tutortime.ui.teachercard;
+package com.project.tutortime.ui.tutorprofile;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,23 +14,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.project.tutortime.databinding.TeacherCardFragmentBinding;
+import com.project.tutortime.databinding.FragmentTutorProfileBinding;
 
-public class TeacherCard extends Fragment {
+public class TutorProfile extends Fragment {
 
-    private TeacherCardViewModel TeacherCardViewModel;
-    private TeacherCardFragmentBinding binding;
+    private TutorProfileViewModel TutorProfileViewModel;
+    private FragmentTutorProfileBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        TeacherCardViewModel =
-                new ViewModelProvider(this).get(TeacherCardViewModel.class);
+        TutorProfileViewModel =
+                new ViewModelProvider(this).get(TutorProfileViewModel.class);
 
-        binding = TeacherCardFragmentBinding.inflate(inflater, container, false);
+        binding = FragmentTutorProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         final TextView textView = binding.textTeachercard;
-        TeacherCardViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        TutorProfileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

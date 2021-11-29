@@ -31,6 +31,8 @@ import com.project.tutortime.ui.notifications.NotificationsAdapter;
 
 import java.util.HashMap;
 
+import java.util.ArrayList;
+
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
     Button mLoginBtn;
@@ -172,15 +174,21 @@ public class Login extends AppCompatActivity {
     }
 
     /* after confirmed as connected this method redirects to the appropriate page depending on the user status */
+    final ArrayList<Integer> arr = new ArrayList<Integer>();
     protected void getInside(String userID) {
         mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
-                    if (dataSnapshot.getValue(Integer.class) == -1) { /* if not set */
-                        startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                    } else { /* TODO: go to Teacher/Student main page depending on the status */
-                        startActivity(new Intent(getApplicationContext(), MainActivity.class)); }
+                    int status = dataSnapshot.getValue(Integer.class);
+                    if (status == -1) { /* if the status is not selected */
+                        startActivity(new Intent(getApplicationContext(), ChooseStatus.class));
+                    } else { /* status entered - pass the status to Main Activity */
+                        arr.add(dataSnapshot.getValue(Integer.class));
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        intent.putExtra("status",arr);
+                        startActivity(intent);
+                    }
                     finish();
                 } else {
                     Toast.makeText(Login.this, "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
@@ -190,7 +198,7 @@ public class Login extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) { }
         });
         /* loading screen section (showing loading screen until data received from FireBase) */
-        Intent intent = new Intent(getApplicationContext(), Loading.class);
+        Intent intent = new Intent(getApplicationContext(), LoadingScreen.class);
         /* prevent going back to this loading screen (from the next screen) */
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(intent);

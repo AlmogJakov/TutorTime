@@ -12,13 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TutorTime" >
         <activity
-            android:name=".Loading"
+            android:name=".LoadingScreen"
             android:exported="false" />
         <activity
-            android:name=".Teacher_card"
+            android:name=".SetTutorProfile"
             android:exported="false" />
         <activity
-            android:name=".Welcome"
+            android:name=".SplashScreen"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,7 +45,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChooseOne"
+            android:name=".ChooseStatus"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

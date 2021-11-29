@@ -9,9 +9,13 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_teacher_card"
+            android:id="@+id/nav_tutor_profile"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_teacher_card" />
+        <item
+            android:id="@+id/nav_new_tutor_profile"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/menu_new_tutor_profile" />
         <item
             android:id="@+id/nav_search"
             android:icon="@drawable/ic_menu_slideshow"
