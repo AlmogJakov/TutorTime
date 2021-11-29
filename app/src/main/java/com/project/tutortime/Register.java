@@ -156,7 +156,8 @@ public class Register extends AppCompatActivity {
                             FireBaseUser u = new FireBaseUser();
                             String userID = fAuth.getCurrentUser().getUid();
                             u.addUserToDB(fName, lName, email, city, userID);
-                            addNotification(userID,email);
+                            /* add welcome notification to user */
+                            addNotification(userID, email);
                             fAuth.signOut();
                             // startActivity(new Intent(getApplicationContext(), ChooseOne.class));
                             startActivity(new Intent(getApplicationContext(), Login.class));
@@ -176,7 +177,6 @@ public class Register extends AppCompatActivity {
             }
         });
 
-
     }
             private void addNotification(String userid,String email){
             HashMap<String,Object> map = new HashMap<>();
@@ -186,6 +186,6 @@ public class Register extends AppCompatActivity {
             map.put("UserEmail",email);
             map.put("Subject","Welcome");
             map.put("RequestStatus","");
-                FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
+            FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
         }
 }

@@ -13,10 +13,8 @@ public class FireBaseTeacher extends firebaseBaseModel{
     public void writeNewTeacher(String phoneNum, String description, String userid, List<subjectObj> sub, String imgUrl){
         teacherObj teacher = new teacherObj(phoneNum, description, userid, sub,  imgUrl);
         System.out.println(teacher.getDescription());
-
         String teacherId = myRef.push().getKey();
         u.getUserRef().child("teacherID").setValue(teacherId);
         myRef.child("teachers").child(teacherId).setValue(teacher);
-        u.getUserRef().child("isTeacher").setValue(1);
     }
 }

@@ -2,6 +2,7 @@ package com.project.tutortime;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
@@ -34,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         }
         /* assign status value from the received array list */
         int status = arr.get(0);
+        //Toast.makeText(MainActivity.this, "Status: "+status, Toast.LENGTH_SHORT).show();
         /* hide options - Here you can hide options from navigation bar! */
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
@@ -79,6 +80,42 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(MenuItem menuItem) {
+//                int id = menuItem.getItemId();
+//                switch (id) {
+//                    case R.id.nav_new_tutor_profile:
+//                        //Do some thing here
+//                        // add navigation drawer item onclick method here
+//                        onBackPressed();
+//                        finishAffinity();
+//                        Intent i = new Intent(MainActivity.this, SetTutorProfile.class);
+//                        finish();
+//                        startActivity(i);
+//                        finish();
+//                        break;
+////                    case R.id.nav_search:
+////                        //Do some thing here
+////                        // add navigation drawer item onclick method here
+////                        break;
+////                    case R.id.navigation_item_3:
+////                        //Do some thing here
+////                        // add navigation drawer item onclick method here
+////                        break;
+////                    case R.id.navigation_item_4:
+////                        //Do some thing here
+////                        // add navigation drawer item onclick method here
+////                        break;
+////                    case R.id.navigation_item_5:
+////                        //Do some thing here
+////                        // add navigation drawer item onclick method here
+////                        break;
+//                }
+//                return false;
+//            }
+//        });
 
         /* get user from firebase */
         fAuth = FirebaseAuth.getInstance();

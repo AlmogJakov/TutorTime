@@ -8,18 +8,16 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-<<<<<<< HEAD
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-=======
+
 import androidx.lifecycle.ViewModelProvider;
->>>>>>> 41ee5177b7cb0d7262d9ab187577ecbfc2e89a63
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-<<<<<<< HEAD
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -27,17 +25,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
-import com.project.tutortime.databinding.NotificationsFragmentBinding;
-import com.project.tutortime.databinding.TeacherCardFragmentBinding;
-import com.project.tutortime.ui.teachercard.TeacherCardViewModel;
-=======
+
 import com.project.tutortime.databinding.FragmentNotificationsBinding;
->>>>>>> 41ee5177b7cb0d7262d9ab187577ecbfc2e89a63
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 public class Notifications extends Fragment {
@@ -51,9 +43,8 @@ public class Notifications extends Fragment {
     private boolean isNote = true;
 
 
-<<<<<<< HEAD
-    //private NotificationsViewModel NotificationsViewModel;
-    private NotificationsFragmentBinding binding;
+    private NotificationsViewModel NotificationsViewModel;
+    private FragmentNotificationsBinding binding;
     private RecyclerView recyclerView;
     private NotificationsAdapter notificationsAdapter;
     private List<Notifications> notifications;
@@ -136,7 +127,7 @@ public class Notifications extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.notifications_fragment,container,false);
+       View view = inflater.inflate(R.layout.fragment_notifications,container,false);
        recyclerView = view.findViewById(R.id.recycler_view);
        recyclerView.setHasFixedSize(true);
        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -153,7 +144,7 @@ public class Notifications extends Fragment {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for(DataSnapshot dss: snapshot.getChildren()){
+                        for (DataSnapshot dss : snapshot.getChildren()) {
                             notifications.add(dss.getValue(Notifications.class));
                         }
                         Collections.reverse(notifications);
@@ -165,33 +156,29 @@ public class Notifications extends Fragment {
 
                     }
                 });
-=======
-    private NotificationsViewModel NotificationsViewModel;
-    private FragmentNotificationsBinding binding;
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        NotificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
-
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textNotifications;
-        NotificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        return root;
->>>>>>> 41ee5177b7cb0d7262d9ab187577ecbfc2e89a63
     }
+
+//    public View onCreateView(@NonNull LayoutInflater inflater,
+//                             ViewGroup container, Bundle savedInstanceState) {
+//        NotificationsViewModel =
+//                new ViewModelProvider(this).get(NotificationsViewModel.class);
+//
+//        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+//        View root = binding.getRoot();
+//
+//        final TextView textView = binding.textNotifications;
+//        NotificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
+//        return root;
+//    }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
     }
-
 }

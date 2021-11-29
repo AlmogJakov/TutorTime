@@ -79,18 +79,6 @@
     <!--        app:layout_constraintEnd_toEndOf="parent"-->
     <!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <Button
-        android:id="@+id/buttonProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Create profile "
-        android:textAllCaps="false"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/subList"
-        app:layout_constraintVertical_bias="0.424" />
-
     <TextView
         android:id="@+id/txtTutorProfile"
         android:layout_width="wrap_content"
@@ -132,24 +120,46 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editPhoneNumber" />
 
+    <ListView
+        android:id="@+id/subList"
+        android:layout_width="343dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editSubject" />
+
+    <Button
+        android:id="@+id/btnAddImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="32dp"
+        android:text="Add image"
+        app:layout_constraintEnd_toStartOf="@+id/editSubject"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <Button
+        android:id="@+id/buttonProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Create profile "
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subList" />
+
     <Button
         android:id="@+id/editSubject"
         android:layout_width="200dp"
         android:layout_height="44dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="28dp"
         android:text="Add Subject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editDescription" />
-
-    <ListView
-        android:id="@+id/subList"
-        android:layout_width="349dp"
-        android:layout_height="306dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="28dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editSubject" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -158,17 +168,8 @@
         android:layout_marginTop="80dp"
         android:layout_marginEnd="12dp"
         app:layout_constraintEnd_toStartOf="@+id/editDescription"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/profile" />
-
-    <Button
-        android:id="@+id/btnAddImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:text="Add image"
-        app:layout_constraintEnd_toStartOf="@+id/editSubject"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

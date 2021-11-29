@@ -3,6 +3,7 @@ package com.project.tutortime;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Dialog;
 import android.content.ContentResolver;
@@ -24,8 +25,11 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -90,10 +94,12 @@ public class SetTutorProfile extends AppCompatActivity {
                 createDialog(a);
             }
         });
+
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fileUploader();
+                //fileUploader();
+                String userID = fAuth.getCurrentUser().getUid();
                 String pNum = PhoneNumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
                 if (TextUtils.isEmpty(pNum)) {
@@ -106,18 +112,27 @@ public class SetTutorProfile extends AppCompatActivity {
                     return;
                 }
                 FireBaseTeacher t = new FireBaseTeacher();
-                Toast.makeText(SetTutorProfile.this, descrip,
-                        Toast.LENGTH_SHORT).show();
-                String userID = fAuth.getCurrentUser().getUid();
+                /* set isTeacher to teacher status (1=teacher,0=customer) */
+                mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
+                /* add the teacher to database */
                 t.addTeacherToDB(pNum, descrip, userID, list, imgURL);
-
                 /* were logging in as tutor (tutor status value = 1).
                      pass 'Status' value (1) to MainActivity. */
                 final ArrayList<Integer> arr = new ArrayList<Integer>();
                 arr.add(1);
+                //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                /* disable returning to SetTutorProfile class after opening main
+                 * activity, since we don't want the user to re-choose Profile
+                 * because the tutor profile data still exists with no use!
+                 * (unless we implementing method to remove the previous data) */
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 intent.putExtra("status",arr);
+                /* finish last activities to prevent last MainActivity to run with Customer view */
+                finishAffinity();
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -284,7 +299,7 @@ public class SetTutorProfile extends AppCompatActivity {
     }
     private void fileUploader(){
         imgURL=System.currentTimeMillis()+"."+getExtension(imageData);
-        StorageReference Ref=FirebaseStorage.getInstance().getReference().child(imgURL);
+        StorageReference Ref= FirebaseStorage.getInstance().getReference().child(imgURL);
         Ref.putFile(imageData)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
@@ -300,5 +315,3 @@ public class SetTutorProfile extends AppCompatActivity {
                 });
     }
 }
-
-

@@ -40,7 +40,6 @@ public class Login extends AppCompatActivity {
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -163,9 +162,7 @@ public class Login extends AppCompatActivity {
 
                 PasswordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
+                    public void onClick(DialogInterface dialog, int which) { }
                 });
                 PasswordResetDialog.create().show();
             }
@@ -186,8 +183,9 @@ public class Login extends AppCompatActivity {
                     } else { /* status entered - pass the status to Main Activity */
                         arr.add(dataSnapshot.getValue(Integer.class));
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        intent.putExtra("status",arr);
+                        intent.putExtra("status", arr);
                         startActivity(intent);
+
                     }
                     finish();
                 } else {

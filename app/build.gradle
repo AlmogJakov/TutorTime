@@ -62,6 +62,10 @@ dependencies {
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
+    // Declare the dependency for the Cloud Storage library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-storage'
+
     implementation ("com.github.bumptech.glide:glide:4.11.0@aar") {
         transitive = true
     }
