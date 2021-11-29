@@ -21,7 +21,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.tutortime.firebase.FireBaseUser;
+
+import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
     EditText mFName, mLName, mEmail, mPassword, mCity;
@@ -112,6 +115,7 @@ public class Register extends AppCompatActivity {
                             FireBaseUser u = new FireBaseUser();
                             String userID = fAuth.getCurrentUser().getUid();
                             u.addUserToDB(fName, lName, email, city, userID);
+                            addNotification(userID,email);
                             fAuth.signOut();
                             // startActivity(new Intent(getApplicationContext(), ChooseOne.class));
                             startActivity(new Intent(getApplicationContext(), Login.class));
@@ -130,5 +134,17 @@ public class Register extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(),Login.class));
             }
         });
+
+
     }
+            private void addNotification(String userid,String email){
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("UserID",userid);
+            map.put("Remarks","Welcome to TutorTime!");
+            map.put("TeacherEmail","");
+            map.put("UserEmail",email);
+            map.put("Subject","Welcome");
+            map.put("RequestStatus","");
+                FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
+        }
 }

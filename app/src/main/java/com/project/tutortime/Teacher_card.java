@@ -24,12 +24,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.userObj;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.security.auth.Subject;
 
@@ -78,7 +81,7 @@ public class Teacher_card extends AppCompatActivity {
                 Toast.makeText(Teacher_card.this, descrip,
                         Toast.LENGTH_SHORT).show();
                 t.addTeacherToDB(pNum, descrip, list);
-
+                addNotification(FirebaseAuth.getInstance().getCurrentUser().getUid(),list);
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
             }
         });
@@ -129,6 +132,20 @@ public class Teacher_card extends AppCompatActivity {
             }
         });
         d.show();
+    }
+    private void addNotification(String userid,ArrayList<subjectObj> list){
+        String subjects="" ;
+        for(subjectObj subObj:list){
+            subjects+=subObj.getsName() + " ";
+        }
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("UserID",userid);
+        map.put("Remarks","Congratulations! You are a Teacher");
+        map.put("TeacherEmail","");
+        map.put("UserEmail","");
+        map.put("Subject",subjects);
+        map.put("RequestStatus","");
+        FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
     }
 }
 

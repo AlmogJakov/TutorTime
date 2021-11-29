@@ -26,6 +26,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.tutortime.ui.notifications.Notifications;
+import com.project.tutortime.ui.notifications.NotificationsAdapter;
+
+import java.util.HashMap;
 
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
@@ -33,6 +37,7 @@ public class Login extends AppCompatActivity {
     TextView mRegisterBtn, mResetPass;
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,4 +197,5 @@ public class Login extends AppCompatActivity {
         /* END loading screen section */
         finish();
     }
+
 }
