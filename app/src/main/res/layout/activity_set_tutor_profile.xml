@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Teacher_card">
+    tools:context=".SetTutorProfile">
 
     <!--    <EditText-->
     <!--        android:id="@+id/editSubject"-->
@@ -92,11 +92,11 @@
         app:layout_constraintVertical_bias="0.181" />
 
     <TextView
-        android:id="@+id/txtTeacherProfile"
+        android:id="@+id/txtTutorProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Open teacher profile "
+        android:text="Open Tutor Profile "
         android:textColor="#303F9F"
         android:textSize="25dp"
         android:textStyle="bold"

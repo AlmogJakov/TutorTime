@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.tutortime.databinding.ActivityMainBinding;
 
+
 import java.util.ArrayList;
 
 
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_new_teacher_card, R.id.nav_teacher_card, R.id.nav_search, R.id.nav_notifications)
+                R.id.nav_home, R.id.nav_new_tutor_profile, R.id.nav_tutor_profile, R.id.nav_search, R.id.nav_notifications)
                 .setOpenableLayout(drawer).build();
 
         /* get the array list contains the status of the user (0=customer/1=tutor) */
@@ -69,9 +70,9 @@ public class MainActivity extends AppCompatActivity {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         Menu nav_Menu = navigationView.getMenu();
         if (status == 0) { /* default user (customer) */
-            nav_Menu.findItem(R.id.nav_teacher_card).setVisible(false);
+            nav_Menu.findItem(R.id.nav_tutor_profile).setVisible(false);
         } else { /* tutor */
-            nav_Menu.findItem(R.id.nav_new_teacher_card).setVisible(false);
+            nav_Menu.findItem(R.id.nav_new_tutor_profile).setVisible(false);
         }
         /* END hide options */
 

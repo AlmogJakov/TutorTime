@@ -12,25 +12,25 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_teacher_card"
-        android:name="com.project.tutortime.ui.teachercard.TeacherCard"
+        android:id="@+id/nav_tutor_profile"
+        android:name="com.project.tutortime.ui.tutorprofile.TutorProfile"
         android:label="@string/menu_teacher_card"
-        tools:layout="@layout/teacher_card_fragment" />
+        tools:layout="@layout/fragment_tutor_profile" />
 
     <activity
-        android:id="@+id/nav_new_teacher_card"
-        android:name="com.project.tutortime.Teacher_card"
-        android:label="@string/menu_new_teacher_card" />
+        android:id="@+id/nav_new_tutor_profile"
+        android:name="com.project.tutortime.SetTutorProfile"
+        android:label="@string/menu_new_tutor_profile" />
 
     <fragment
         android:id="@+id/nav_search"
         android:name="com.project.tutortime.ui.search.Search"
         android:label="@string/menu_search"
-        tools:layout="@layout/search_fragment" />
+        tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/nav_notifications"
         android:name="com.project.tutortime.ui.notifications.Notifications"
         android:label="@string/menu_notifications"
-        tools:layout="@layout/notifications_fragment" />
+        tools:layout="@layout/fragment_notifications" />
 </navigation>

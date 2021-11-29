@@ -5,13 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -82,7 +80,7 @@ public class Register extends AppCompatActivity {
 
         /* if the user already logged in */
         if (fAuth.getCurrentUser() != null) {
-            startActivity(new Intent(getApplicationContext(),ChooseOne.class));
+            startActivity(new Intent(getApplicationContext(), ChooseStatus.class));
             finish();
         }
 

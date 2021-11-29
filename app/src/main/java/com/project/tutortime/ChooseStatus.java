@@ -4,16 +4,14 @@ package com.project.tutortime;
 
         import android.content.Intent;
         import android.os.Bundle;
-        import android.text.TextUtils;
         import android.view.View;
         import android.widget.Button;
 
         import com.google.firebase.auth.FirebaseAuth;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
-        import com.project.tutortime.R;
 
-public class ChooseOne extends AppCompatActivity {
+public class ChooseStatus extends AppCompatActivity {
     Button teacher, student;
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
@@ -31,7 +29,7 @@ public class ChooseOne extends AppCompatActivity {
         teacher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), Teacher_card.class));
+                startActivity(new Intent(getApplicationContext(), SetTutorProfile.class));
             }
         });
 
