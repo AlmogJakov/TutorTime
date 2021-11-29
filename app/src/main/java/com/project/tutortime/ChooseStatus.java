@@ -19,7 +19,7 @@ public class ChooseStatus extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_choose_one);
+        setContentView(R.layout.activity_choose_status);
 
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -38,7 +38,11 @@ public class ChooseStatus extends AppCompatActivity {
             public void onClick(View v) {
                 String userID = fAuth.getCurrentUser().getUid();
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(0);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                /* since were already logged in - after redirecting to Login.class
+                    there will be an immediate referral to MainActivity.
+                     (The reference to Login.class is needed because the method that passes
+                     'Status' value (0=customer/1=tutor) to MainActivity is implemented there). */
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
     }

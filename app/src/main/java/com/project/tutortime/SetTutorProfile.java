@@ -83,7 +83,11 @@ public class SetTutorProfile extends AppCompatActivity {
                 String userID = fAuth.getCurrentUser().getUid();
                 t.addTeacherToDB(pNum, descrip, userID, list);
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                /* since were already logged in - after redirecting to Login.class
+                    there will be an immediate referral to MainActivity.
+                     (The reference to Login.class is needed because the method that passes
+                     'Status' value (0=customer/1=tutor) to MainActivity is implemented there). */
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
     }

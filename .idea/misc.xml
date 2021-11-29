@@ -28,11 +28,14 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/side_nav_bar.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_choose_one.xml" value="0.2546875" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_choose_status.xml" value="0.25226449275362317" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_empty.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_loading.xml" value="0.26811594202898553" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_loading_screen.xml" value="0.25226449275362317" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_login.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_main.xml" value="0.22282608695652173" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_register.xml" value="0.33" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_splash_screen.xml" value="0.25226449275362317" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_teacher_card.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_welcome.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/add_sub_dialog.xml" value="0.2546875" />
