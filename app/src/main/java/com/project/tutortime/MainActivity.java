@@ -81,42 +81,6 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(MenuItem menuItem) {
-//                int id = menuItem.getItemId();
-//                switch (id) {
-//                    case R.id.nav_new_tutor_profile:
-//                        //Do some thing here
-//                        // add navigation drawer item onclick method here
-//                        onBackPressed();
-//                        finishAffinity();
-//                        Intent i = new Intent(MainActivity.this, SetTutorProfile.class);
-//                        finish();
-//                        startActivity(i);
-//                        finish();
-//                        break;
-////                    case R.id.nav_search:
-////                        //Do some thing here
-////                        // add navigation drawer item onclick method here
-////                        break;
-////                    case R.id.navigation_item_3:
-////                        //Do some thing here
-////                        // add navigation drawer item onclick method here
-////                        break;
-////                    case R.id.navigation_item_4:
-////                        //Do some thing here
-////                        // add navigation drawer item onclick method here
-////                        break;
-////                    case R.id.navigation_item_5:
-////                        //Do some thing here
-////                        // add navigation drawer item onclick method here
-////                        break;
-//                }
-//                return false;
-//            }
-//        });
-
         /* get user from firebase */
         fAuth = FirebaseAuth.getInstance();
         FirebaseUser user = fAuth.getCurrentUser();
