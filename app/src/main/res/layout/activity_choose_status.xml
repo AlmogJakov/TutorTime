@@ -6,50 +6,135 @@
     android:layout_height="match_parent"
     tools:context=".ChooseStatus">
 
-    <Button
-        android:id="@+id/btnTeacher"
-        android:layout_width="154dp"
-        android:layout_height="76dp"
-        android:text="מורה"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.384" />
-
-    <Button
-        android:id="@+id/btnStudent"
-        android:layout_width="154dp"
-        android:layout_height="76dp"
-        android:text="תלמיד"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.551" />
-
     <TextView
         android:id="@+id/txtTutorTime"
-        android:layout_width="357dp"
-        android:layout_height="106dp"
-        android:autoSizeTextType="uniform"
+        android:layout_width="257dp"
+        android:layout_height="35dp"
         android:gravity="center"
-        android:text="Tutor Time"
+        android:text="Choose Your User Type"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.053" /><![CDATA[
+        app:layout_constraintVertical_bias="0.024" />
+
+    <!--    android:autoSizeTextType="uniform"-->
 
 
+    <!-- //////////////////////////////////////////////////////////////////////////////// -->
+    <!-- ////////////////////////////////// Tutor Card ////////////////////////////////// -->
+    <!-- //////////////////////////////////////////////////////////////////////////////// -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewTutor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtTutorTime"
+        tools:ignore="MissingConstraints">
+        <!--
+        In the above cardview widget
+        cardelevation property will give elevation to your card view
+        card corner radius will provide radius to your card view
+        card background color will give background color to your card view
+        card max elevation will give the cardview maximum elevation
+        card prevent corner overlap will add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners.
+        card use compact padding will add padding in API v21+ as well to have the same measurements with previous versions.
+        below are the two widgets imageview and text view we are displaying inside our card view.
+        -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical|top"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/tutorIMG"
+                android:layout_width="200dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center|center_vertical|top"
+                android:layout_margin="10dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/tutor" />
 
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.852" />
-    ]]><!--        app:layout_constraint-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="10dp"
+                android:text="Tutor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        
+    </androidx.cardview.widget.CardView>
+
+    <!-- //////////////////////////////////////////////////////////////////////////////// -->
+    <!-- //////////////////////////////// Customer Card ///////////////////////////////// -->
+    <!-- //////////////////////////////////////////////////////////////////////////////// -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewCustomer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="10dp"
+        app:cardMaxElevation="12dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardViewTutor"
+        tools:ignore="MissingConstraints">
+        <!--
+        In the above cardview widget
+        cardelevation property will give elevation to your card view
+        card corner radius will provide radius to your card view
+        card background color will give background color to your card view
+        card max elevation will give the cardview maximum elevation
+        card prevent corner overlap will add padding to CardView on v20 and before to prevent intersections between the Card content and rounded corners.
+        card use compact padding will add padding in API v21+ as well to have the same measurements with previous versions.
+        below are the two widgets imageview and text view we are displaying inside our card view.
+        -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|center_vertical|top"
+            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/customerIMG"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/customers" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="10dp"
+            android:text="Customer"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
