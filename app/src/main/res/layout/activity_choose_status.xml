@@ -6,26 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".ChooseStatus">
 
-    <TextView
-        android:id="@+id/txtTutorTime"
-        android:layout_width="257dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:text="Choose Your User Type"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.024" />
-
     <!--    android:autoSizeTextType="uniform"-->
 
 
     <!-- //////////////////////////////////////////////////////////////////////////////// -->
     <!-- ////////////////////////////////// Tutor Card ////////////////////////////////// -->
     <!-- //////////////////////////////////////////////////////////////////////////////// -->
+    <TextView
+        android:id="@+id/txtTutorTime"
+        android:layout_width="359dp"
+        android:layout_height="29dp"
+        android:gravity="center"
+        android:text="Choose Your User Type"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.031" />
+
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewTutor"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
         android:layout_margin="5dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/soft_gray"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="12dp"
@@ -91,7 +91,7 @@
         android:layout_margin="5dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="@color/white"
+        app:cardBackgroundColor="@color/soft_gray"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="12dp"
