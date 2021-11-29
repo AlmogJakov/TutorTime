@@ -1,23 +1,34 @@
 package com.project.tutortime;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.subjectObj;
 
@@ -25,12 +36,17 @@ import java.util.ArrayList;
 
 public class SetTutorProfile extends AppCompatActivity {
     EditText PhoneNumber, description;
-    Button profile, addSub;
+    Button profile, addSub, addImage;
+    ImageView img;
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
     FirebaseAuth fAuth;
+    Uri imageData;
+    String imgURL;
     private DatabaseReference mDatabase;
+    private static final int GALLERY_REQUEST_COD = 1;
+
 
 
     @Override
@@ -43,10 +59,22 @@ public class SetTutorProfile extends AppCompatActivity {
         description = findViewById(R.id.editDescription);
         addSub = findViewById(R.id.editSubject);
         profile = findViewById(R.id.buttonProfile);
+        addImage = findViewById(R.id.btnAddImage);
+        img = findViewById(R.id.imageView);
         subjectList = (ListView) findViewById(R.id.subList);
         ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
+
+        addImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, GALLERY_REQUEST_COD);
+            }
+        });
 
         subjectList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -55,7 +83,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 createEditDialog(a,s);
             }
         });
-
 
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +93,7 @@ public class SetTutorProfile extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                fileUploader();
                 String pNum = PhoneNumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
                 if (TextUtils.isEmpty(pNum)) {
@@ -81,8 +109,8 @@ public class SetTutorProfile extends AppCompatActivity {
                 Toast.makeText(SetTutorProfile.this, descrip,
                         Toast.LENGTH_SHORT).show();
                 String userID = fAuth.getCurrentUser().getUid();
-                t.addTeacherToDB(pNum, descrip, userID, list);
-                mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
+                t.addTeacherToDB(pNum, descrip, userID, list, imgURL);
+
                 /* were logging in as tutor (tutor status value = 1).
                      pass 'Status' value (1) to MainActivity. */
                 final ArrayList<Integer> arr = new ArrayList<Integer>();
@@ -123,16 +151,24 @@ public class SetTutorProfile extends AppCompatActivity {
                     priceEdit.setError("Price is required.");
                     return;
                 }
-                if (nameSub.isEmpty() || nameSub.equals(subjectObj.SubName.HINT)) {
+//                if (nameSub.isEmpty() || nameSub.equals(subjectObj.SubName.HINT)) {
+//                    Toast.makeText(SetTutorProfile.this, "Subject is required.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (type.isEmpty() || type.equals(subjectObj.Type.HINT)) {
+//                    Toast.makeText(SetTutorProfile.this, "Learning type is required.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+                if (listSub.contains(nameSub)) {
+                    Toast.makeText(SetTutorProfile.this, "You already have selected this subject.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (nameSub == "Select subject") {
                     Toast.makeText(SetTutorProfile.this, "Subject is required.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (type.isEmpty() || type.equals(subjectObj.Type.HINT)) {
+                if (type == "Select learning type") {
                     Toast.makeText(SetTutorProfile.this, "Learning type is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (listSub.contains(nameSub)) {
-                    Toast.makeText(SetTutorProfile.this, "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
@@ -164,7 +200,7 @@ public class SetTutorProfile extends AppCompatActivity {
         expEdit = d.findViewById(R.id.ExpEdit);
         saveBtn = d.findViewById(R.id.btnSave);
         closeBtn = d.findViewById(R.id.btnClose);
-        deleteBtn = d.findViewById(R.id.btnDelete);/////////////////////////////////////////////////
+        deleteBtn = d.findViewById(R.id.btnDelete);
         nameSpinner = d.findViewById(R.id.spinSubName);
         ArrayAdapter nameAd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 subjectObj.SubName.values());
@@ -231,6 +267,37 @@ public class SetTutorProfile extends AppCompatActivity {
             }
         });
         d.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_COD && resultCode == RESULT_OK && data != null) {
+            imageData = data.getData();
+            img.setImageURI(imageData);
+        }
+    }
+    private String getExtension(Uri uri){
+        ContentResolver cr = getContentResolver();
+        MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
+        return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
+    }
+    private void fileUploader(){
+        imgURL=System.currentTimeMillis()+"."+getExtension(imageData);
+        StorageReference Ref=FirebaseStorage.getInstance().getReference().child(imgURL);
+        Ref.putFile(imageData)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Toast.makeText(getApplicationContext(), "Upload imageFailed", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }
 

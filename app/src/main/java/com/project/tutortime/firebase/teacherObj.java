@@ -9,15 +9,17 @@ public class teacherObj implements Serializable {
     private List<subjectObj> sub;
     private String description;
     private String userID;
+    String imgUrl;
 
     public teacherObj(){
     }
 
-    public teacherObj(String phoneNum, String description, String userid, List<subjectObj> sub) {
+    public teacherObj(String phoneNum, String description, String userid, List<subjectObj> sub, String imgUrl) {
         this.phoneNum=phoneNum;
         this.description=description;
         this.sub= new ArrayList<subjectObj>(sub);
         this.userID = userid;
+        this.imgUrl=imgUrl;
     }
 
     public String getPhoneNum() {
@@ -42,6 +44,14 @@ public class teacherObj implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 
     public String getUserID() {
