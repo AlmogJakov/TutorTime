@@ -1,13 +1,12 @@
 package com.project.tutortime.ui.search;
 
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -26,23 +25,148 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
-import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.firebase.subjectObj;
+
+import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class Search extends Fragment {
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
+    Button addBtn;
+    Spinner nameSpinner;
+    TextView typeSpinner;
+    TextView citySpinner;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        View v = inflater.inflate(R.layout.fragment_search, container, false);
+        addBtn = v.findViewById(R.id.buttonAcount);
+
+        String[] type = {"Online", "Frontal"};
+        typeSpinner = v.findViewById(R.id.learn);
+        boolean[] selectType = new boolean[type.length];
+        ArrayList<Integer> listType = new ArrayList<>();
+        setSpinner(typeSpinner, selectType, listType, type);
+
+        nameSpinner = v.findViewById(R.id.selectSub);
+        nameSpinner.setAdapter(new ArrayAdapter<>
+                (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
+        
+        citySpinner = v.findViewById(R.id.selectCity);
+        String[] cities = getResources().getStringArray(R.array.Cities);
+        boolean[] selectCity = new boolean[cities.length];
+        ArrayList<Integer> listCity = new ArrayList<>();
+        setSpinner(citySpinner,selectCity,listCity, cities);
+
+
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchResults.class);
+                startActivity(intent);
+            }
+        });
+        return v;
+
+    }
+
+    private void setSpinner(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type) {
+        typeSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Select type");
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            list.add(which);
+                            Collections.sort(list);
+                        } else {
+                            int i = list.indexOf(which);
+                            list.remove(i);
+                        }
+                    }
+                });
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < list.size(); i++) {
+                            stringBuilder.append(type[list.get(i)]);
+                            if (i != list.size() - 1) {
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        typeSpinner.setText(stringBuilder.toString());
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectType.length; i++) {
+                            selectType[i] = false;
+                            list.clear();
+                            typeSpinner.setText("");
+                        }
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
+
+    private ArrayAdapter<String> getAdapter() {
+        return new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                if (position == 0) { // Hint
+                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(0));
+                }
+                return v;
+            }
+
+            @Override
+            public int getCount() {
+                return super.getCount();
+            }
+
+            @Override /* Disable selection of the Hint (first selection) */
+            public boolean isEnabled(int position) {
+                return (position != 0);
+            }
+
+            @Override /* Set the color of the Hint (first selection) to Grey */
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if (position == 0) tv.setTextColor(Color.GRAY);
+                else tv.setTextColor(Color.BLACK);
+                return view;
+            }
+        };
+    }
+
+    private void almog() {
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         String userID = fAuth.getCurrentUser().getUid();
         mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists() && dataSnapshot.getValue()!= null) {
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
                     if (dataSnapshot.getValue(Integer.class) == 0) {
                         Toast.makeText(getActivity(), "Your a Student.", Toast.LENGTH_SHORT).show();
                     } else {
@@ -50,62 +174,11 @@ public class Search extends Fragment {
                     }
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
-
-        View v = inflater.inflate(R.layout.fragment_search, container, false);
-        Button addBtn = v.findViewById(R.id.buttonAcount);
-
-        Spinner nameSpinner = v.findViewById(R.id.selectSub);
-        nameSpinner.setAdapter(new ArrayAdapter<>
-                (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
-
-        Spinner typeSpinner = v.findViewById(R.id.learn);
-        typeSpinner.setAdapter(new ArrayAdapter<>
-                (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.Type.values()));
-
-        Spinner spinner = (Spinner) v.findViewById(R.id.selectCity);
-        ArrayAdapter<String> adapter = getAdapter();
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        String[] cities = getResources().getStringArray(R.array.Cities);
-        adapter.add("Choose City");
-        adapter.addAll(cities);
-        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        spinner.setAdapter(adapter);
-
-        addBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
+            public void onCancelled(DatabaseError databaseError) {
             }
         });
-        return v;
-
     }
-
-    private ArrayAdapter<String> getAdapter() {
-        return new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item)
-        {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View v = super.getView(position, convertView, parent);
-                if (position == 0) { // Hint
-                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
-                return v; }
-            @Override
-            public int getCount() { return super.getCount(); }
-            @Override /* Disable selection of the Hint (first selection) */
-            public boolean isEnabled(int position) { return (position != 0); }
-            @Override /* Set the color of the Hint (first selection) to Grey */
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView)view;
-                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
-                return view; }
-        };
-    }
-
 
 }

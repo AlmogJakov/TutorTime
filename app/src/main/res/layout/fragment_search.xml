@@ -101,13 +101,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.324" />
 
-    <Spinner
+    <TextView
         android:id="@+id/learn"
         android:layout_width="293dp"
         android:layout_height="41dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="City"
+        android:hint="Type"
         android:spinnerMode="dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.457"
@@ -131,13 +131,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.506" />
 
-    <Spinner
+    <TextView
         android:id="@+id/selectCity"
         android:layout_width="293dp"
         android:layout_height="41dp"
         android:layout_marginTop="4dp"
         android:ems="10"
-        android:hint="City"
+        android:hint="Choose City"
         android:spinnerMode="dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.457"
@@ -236,6 +236,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.764" />
+
+<!--    <TextView-->
+<!--        android:id="@+id/arrow"-->
+<!--        android:layout_width="29dp"-->
+<!--        android:layout_height="37dp"-->
+<!--        android:text="▾"-->
+<!--        android:textAlignment="center"-->
+<!--        android:textSize="20sp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.803"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.391" />-->
 
     <Button
         android:id="@+id/buttonAcount"
