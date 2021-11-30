@@ -17,7 +17,7 @@
         android:layout_marginStart="5dp"
         android:orientation="vertical"
         android:layout_toEndOf="@id/bell"
-        android:layout_toStartOf="@id/OpenBtn">
+        android:layout_toStartOf="@id/open">
 
 
         <TextView
@@ -36,12 +36,12 @@
 
     </LinearLayout>
 
-    <Button
+    <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:id="@+id/OpenBtn"
-        android:text="Open"/>
+        android:src="@drawable/open_icon"
+        android:id="@+id/open"/>
 
 
 </RelativeLayout>

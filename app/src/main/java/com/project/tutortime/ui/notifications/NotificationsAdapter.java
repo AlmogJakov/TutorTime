@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         getUser(notifications.getUserID(),holder.UserName);
         holder.Remarks.setText(notifications.getRemarks());
         if(notifications.isNote()){
-            holder.OpenBtn.setVisibility(View.INVISIBLE);
+            holder.Open.setVisibility(View.GONE);
         }
     }
 
@@ -57,12 +58,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         public TextView UserName;
         public TextView Remarks;
-        public Button OpenBtn;
+        public ImageView Open;
         public NotificationsViewHolder(@NonNull View itemView) {
             super(itemView);
             UserName = itemView.findViewById(R.id.UserName);
             Remarks = itemView.findViewById(R.id.Remarks);
-            OpenBtn = itemView.findViewById(R.id.OpenBtn);
+            Open = itemView.findViewById(R.id.open);
         }
     }
     private void getUser(String UserID,TextView username){
