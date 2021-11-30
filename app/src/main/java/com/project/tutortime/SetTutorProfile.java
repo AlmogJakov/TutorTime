@@ -51,8 +51,6 @@ public class SetTutorProfile extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private static final int GALLERY_REQUEST_COD = 1;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

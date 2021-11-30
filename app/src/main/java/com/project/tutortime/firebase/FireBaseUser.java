@@ -15,6 +15,6 @@ public class FireBaseUser extends firebaseBaseModel {
 
     public DatabaseReference getUserRef(){
         String userID = fAuth.getInstance().getCurrentUser().getUid();
-        return myRef.child("users").child(userID);
+        return myRef.child("users").child(userID).getRef();
     }
 }

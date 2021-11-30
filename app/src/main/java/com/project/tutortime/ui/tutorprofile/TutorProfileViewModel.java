@@ -10,7 +10,7 @@ public class TutorProfileViewModel extends ViewModel {
 
     public TutorProfileViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is Tutor Profile fragment");
+        //mText.setValue("This is Tutor Profile fragment");
     }
 
     public LiveData<String> getText() {

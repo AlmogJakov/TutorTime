@@ -6,17 +6,132 @@
     android:layout_height="match_parent"
     tools:context=".ui.tutorprofile.TutorProfile">
 
+    <!--    <TextView-->
+    <!--        android:id="@+id/text_teachercard"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="8dp"-->
+    <!--        android:layout_marginTop="8dp"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textSize="20sp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
+
     <TextView
-        android:id="@+id/text_teachercard"
-        android:layout_width="match_parent"
+        android:id="@+id/myTutorProfile"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:text="My Tutor Profile "
+        android:textColor="#303F9F"
+        android:textSize="25dp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/myFName"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:hint="First name"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/myLName"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:hint="Last name"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/myFName" />
+
+    <EditText
+        android:id="@+id/myPhoneNumber"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:hint="Phone Number"
+        android:inputType="phone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/myLName" />
+
+    <EditText
+        android:id="@+id/editDescription"
+        android:layout_width="200dp"
+        android:layout_height="44dp"
+        android:layout_marginEnd="28dp"
+        android:ems="10"
+        android:gravity="start|top"
+        android:hint="About Me"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myPhoneNumber" />
+
+    <Button
+        android:id="@+id/addSubject"
+        android:layout_width="150dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="24sp"
+        android:layout_marginEnd="56sp"
+        android:text="Add Subject"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editDescription" />
+
+    <Button
+        android:id="@+id/btnUpdateImage"
+        android:layout_width="143dp"
+        android:layout_height="44dp"
+        android:layout_marginStart="32sp"
+        android:layout_marginTop="24sp"
+        android:text="Update image"
+        app:layout_constraintEnd_toStartOf="@+id/addSubject"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="153dp"
+        android:layout_height="178dp"
+        android:layout_marginTop="80sp"
+        android:layout_marginEnd="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/editDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/profile" />
+
+    <ListView
+        android:id="@+id/subList"
+        android:layout_width="343dp"
+        android:layout_height="108dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addSubject" />
+
+    <Button
+        android:id="@+id/btnSaveProfile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="220sp"
+        android:text="Save profile "
+        android:textAllCaps="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
