@@ -12,6 +12,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FireBaseTeacher extends firebaseBaseModel{
@@ -29,4 +30,7 @@ public class FireBaseTeacher extends firebaseBaseModel{
         myRef.child("teachers").child(teacherId).setValue(teacher);
     }
 
+    public void setSubList(String teacherId, ArrayList<subjectObj> listSub){
+        myRef.child("teachers").child(teacherId).child("sub").setValue(listSub);
+    }
 }

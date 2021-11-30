@@ -27,20 +27,15 @@
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/edit_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_first.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_gallery.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_notifications.xml" value="0.14666666666666667" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_search.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_search_results.xml" value="0.22" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_second.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/notification_item.xml" value="0.1" />
-        <entry key="..\:/Users/97252/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.1" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_tutor_profile.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/my_tutor_profile.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/nav_header_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/notifications_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/search_fragment.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_add_dialog.xml" value="0.13385416666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_edit_dialog.xml" value="0.1" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_add_dialog.xml" value="0.5" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_edit_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/teacher_card_fragment.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/update_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/update_teacher_profile.xml" value="0.33" />
