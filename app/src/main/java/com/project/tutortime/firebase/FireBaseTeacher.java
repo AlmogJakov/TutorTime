@@ -9,7 +9,6 @@ public class FireBaseTeacher extends firebaseBaseModel{
     public String addTeacherToDB(String phoneNum, String description, String userid, List<subjectObj> sub, String imgUrl){
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
         teacherObj teacher = new teacherObj(phoneNum, description, userid, sub,  imgUrl);
-        System.out.println(teacher.getDescription());
         String teacherId = myRef.push().getKey();
         u.getUserRef().child("teacherID").setValue(teacherId);
         myRef.child("teachers").child(teacherId).setValue(teacher);
@@ -18,5 +17,17 @@ public class FireBaseTeacher extends firebaseBaseModel{
 
     public void setSubList(String teacherId, ArrayList<subjectObj> listSub){
         myRef.child("teachers").child(teacherId).child("sub").setValue(listSub);
+    }
+
+    public void setPhoneNum(String teacherId, String pNum){
+        myRef.child("teachers").child(teacherId).child("phoneNum").setValue(pNum);
+    }
+
+    public void setDescription(String teacherId, String des){
+        myRef.child("teachers").child(teacherId).child("description").setValue(des);
+    }
+
+    public void setImgUrl(String teacherId, String imgUrl){
+        myRef.child("teachers").child(teacherId).child("imgUrl").setValue(imgUrl);
     }
 }

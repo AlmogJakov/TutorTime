@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
 import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.databinding.FragmentTutorProfileBinding;
@@ -65,15 +67,14 @@ public class TutorProfile extends Fragment {
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
-    FirebaseAuth fAuth;
+    FirebaseAuth fAuth = FirebaseAuth.getInstance();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     FireBaseUser fbUser = new FireBaseUser();
     FireBaseTeacher fbTeacher = new FireBaseTeacher();
     userObj user_obj;
     Uri imageData;
     String imgURL;
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageRef = storage.getReference();
+
     private static final int GALLERY_REQUEST_COD = 1;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -128,6 +129,61 @@ public class TutorProfile extends Fragment {
             }
         });
 
+        saveProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (imageData != null)
+                    fileUploader();
+                String userID = fAuth.getCurrentUser().getUid();
+                String pNum = pnumber.getText().toString().trim();
+                String descrip = description.getText().toString().trim();
+                if (TextUtils.isEmpty(pNum)) {
+                    pnumber.setError("PhoneNumber is required.");
+                    return;
+                }
+                if (list.isEmpty()) {
+                    Toast.makeText(getActivity(), "You must choose at least one subject",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                FireBaseTeacher fbteacher = new FireBaseTeacher();
+                new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                        fbteacher.setPhoneNum(teacherID, pNum);
+                        fbteacher.setDescription(teacherID, descrip);
+                        System.out.println(imgURL);
+                        if(imgURL != null)
+                            fbteacher.setImgUrl(teacherID, imgURL);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+
+
+                /* were logging in as tutor (tutor status value = 1).
+                     pass 'Status' value (1) to MainActivity. */
+                final ArrayList<Integer> arr = new ArrayList<Integer>();
+                arr.add(1);
+                //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                /* disable returning to SetTutorProfile class after opening main
+                 * activity, since we don't want the user to re-choose Profile
+                 * because the tutor profile data still exists with no use!
+                 * (unless we implementing method to remove the previous data) */
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("status",arr);
+                /* finish last activities to prevent last MainActivity to run with Customer view */
+                getActivity().finish();
+                startActivity(intent);
+                getActivity().getFragmentManager().popBackStack();
+            }
+        });
+
         return root;
     }
 
@@ -146,19 +202,33 @@ public class TutorProfile extends Fragment {
                         child("description").getValue(String.class));
                 String imgAdd = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgAdd != null) {
-                    StorageReference imagesRef = storageRef.child(imgAdd);
-                    System.out.println(imgAdd);
-                    imagesRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                    StorageReference imagesRef = storageRef.child(imgAdd);
+//                    System.out.println(imgAdd);
+                    StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
+                    StorageReference ref = mImageStorage.child(imgAdd);
+                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            img.setImageBitmap(bmp);
+                        public void onSuccess(Uri uri) {
+                            Glide.with(getActivity()).load(uri).into(img);
+                        } }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) { }
                     });
                 }
+
+//                    imagesRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                        @Override
+//                        public void onSuccess(byte[] bytes) {
+//                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                            img.setImageBitmap(bmp);
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception exception) { }
+//                    });
+//                }
 
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
                         child("sub").getChildren()) {
@@ -354,6 +424,7 @@ public class TutorProfile extends Fragment {
     }
 
     private String getExtension(Uri uri) {
+        //.getApplicationContext()
         ContentResolver cr = getActivity().getApplicationContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
