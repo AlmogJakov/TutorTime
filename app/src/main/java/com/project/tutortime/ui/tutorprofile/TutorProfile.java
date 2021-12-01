@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -63,6 +64,7 @@ public class TutorProfile extends Fragment {
     EditText fname, lname, pnumber, description;
     Button saveProfile, addSub, updateImage;
     String teacherID;
+    Spinner citySpinner;
     ImageView img;
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
@@ -100,9 +102,38 @@ public class TutorProfile extends Fragment {
         updateImage = binding.btnUpdateImage;
         img = binding.imageView;
         subjectList = binding.subList;
+        citySpinner = binding.spinnerCity;
         ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
+
+        /* Select City Spinner Code () */
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                if (position == 0) { // Hint
+                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
+                return v; }
+            @Override
+            public int getCount() { return super.getCount(); }
+            @Override /* Disable selection of the Hint (first selection) */
+            public boolean isEnabled(int position) { return ((position == 0) ? false : true); }
+            @Override /* Set the color of the Hint (first selection) to Grey */
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView)view;
+                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
+                return view; }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        String[] cities = getResources().getStringArray(R.array.Cities);
+        adapter.add("Choose City");
+        adapter.addAll(cities);
+        citySpinner.setAdapter(adapter);
+        citySpinner.setSelection(0); //display hint
+        /* END Select City Spinner Code () */
 
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,13 +163,24 @@ public class TutorProfile extends Fragment {
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imageData != null)
-                    fileUploader();
-                String userID = fAuth.getCurrentUser().getUid();
+                String userID = fAuth.getInstance().getCurrentUser().getUid();
                 String pNum = pnumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
+                String firstName = fname.getText().toString().trim();
+                String lastName = lname.getText().toString().trim();
+                String city = citySpinner.getSelectedItem().toString();
+                if (imageData != null)
+                    fileUploader();
                 if (TextUtils.isEmpty(pNum)) {
                     pnumber.setError("PhoneNumber is required.");
+                    return;
+                }
+                if (TextUtils.isEmpty(firstName)) {
+                    fname.setError("First name is required.");
+                    return;
+                }
+                if (TextUtils.isEmpty(lastName)) {
+                    lname.setError("Last name is required.");
                     return;
                 }
                 if (list.isEmpty()) {
@@ -147,6 +189,7 @@ public class TutorProfile extends Fragment {
                     return;
                 }
                 FireBaseTeacher fbteacher = new FireBaseTeacher();
+                FireBaseUser fbUser = new FireBaseUser();
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -156,6 +199,9 @@ public class TutorProfile extends Fragment {
                         System.out.println(imgURL);
                         if(imgURL != null)
                             fbteacher.setImgUrl(teacherID, imgURL);
+                        fbUser.setFName(userID, firstName);
+                        fbUser.setLName(userID, lastName);
+                        fbUser.setCity(userID, city);
                     }
 
                     @Override
@@ -196,10 +242,20 @@ public class TutorProfile extends Fragment {
                 fname.setText(dataSnapshot.child("users").child(userID).child("fName").getValue(String.class));
                 lname.setText(dataSnapshot.child("users").child(userID).child("lName").getValue(String.class));
                 teacherID = dataSnapshot.child("users").child(userID).child("teacherID").getValue(String.class);
+                String currCity = dataSnapshot.child("users").child(userID).
+                        child("city").getValue(String.class);
+                String[] cities = getResources().getStringArray(R.array.Cities);
+                for (int i = 0; i < cities.length; i++) {
+                    if (citySpinner.getItemAtPosition(i).equals(currCity)) {
+                        citySpinner.setSelection(i);
+                        break;
+                    }
+                }
                 pnumber.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("phoneNum").getValue(String.class));
                 description.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("description").getValue(String.class));
+
                 String imgAdd = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgAdd != null) {
 //                    StorageReference imagesRef = storageRef.child(imgAdd);
@@ -382,6 +438,7 @@ public class TutorProfile extends Fragment {
             @Override
             public void onClick(View view) {
                 list.remove(currSub);
+                listSub.remove(currSub.getsName());
                 updateList();
                 a.notifyDataSetChanged();
                 d.dismiss();

@@ -8,6 +8,7 @@ public class FireBaseUser extends firebaseBaseModel {
     public void addUserToDB(String fName, String lName, String email, String city, String id){
         writeNewUser(fName,lName,email,city, id);
     }
+
     public void writeNewUser(String fName, String lName, String email, String city, String id){
         userObj user = new userObj(fName,lName,email, city);
         myRef.child("users").child(id).setValue(user);
@@ -16,5 +17,17 @@ public class FireBaseUser extends firebaseBaseModel {
     public DatabaseReference getUserRef(){
         String userID = fAuth.getInstance().getCurrentUser().getUid();
         return myRef.child("users").child(userID).getRef();
+    }
+
+    public void setFName(String userId, String fName){
+        myRef.child("users").child(userId).child("fName").setValue(fName);
+    }
+
+    public void setLName(String userId, String lName){
+        myRef.child("users").child(userId).child("lName").setValue(lName);
+    }
+
+    public void setCity(String userId,  String city){
+        myRef.child("users").child(userId).child("city").setValue(city);
     }
 }
