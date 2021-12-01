@@ -8,8 +8,11 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
@@ -36,6 +39,9 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.subjectObj;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SetTutorProfile extends AppCompatActivity {
@@ -288,15 +294,48 @@ public class SetTutorProfile extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_COD && resultCode == RESULT_OK && data != null) {
-            imageData = data.getData();
-            img.setImageURI(imageData);
+            try {
+                imageData = data.getData();
+                /* crop the image bmp to square */
+                InputStream imageStream = getContentResolver().openInputStream(imageData);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                selectedImage = getResizedBitmap(selectedImage, 200);// 400 is for example, replace with desired size
+                /* show the new image on screen */
+                img.setImageBitmap(selectedImage);
+                /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), selectedImage, "Title", null);
+                imageData = Uri.parse(path);
+                /* Note that a new image has been created in the gallery
+                 * but the image will be deleted after uploading it to the server.
+                 * (In the 'fileUploader' method below) */
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
+
+    private Bitmap getResizedBitmap(Bitmap bitmap, int maxSize) {
+        int width  = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = (height > width) ? width : height;
+        int newHeight = (height > width)? height - ( height - width) : height;
+        int cropW = (width - height) / 2;
+        cropW = (cropW < 0)? 0: cropW;
+        int cropH = (height - width) / 2;
+        cropH = (cropH < 0)? 0: cropH;
+        Bitmap cropImg = Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
+        Bitmap resizedImg = Bitmap.createScaledBitmap(bitmap, maxSize, maxSize, false);
+        return resizedImg;
+    }
+
     private String getExtension(Uri uri){
         ContentResolver cr = getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
     }
+
     private void fileUploader(String teacherID) {
         /* if no image to upload */
         if (imageData==null) return;
@@ -309,6 +348,8 @@ public class SetTutorProfile extends AppCompatActivity {
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         /* Set the image URL AFTER After the image has been successfully uploaded */
                         mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
+                        /* remove the cropped image from gallery */
+                        getApplicationContext().getContentResolver().delete(imageData, null, null);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

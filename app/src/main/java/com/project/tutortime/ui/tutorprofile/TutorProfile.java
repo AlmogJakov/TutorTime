@@ -8,6 +8,8 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -70,6 +72,8 @@ public class TutorProfile extends Fragment {
     userObj user_obj;
     Uri imageData;
     String imgURL;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageRef = storage.getReference();
     private static final int GALLERY_REQUEST_COD = 1;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,8 +146,18 @@ public class TutorProfile extends Fragment {
                         child("description").getValue(String.class));
                 String imgAdd = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgAdd != null) {
-                    Glide.with(getActivity()).load(dataSnapshot.child("teachers").child(teacherID).
-                            child("imgUrl").getValue(String.class)).into(img);
+                    StorageReference imagesRef = storageRef.child(imgAdd);
+                    System.out.println(imgAdd);
+                    imagesRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            img.setImageBitmap(bmp);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) { }
+                    });
                 }
 
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
