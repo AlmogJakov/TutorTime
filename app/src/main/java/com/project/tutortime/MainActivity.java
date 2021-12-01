@@ -171,9 +171,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadUserEmailToNavigation(FirebaseUser user,View navHeaderView) {
+        TextView firstHello = (TextView)navHeaderView.findViewById(R.id.firstHello);
+        //String hello = "";
+        if(user != null) {
+            mDatabase.child("users").child(user.getUid()).child("fName").addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String first_name = snapshot.getValue(String.class);
+                    firstHello.setText("Hello, "+first_name+"!");
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) { }
+            });
+            //hello = hello.concat("").concat(user.getEmail());
+        }
         TextView EmailHello = (TextView)navHeaderView.findViewById(R.id.emailHello);
         String hello = "";
-        if(user != null) { hello = hello.concat("").concat(user.getEmail()); }
+        hello = hello.concat("").concat(user.getEmail());
         EmailHello.setText(hello);
     }
 }

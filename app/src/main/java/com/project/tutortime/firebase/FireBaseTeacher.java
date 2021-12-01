@@ -5,7 +5,6 @@ import java.util.List;
 
 public class FireBaseTeacher extends firebaseBaseModel{
     FireBaseUser u = new FireBaseUser();
-    String teacherId;
 
     public String addTeacherToDB(String phoneNum, String description, String userid, List<subjectObj> sub, String imgUrl){
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
@@ -15,9 +14,6 @@ public class FireBaseTeacher extends firebaseBaseModel{
         u.getUserRef().child("teacherID").setValue(teacherId);
         myRef.child("teachers").child(teacherId).setValue(teacher);
         return teacherId;
-    }
-    public void writeNewTeacher(String phoneNum, String description, String userid, List<subjectObj> sub, String imgUrl){
-
     }
 
     public void setSubList(String teacherId, ArrayList<subjectObj> listSub){
