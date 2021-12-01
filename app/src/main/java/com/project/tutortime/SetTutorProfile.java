@@ -96,7 +96,6 @@ public class SetTutorProfile extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //fileUploader();
                 String userID = fAuth.getCurrentUser().getUid();
                 String pNum = PhoneNumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
@@ -113,7 +112,10 @@ public class SetTutorProfile extends AppCompatActivity {
                 /* set isTeacher to teacher status (1=teacher,0=customer) */
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
                 /* add the teacher to database */
-                t.addTeacherToDB(pNum, descrip, userID, list, imgURL);
+                /* img=null because there is no need to store url before the image was successfully uploaded */
+                String teacherID = t.addTeacherToDB(pNum, descrip, userID, list, null); // imgURL
+                /* upload the image and ON SUCCESS store url on the teacher database */
+                fileUploader(teacherID);
                 /* were logging in as tutor (tutor status value = 1).
                      pass 'Status' value (1) to MainActivity. */
                 final ArrayList<Integer> arr = new ArrayList<Integer>();
@@ -295,14 +297,18 @@ public class SetTutorProfile extends AppCompatActivity {
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
     }
-    private void fileUploader(){
-        imgURL=System.currentTimeMillis()+"."+getExtension(imageData);
+    private void fileUploader(String teacherID) {
+        /* if no image to upload */
+        if (imageData==null) return;
+        /* else */
+        imgURL = System.currentTimeMillis()+"."+getExtension(imageData);
         StorageReference Ref= FirebaseStorage.getInstance().getReference().child(imgURL);
         Ref.putFile(imageData)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
+                        /* Set the image URL AFTER After the image has been successfully uploaded */
+                        mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
