@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
@@ -121,26 +122,34 @@ public class SetTutorProfile extends AppCompatActivity {
                 /* img=null because there is no need to store url before the image was successfully uploaded */
                 String teacherID = t.addTeacherToDB(pNum, descrip, userID, list, null); // imgURL
                 /* upload the image and ON SUCCESS store url on the teacher database */
-                fileUploader(teacherID);
-                /* were logging in as tutor (tutor status value = 1).
-                     pass 'Status' value (1) to MainActivity. */
-                final ArrayList<Integer> arr = new ArrayList<Integer>();
-                arr.add(1);
-                //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                /* disable returning to SetTutorProfile class after opening main
-                 * activity, since we don't want the user to re-choose Profile
-                 * because the tutor profile data still exists with no use!
-                 * (unless we implementing method to remove the previous data) */
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("status",arr);
-                /* finish last activities to prevent last MainActivity to run with Customer view */
-                finishAffinity();
-                startActivity(intent);
-                finish();
+                /* if no image to upload */
+                if (imageData==null) {
+                    goToTutorMain();
+                } else {
+                    uploadImageAndGoToMain(teacherID);
+                }
             }
         });
+    }
+
+    private void goToTutorMain() {
+        /* were logging in as tutor (tutor status value = 1).
+         * therefore, pass 'Status' value (1) to MainActivity. */
+        final ArrayList<Integer> arr = new ArrayList<Integer>();
+        arr.add(1);
+        //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        /* disable returning to SetTutorProfile class after opening main
+         * activity, since we don't want the user to re-choose Profile
+         * because the tutor profile data still exists with no use!
+         * (unless we implementing method to remove the previous data) */
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("status",arr);
+        /* finish last activities to prevent last MainActivity to run with Customer view */
+        finishAffinity();
+        startActivity(intent);
+        finish();
     }
 
     public void createDialog(ArrayAdapter a) {
@@ -336,20 +345,37 @@ public class SetTutorProfile extends AppCompatActivity {
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
     }
 
-    private void fileUploader(String teacherID) {
-        /* if no image to upload */
-        if (imageData==null) return;
-        /* else */
+    private void uploadImageAndGoToMain(String teacherID) {
+//        /* if no image to upload */
+//        if (imageData==null) {
+//            goToTutorMain();
+//            return;
+//        }
+//        /* else - upload the image and go to main */
         imgURL = System.currentTimeMillis()+"."+getExtension(imageData);
         StorageReference Ref= FirebaseStorage.getInstance().getReference().child(imgURL);
         Ref.putFile(imageData)
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override // onProgress show loading screen
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        /* loading screen section (showing loading screen until data received from FireBase) */
+                        Intent intent = new Intent(SetTutorProfile.this, LoadingScreen.class);
+                        /* prevent going back to this loading screen (from the next screen) */
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        finishAffinity();
+                        startActivity(intent);
+                        /* END loading screen section */
+                        finish();
+                    }
+                })
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
+                    @Override // on success set image URL on tutor database & go to main
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         /* Set the image URL AFTER After the image has been successfully uploaded */
                         mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
                         /* remove the cropped image from gallery */
                         getApplicationContext().getContentResolver().delete(imageData, null, null);
+                        goToTutorMain();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

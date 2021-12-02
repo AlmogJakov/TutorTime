@@ -158,8 +158,7 @@ public class MainActivity extends AppCompatActivity {
                                 then the address of the image will be saved immediately
                                 in the database, but the image will not be uploaded immediately
                                  - so an error will occur and we will get here. */
-
-                                //Toast.makeText(getApplicationContext(), "No Such file or Path found!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Image loading error. No Such Image file or Path found!", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

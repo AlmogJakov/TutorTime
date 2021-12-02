@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,9 +42,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.core.Context;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.project.tutortime.LoadingScreen;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
 import com.project.tutortime.SetTutorProfile;
@@ -55,6 +58,9 @@ import com.project.tutortime.firebase.firebaseBaseModel;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.userObj;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public class TutorProfile extends Fragment {
@@ -71,6 +77,7 @@ public class TutorProfile extends Fragment {
     ArrayList<String> listSub = new ArrayList<>();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     FireBaseUser fbUser = new FireBaseUser();
     FireBaseTeacher fbTeacher = new FireBaseTeacher();
     userObj user_obj;
@@ -169,8 +176,8 @@ public class TutorProfile extends Fragment {
                 String firstName = fname.getText().toString().trim();
                 String lastName = lname.getText().toString().trim();
                 String city = citySpinner.getSelectedItem().toString();
-                if (imageData != null)
-                    fileUploader();
+//                if (imageData != null)
+//                    fileUploader();
                 if (TextUtils.isEmpty(pNum)) {
                     pnumber.setError("PhoneNumber is required.");
                     return;
@@ -196,45 +203,68 @@ public class TutorProfile extends Fragment {
                         teacherID = dataSnapshot.child("teacherID").getValue(String.class);
                         fbteacher.setPhoneNum(teacherID, pNum);
                         fbteacher.setDescription(teacherID, descrip);
-                        System.out.println(imgURL);
-                        if(imgURL != null)
-                            fbteacher.setImgUrl(teacherID, imgURL);
+                        //System.out.println(imgURL);
+                        // TODO: REMOVE PREVIOUS IMAGE
+                        if(imgURL != null) fbteacher.setImgUrl(teacherID, imgURL);
                         fbUser.setFName(userID, firstName);
                         fbUser.setLName(userID, lastName);
                         fbUser.setCity(userID, city);
                     }
-
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
+                    public void onCancelled(DatabaseError databaseError) { }
                 });
-
-
-                /* were logging in as tutor (tutor status value = 1).
-                     pass 'Status' value (1) to MainActivity. */
-                final ArrayList<Integer> arr = new ArrayList<Integer>();
-                arr.add(1);
-                //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                /* disable returning to SetTutorProfile class after opening main
-                 * activity, since we don't want the user to re-choose Profile
-                 * because the tutor profile data still exists with no use!
-                 * (unless we implementing method to remove the previous data) */
-                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("status",arr);
-                /* finish last activities to prevent last MainActivity to run with Customer view */
-                getActivity().finish();
-                startActivity(intent);
-                getActivity().getFragmentManager().popBackStack();
+//                /* were logging in as tutor (tutor status value = 1).
+//                     pass 'Status' value (1) to MainActivity. */
+//                final ArrayList<Integer> arr = new ArrayList<Integer>();
+//                arr.add(1);
+//                //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
+//                Intent intent = new Intent(getActivity(), MainActivity.class);
+//                /* disable returning to SetTutorProfile class after opening main
+//                 * activity, since we don't want the user to re-choose Profile
+//                 * because the tutor profile data still exists with no use!
+//                 * (unless we implementing method to remove the previous data) */
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                intent.putExtra("status",arr);
+//                /* finish last activities to prevent last MainActivity to run with Customer view */
+//                getActivity().finish();
+//                startActivity(intent);
+//                getActivity().getFragmentManager().popBackStack();
+                if (imageData==null) {
+                    goToTutorMain(requireActivity());
+                } else {
+                    uploadImageAndGoToMain(teacherID);
+                }
             }
         });
-
         return root;
     }
 
-    public void onResume() {
-        super.onResume();
+    /* get fragment activity (to do actions on the activity) */
+    private void goToTutorMain(Activity currentActivity) {
+        //Activity currentActivity = getContext();
+        /* were logging in as tutor (tutor status value = 1).
+         * therefore, pass 'Status' value (1) to MainActivity. */
+        final ArrayList<Integer> arr = new ArrayList<Integer>();
+        arr.add(1);
+        //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
+        Intent intent = new Intent(currentActivity, MainActivity.class);
+        /* disable returning to SetTutorProfile class after opening main
+         * activity, since we don't want the user to re-choose Profile
+         * because the tutor profile data still exists with no use!
+         * (unless we implementing method to remove the previous data) */
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("status",arr);
+        /* finish last activities to prevent last MainActivity to run with Customer view */
+        currentActivity.finishAffinity();
+        currentActivity.startActivity(intent);
+        currentActivity.finish();
+    }
+
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         String userID = fAuth.getInstance().getCurrentUser().getUid();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -258,33 +288,25 @@ public class TutorProfile extends Fragment {
 
                 String imgAdd = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgAdd != null) {
-//                    StorageReference imagesRef = storageRef.child(imgAdd);
-//                    System.out.println(imgAdd);
                     StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
                     StorageReference ref = mImageStorage.child(imgAdd);
-                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    ref.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
                         @Override
-                        public void onSuccess(Uri uri) {
-                            Glide.with(getActivity()).load(uri).into(img);
-                        } }).addOnFailureListener(new OnFailureListener() {
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);img.setImageBitmap(bmp);
+                            System.out.println("HEY");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
+                                /* If the user registers as a tutor with an image,
+                                then the address of the image will be saved immediately
+                                in the database, but the image will not be uploaded immediately
+                                 - so an error will occur and we will get here. */
+                            Toast.makeText(getContext(), "Image loading error. No Such Image file or Path found!", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
-
-//                    imagesRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                        @Override
-//                        public void onSuccess(byte[] bytes) {
-//                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                            img.setImageBitmap(bmp);
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception exception) { }
-//                    });
-//                }
 
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
                         child("sub").getChildren()) {
@@ -299,10 +321,8 @@ public class TutorProfile extends Fragment {
                 subjectList.setAdapter(a);
                 a.notifyDataSetChanged();
             }
-
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
     }
 
@@ -339,33 +359,26 @@ public class TutorProfile extends Fragment {
                 String type = typeSpinner.getSelectedItem().toString().trim();
                 if (price.isEmpty()) {
                     priceEdit.setError("Price is required.");
-                    return;
-                }
+                    return; }
                 if (listSub.contains(nameSub)) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 if (nameSub == "Select subject") {
                     Toast.makeText(getActivity(), "Subject is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 if (type == "Select learning type") {
                     Toast.makeText(getActivity(), "Learning type is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 list.add(s);
                 updateList();
                 listSub.add(nameSub);
                 d.dismiss();
             }
-
         });
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                d.dismiss();
-            }
+            public void onClick(View view) { d.dismiss(); }
         });
         d.show();
     }
@@ -408,21 +421,17 @@ public class TutorProfile extends Fragment {
                 String type = typeSpinner.getSelectedItem().toString().trim();
                 if (price.isEmpty()) {
                     priceEdit.setError("Price is required.");
-                    return;
-                }
+                    return; }
                 if (nameSub.isEmpty() || nameSub.equals(subjectObj.SubName.HINT)) {
                     Toast.makeText(getActivity(), "Subject is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 if (type.isEmpty() || type.equals(subjectObj.Type.HINT)) {
                     Toast.makeText(getActivity(), "Learning type is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 /* if the subject already exists BUT IN THE ENTRY THAT CURRENTLY EDITING - IT'S OK!  */
                 if (listSub.contains(nameSub) && nameSub != currSub.getsName()) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 /* remove the last entry (before the edit) */
                 list.remove(currSub);
@@ -430,7 +439,6 @@ public class TutorProfile extends Fragment {
                 list.add(s);
                 updateList();
                 listSub.add(nameSub);
-
                 d.dismiss();
             }
         });
@@ -464,7 +472,6 @@ public class TutorProfile extends Fragment {
                 subjectList.setAdapter(a);
                 a.notifyDataSetChanged();
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -475,33 +482,85 @@ public class TutorProfile extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_COD && resultCode == Activity.RESULT_OK && data != null) {
-            imageData = data.getData();
-            img.setImageURI(imageData);
+            //imageData = data.getData();
+            //img.setImageURI(imageData);
+            try {
+                imageData = data.getData();
+                /* crop the image bmp to square */
+                InputStream imageStream = getContext().getContentResolver().openInputStream(imageData);
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                selectedImage = getResizedBitmap(selectedImage, 200);// 400 is for example, replace with desired size
+                /* show the new image on screen */
+                //img.setImageResource(0); // clear image view
+                img.setImageBitmap(selectedImage);
+                /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), selectedImage, "Title", null);
+                imageData = Uri.parse(path);
+                /* Note that a new image has been created in the gallery
+                 * but the image will be deleted after uploading it to the server.
+                 * (In the 'fileUploader' method below) */
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
+    private Bitmap getResizedBitmap(Bitmap bitmap, int maxSize) {
+        int width  = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int newWidth = (height > width) ? width : height;
+        int newHeight = (height > width)? height - ( height - width) : height;
+        int cropW = (width - height) / 2;
+        cropW = (cropW < 0)? 0: cropW;
+        int cropH = (height - width) / 2;
+        cropH = (cropH < 0)? 0: cropH;
+        Bitmap cropImg = Bitmap.createBitmap(bitmap, cropW, cropH, newWidth, newHeight);
+        Bitmap resizedImg = Bitmap.createScaledBitmap(bitmap, maxSize, maxSize, false);
+        return resizedImg;
+    }
+
     private String getExtension(Uri uri) {
-        //.getApplicationContext()
         ContentResolver cr = getActivity().getApplicationContext().getContentResolver();
         MimeTypeMap mimeTypeMap = MimeTypeMap.getSingleton();
         return mimeTypeMap.getExtensionFromMimeType(cr.getType(uri));
     }
 
-    private void fileUploader() {
-        imgURL = System.currentTimeMillis() + "." + getExtension(imageData);
-        StorageReference Ref = FirebaseStorage.getInstance().getReference().child(imgURL);
+    private void uploadImageAndGoToMain(String teacherID) {
+        /* get fragment activity (to do actions on the activity) */
+        Activity currentActivity = requireActivity();
+        imgURL = System.currentTimeMillis()+"."+getExtension(imageData);
+        StorageReference Ref= FirebaseStorage.getInstance().getReference().child(imgURL);
         Ref.putFile(imageData)
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override // onProgress show loading screen
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot snapshot) {
+                        /* loading screen section (showing loading screen until data received from FireBase) */
+                        Intent intent = new Intent(currentActivity, LoadingScreen.class);
+                        /* prevent going back to this loading screen (from the next screen) */
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                        currentActivity.finishAffinity();
+                        currentActivity.startActivity(intent);
+                        /* END loading screen section */
+                        currentActivity.finish();
+                    }
+                })
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
+                    @Override // on success set image URL on tutor database & go to main
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
+                        /* Set the image URL AFTER After the image has been successfully uploaded */
+                        mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
+                        /* remove the cropped image from gallery */
+                        currentActivity.getContentResolver().delete(imageData, null, null);
+                        /* pass the activity forward */
+                        goToTutorMain(currentActivity);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getActivity(), "Upload imageFailed", Toast.LENGTH_LONG).show();
-                    }
+                        Toast.makeText(getContext(), "Upload image Failed", Toast.LENGTH_LONG).show(); }
                 });
     }
 }
