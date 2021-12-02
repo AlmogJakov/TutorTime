@@ -36,6 +36,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,6 +63,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class TutorProfile extends Fragment {
 
@@ -287,25 +289,32 @@ public class TutorProfile extends Fragment {
                         child("description").getValue(String.class));
 
                 String imgAdd = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
-                if (imgAdd != null) {
-                    StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
-                    StorageReference ref = mImageStorage.child(imgAdd);
-                    ref.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);img.setImageBitmap(bmp);
-                            System.out.println("HEY");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                                /* If the user registers as a tutor with an image,
-                                then the address of the image will be saved immediately
-                                in the database, but the image will not be uploaded immediately
-                                 - so an error will occur and we will get here. */
-                            Toast.makeText(getContext(), "Image loading error. No Such Image file or Path found!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                if (imgAdd != null) { /* The image exists! */
+                    /* The image has already been downloaded from the server for display
+                     * in the navigation bar, so take the existing image. */
+                    NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
+                    View navHeaderView = navigationView.getHeaderView(0);
+                    ImageView prof = (ImageView)navHeaderView.findViewById(R.id.imageView);
+                    img.setImageDrawable(prof.getDrawable());
+
+//                    StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
+//                    StorageReference ref = mImageStorage.child(imgAdd);
+//                    ref.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                        @Override
+//                        public void onSuccess(byte[] bytes) {
+//                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                            img.setImageBitmap(bmp);
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception exception) {
+//                                /* If the user registers as a tutor with an image,
+//                                then the address of the image will be saved immediately
+//                                in the database, but the image will not be uploaded immediately
+//                                 - so an error will occur and we will get here. */
+//                            Toast.makeText(getContext(), "Image loading error. No Such Image file or Path found!", Toast.LENGTH_SHORT).show();
+//                        }
+//                    });
                 }
 
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).

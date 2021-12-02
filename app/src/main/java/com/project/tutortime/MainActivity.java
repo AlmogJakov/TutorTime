@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                     /* if the link exists (case of Tutor with no profile image) */
                     if (imageLink!=null&&imageLink.getValue()!=null) {
                         System.out.println(imageLink.getValue());
+//                        ImageView profile = (ImageView)navHeaderView.findViewById(R.id.imageView);
                         ImageView profile = (ImageView)navHeaderView.findViewById(R.id.imageView);
                         StorageReference imagesRef = storageRef.child(imageLink.getValue().toString());
                         /* allow 1MB (1024*1024) KB download */
