@@ -1,6 +1,5 @@
 package com.project.tutortime.ui.tutorprofile;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
@@ -25,7 +24,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,7 +32,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
@@ -44,7 +41,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.core.Context;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -52,11 +48,9 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.LoadingScreen;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
-import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.databinding.FragmentTutorProfileBinding;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
-import com.project.tutortime.firebase.firebaseBaseModel;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.userObj;
 
@@ -64,7 +58,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 public class TutorProfile extends Fragment {
 
@@ -86,6 +79,10 @@ public class TutorProfile extends Fragment {
     userObj user_obj;
     Uri imageData;
     String imgURL;
+
+    public ImageView getImageDisplay() {
+        return img;
+    }
 
     private static final int GALLERY_REQUEST_COD = 1;
 

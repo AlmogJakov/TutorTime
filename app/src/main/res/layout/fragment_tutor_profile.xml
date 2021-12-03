@@ -7,10 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.tutorprofile.TutorProfile">
 
+<!--    android:scrollbarFadeDuration="0"-->
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
+        android:fadeScrollbars="false"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -29,7 +33,7 @@
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal|center_vertical"
                 app:layout_constraintTop_toTopOf="parent">
                 <RelativeLayout
@@ -76,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintWidth_percent="0.7"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -155,6 +159,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="20dp"
                 android:textColorHint="#808080"
                 app:layout_constraintTop_toBottomOf="@+id/name"
                 >

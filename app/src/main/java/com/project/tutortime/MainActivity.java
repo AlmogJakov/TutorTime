@@ -1,9 +1,12 @@
 package com.project.tutortime;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
@@ -34,11 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.databinding.ActivityMainBinding;
-import com.project.tutortime.firebase.teacherObj;
+import com.project.tutortime.ui.tutorprofile.TutorProfile;
 
-
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
 
         setSupportActionBar(binding.appBarMain.toolbar);
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
