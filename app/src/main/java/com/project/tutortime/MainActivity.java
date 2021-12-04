@@ -2,6 +2,7 @@ package com.project.tutortime;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
 import com.project.tutortime.databinding.ActivityMainBinding;
 import com.project.tutortime.ui.tutorprofile.TutorProfile;
 
@@ -55,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        /* DISABLE landscape orientation  */
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_new_tutor_profile, R.id.nav_tutor_profile, R.id.nav_search, R.id.nav_notifications)
+                R.id.nav_home, R.id.nav_new_tutor_profile, R.id.nav_tutor_profile, R.id.nav_search, R.id.nav_notifications, R.id.logout)
                 .setOpenableLayout(drawer).build();
 
         /* get the array list contains the status of the user (0=customer/1=tutor) */
@@ -107,16 +112,26 @@ public class MainActivity extends AppCompatActivity {
         /* END Adjust the view to the user status */
 
 
+        nav_Menu.findItem(R.id.logout).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(),Login.class));
+                finish();
+                return false;
+            }
+        });
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
-    public void logout(View view) {
-        FirebaseAuth.getInstance().signOut();
-        startActivity(new Intent(getApplicationContext(),Login.class));
-        finish();
-    }
+//    public void logout(View view) {
+//        FirebaseAuth.getInstance().signOut();
+//        startActivity(new Intent(getApplicationContext(),Login.class));
+//        finish();
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

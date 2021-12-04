@@ -3,6 +3,7 @@ package com.project.tutortime;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -20,6 +21,9 @@ public class LoadingScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loading_screen);
+
+        /* DISABLE landscape orientation  */
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
 //        /* Unnecessary teacher remover
 //        * Should be removed! for developers ONLY!

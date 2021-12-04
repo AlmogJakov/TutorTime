@@ -173,7 +173,7 @@
                     android:padding="10dp"
                     android:textColorHint="#808080"
                     android:background="#00000000"
-                    android:text="0300 1234567"
+                    android:text=""
                     android:textSize="15sp"
                     android:inputType="phone"
                     />

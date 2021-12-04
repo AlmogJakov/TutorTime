@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -67,6 +68,10 @@ public class SetTutorProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_tutor_profile);
+
+        /* DISABLE landscape orientation  */
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         delImage = findViewById(R.id.deleteImage);

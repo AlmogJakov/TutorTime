@@ -1,28 +1,28 @@
 <resources>
     <string name="app_name">TutorTime</string>
-    <string name="navigation_drawer_open">פתח את כרטיסיית הניווט</string>
-    <string name="navigation_drawer_close">סגור את כרטיסיית הניווט</string>
-    <string name="nav_header_title">ברוך הבא אל Tutor Time!</string>
-    <string name="nav_header_subtitle">אימייל</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Welcome to Tutor Time!</string>
+    <string name="nav_header_subtitle">Email</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">הגדרות</string>
-    <string name="cities_hint">ערים</string>
-    <string name="menu_home">מסך הבית</string>
-    <string name="menu_teacher_card">כרטיס המורה שלי</string>
-    <string name="menu_new_tutor_profile">צור כרטיס מורה</string>
-    <string name="menu_search">חיפוש</string>
-    <string name="menu_notifications">התראות</string>
-    <string name="title_activity_welcome">שלום</string>
+    <string name="action_settings">Settings</string>
+    <string name="cities_hint">Settings</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_teacher_card">My Tutor Profile</string>
+    <string name="menu_new_tutor_profile">Create Tutor Profile</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_notifications">Notifications</string>
+    <string name="title_activity_welcome">Welcome</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">הבא</string>
-    <string name="previous">הקודם</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <string name="sign_up">הירשם</string>
+    <string name="sign_up">Sign Up</string>
 
     <string-array name="Options1">
         <item>Select subject</item>
