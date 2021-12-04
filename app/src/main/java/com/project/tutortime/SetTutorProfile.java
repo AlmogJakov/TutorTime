@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -40,12 +42,15 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.subjectObj;
 
+import org.w3c.dom.Text;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SetTutorProfile extends AppCompatActivity {
+    TextView delImage;
     EditText PhoneNumber, description;
     Button profile, addSub, addImage;
     ImageView img;
@@ -64,6 +69,7 @@ public class SetTutorProfile extends AppCompatActivity {
         setContentView(R.layout.activity_set_tutor_profile);
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        delImage = findViewById(R.id.deleteImage);
         PhoneNumber = findViewById(R.id.editPhoneNumber);
         description = findViewById(R.id.editDescription);
         addSub = findViewById(R.id.editSubject);
@@ -74,6 +80,26 @@ public class SetTutorProfile extends AppCompatActivity {
         ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
+
+        delImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
+                    photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // File deleted successfully
+                            Log.d("Picture", "onSuccess: deleted file");
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Uh-oh, an error occurred!
+                            Log.d("Picture", "onFailure: did not delete file");
+                        }
+                    });
+                }
+        });
 
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override

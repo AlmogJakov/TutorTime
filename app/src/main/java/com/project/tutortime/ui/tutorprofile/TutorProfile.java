@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,9 +75,6 @@ public class TutorProfile extends Fragment {
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    FireBaseUser fbUser = new FireBaseUser();
-    FireBaseTeacher fbTeacher = new FireBaseTeacher();
-    userObj user_obj;
     Uri imageData;
     String imgURL;
 
@@ -145,6 +143,26 @@ public class TutorProfile extends Fragment {
         citySpinner.setSelection(0); //display hint
         /* END Select City Spinner Code () */
 
+//        delImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                StorageReference imgRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
+//                imgRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // File deleted successfully
+//                        Log.d("Picture", "onSuccess: deleted file");
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Uh-oh, an error occurred!
+//                        Log.d("Picture", "onFailure: did not delete file");
+//                    }
+//                });
+//            }
+//        });
+
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -163,12 +181,79 @@ public class TutorProfile extends Fragment {
         updateImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, GALLERY_REQUEST_COD);
+                if (imgURL != null) {
+                    final Dialog d = new Dialog(getActivity());
+                    Button editImage, deleteImage;
+                    d.setContentView(R.layout.image_dialog);
+                    //d.setTitle("Add Subject");
+                    d.setCancelable(true);
+                    editImage = d.findViewById(R.id.btnEditImage);
+                    deleteImage = d.findViewById(R.id.DeleteImage);
+                    editImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent, GALLERY_REQUEST_COD);
+                            d.dismiss();
+                        }
+
+                    });
+
+                    deleteImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FireBaseTeacher fbteacher = new FireBaseTeacher();
+                            new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                                    System.out.println(imgURL);
+                                    if (imgURL != null) {
+                                        fbteacher.setImgUrl(teacherID, null);
+                                        img.setImageDrawable(null);
+                                        img.setBackgroundResource(R.mipmap.ic_launcher_round);
+                                        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                                        StorageReference storageReference = firebaseStorage.getReference(imgURL);
+                                        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.e("Picture", "#deleted");
+                                                imgURL=null;
+                                            }
+                                        });
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            });
+                            d.dismiss();
+                        }
+                    });
+                    d.show();
+                }
+                else{
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, GALLERY_REQUEST_COD);
+                }
             }
+
         });
+
+
+
+
+                        /////////////////////////////////////////////////////
+//                Intent intent = new Intent();
+//                intent.setType("image/*");
+//                intent.setAction(Intent.ACTION_GET_CONTENT);
+//                startActivityForResult(intent, GALLERY_REQUEST_COD);
+
 
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -289,8 +374,8 @@ public class TutorProfile extends Fragment {
                 description.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("description").getValue(String.class));
 
-                String imgAdd = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
-                if (imgAdd != null) { /* The image exists! */
+                 imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
+                if (imgURL != null) { /* The image exists! */
                     /* The image has already been downloaded from the server for display
                      * in the navigation bar, so take the existing image. */
                     NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
@@ -317,7 +402,6 @@ public class TutorProfile extends Fragment {
 //                        }
 //                    });
                 }
-
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
                         child("sub").getChildren()) {
                     subjectObj sub = new subjectObj(subSnapsot.child("sName").getValue(String.class),
@@ -572,5 +656,7 @@ public class TutorProfile extends Fragment {
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(), "Upload image Failed", Toast.LENGTH_LONG).show(); }
                 });
+
+
     }
 }
