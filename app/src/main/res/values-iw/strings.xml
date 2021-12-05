@@ -1,0 +1,132 @@
+<resources>
+<string name="app_name">TutorTime</string>
+<string name="navigation_drawer_open">פתח את כרטיסיית הניווט</string>
+<string name="navigation_drawer_close">סגור את כרטיסיית הניווט</string>
+<string name="nav_header_title">ברוך הבא אל Tutor Time!</string>
+<string name="nav_header_subtitle">אימייל</string>
+<string name="nav_header_desc">Navigation header</string>
+<string name="action_settings">הגדרות</string>
+<string name="cities_hint">ערים</string>
+<string name="menu_home">מסך הבית</string>
+<string name="menu_teacher_card">כרטיס המורה שלי</string>
+<string name="menu_new_tutor_profile">צור כרטיס מורה</string>
+<string name="menu_search">חיפוש</string>
+<string name="menu_notifications">התראות</string>
+<string name="title_activity_welcome">שלום</string>
+<!-- Strings used for fragments for navigation -->
+<string name="first_fragment_label">First Fragment</string>
+<string name="second_fragment_label">Second Fragment</string>
+<string name="next">הבא</string>
+<string name="previous">הקודם</string>
+<string name="hello">שלום</string>
+<string name="logout">התנתק</string>
+
+<string name="hello_first_fragment">Hello first fragment</string>
+<string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+<string name="sign_up">הירשם</string>
+
+<string-array name="Options1">
+    <item>Select subject</item>
+    <item>Math</item>
+    <item>English</item>
+    <item>physics</item>
+    <item>Biology</item>
+    <item>Literature</item>
+    <item>history</item>
+    <item>chemistry</item>
+    <item>music</item>
+    <item>Computer Science</item>
+    <item>citizenship</item>
+    <item>Bible</item>
+</string-array>
+
+<style name="Dialog" parent="Theme.AppCompat.Dialog">
+    <item name="android:windowNoTitle">false</item>
+    <item name="android:windowIsFloating">true</item>
+</style>
+
+<string-array name="Options2">
+    <item>Select learning form</item>
+    <item>online</item>
+    <item>frontal</item>
+    <item>online/frontal</item>
+</string-array>
+
+<string-array name="Cities">
+    <item>Afula</item>
+    <item>Akko</item>
+    <item>Arad</item>
+    <item>Ariel</item>
+    <item>Ashdod</item>
+    <item>Ashkelon</item>
+    <item>Baqa-al-Gharbiyye</item>
+    <item>Bat-Yam</item>
+    <item>Beer-Sheva</item>
+    <item>Beit-Shean</item>
+    <item>Beit-Shemesh</item>
+    <item>Betar-Illit</item>
+    <item>Bnei-Berak</item>
+    <item>Dimona</item>
+    <item>Eilat</item>
+    <item>Elad</item>
+    <item>Givatayim</item>
+    <item>Hadera</item>
+    <item>Haifa</item>
+    <item>Harish</item>
+    <item>Herzliya</item>
+    <item>Hod-HaSharon</item>
+    <item>Holon</item>
+    <item>Jerusalem</item>
+    <item>Karmiel</item>
+    <item>Kfar-Sava</item>
+    <item>Kiryat-Ata</item>
+    <item>Kiryat-Bialik</item>
+    <item>Kiryat-Gat</item>
+    <item>Kiryat-Malachi</item>
+    <item>Kiryat-Motzkin</item>
+    <item>Kiryat-Ono</item>
+    <item>Kiryat-Shemone</item>
+    <item>Kiryat-Yam</item>
+    <item>Lod</item>
+    <item>Maale-Adumim</item>
+    <item>Maalot-Tarshiha</item>
+    <item>Migdal-HaEmek</item>
+    <item>Modiin</item>
+    <item>Nahariya</item>
+    <item>Nazareth</item>
+    <item>Nes-Ziona</item>
+    <item>Nesher</item>
+    <item>Netanya</item>
+    <item>Netivot</item>
+    <item>Nof-Hagalil</item>
+    <item>Ofakim</item>
+    <item>Or-Akiva</item>
+    <item>Or-Yehuda</item>
+    <item>Petah-Tikva</item>
+    <item>Qalansawe</item>
+    <item>Raanana</item>
+    <item>Rahat</item>
+    <item>Ramat-Hasharon</item>
+    <item>Ramat-Gan</item>
+    <item>Ramla</item>
+    <item>Rehovot</item>
+    <item>Rishon-Lezion</item>
+    <item>Rosh-Haayin</item>
+    <item>Sakhnin</item>
+    <item>Sderot</item>
+    <item>Shefaram</item>
+    <item>Taibeh</item>
+    <item>Tamra</item>
+    <item>Tel-Aviv</item>
+    <item>Tiberias</item>
+    <item>Tira</item>
+    <item>Tirat-Carmel</item>
+    <item>Tsfat</item>
+    <item>Umm</item>
+    <item>Yavne</item>
+    <item>Yehud-Monosson</item>
+    <item>Yokneam</item>
+
+</string-array>
+</resources>

@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -49,6 +50,7 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.LoadingScreen;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
+import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.databinding.FragmentTutorProfileBinding;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
@@ -56,7 +58,10 @@ import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.userObj;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -74,7 +79,7 @@ public class TutorProfile extends Fragment {
     ArrayList<String> listSub = new ArrayList<>();
     FirebaseAuth fAuth = FirebaseAuth.getInstance();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     Uri imageData;
     String imgURL;
 
@@ -127,7 +132,7 @@ public class TutorProfile extends Fragment {
             @Override
             public int getCount() { return super.getCount(); }
             @Override /* Disable selection of the Hint (first selection) */
-            public boolean isEnabled(int position) { return ((position == 0) ? false : true); }
+            public boolean isEnabled(int position) { return (position != 0); }
             @Override /* Set the color of the Hint (first selection) to Grey */
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
@@ -258,7 +263,7 @@ public class TutorProfile extends Fragment {
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = fAuth.getInstance().getCurrentUser().getUid();
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String pNum = pnumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
                 String firstName = fname.getText().toString().trim();
@@ -266,16 +271,23 @@ public class TutorProfile extends Fragment {
                 String city = citySpinner.getSelectedItem().toString();
 //                if (imageData != null)
 //                    fileUploader();
-                if (TextUtils.isEmpty(pNum)) {
-                    pnumber.setError("PhoneNumber is required.");
-                    return;
-                }
                 if (TextUtils.isEmpty(firstName)) {
                     fname.setError("First name is required.");
                     return;
                 }
                 if (TextUtils.isEmpty(lastName)) {
                     lname.setError("Last name is required.");
+                    return;
+                }
+                if (TextUtils.isEmpty(pNum)) {
+                    pnumber.setError("PhoneNumber is required.");
+                    return;
+                }
+                if (citySpinner.getSelectedItemPosition()==0) {
+                    TextView errorText = (TextView)citySpinner.getSelectedView();
+                    errorText.setError("City is required.");
+                    Toast.makeText(getActivity(), "City is required.",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 if (list.isEmpty()) {
@@ -353,7 +365,7 @@ public class TutorProfile extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String userID = fAuth.getInstance().getCurrentUser().getUid();
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -587,15 +599,44 @@ public class TutorProfile extends Fragment {
                 /* show the new image on screen */
                 //img.setImageResource(0); // clear image view
                 img.setImageBitmap(selectedImage);
+
+
+
+
+
+
                 /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), selectedImage, "Title", null);
-                imageData = Uri.parse(path);
+                if (path!=null) imageData = Uri.parse(path);
+                else {
+                    imageData = null;
+                    Toast.makeText(getActivity(), "Upload image Failed", Toast.LENGTH_LONG).show();
+                }
+
+
+//                File tempDir= Environment.getExternalStorageDirectory();
+//                tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
+//                tempDir.mkdir();
+//                File tempFile = File.createTempFile("some", ".jpg", tempDir);
+//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//                byte[] bitmapData = bytes.toByteArray();
+//                //write the bytes in file
+//                FileOutputStream fos = new FileOutputStream(tempFile);
+//                fos.write(bitmapData);
+//                fos.flush();
+//                fos.close();
+//                imageData = Uri.fromFile(tempFile);
+
+
                 /* Note that a new image has been created in the gallery
                  * but the image will be deleted after uploading it to the server.
                  * (In the 'fileUploader' method below) */
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -646,7 +687,7 @@ public class TutorProfile extends Fragment {
                         /* Set the image URL AFTER After the image has been successfully uploaded */
                         mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
                         /* remove the cropped image from gallery */
-                        currentActivity.getContentResolver().delete(imageData, null, null);
+                        if (imageData!=null) currentActivity.getContentResolver().delete(imageData, null, null);
                         /* pass the activity forward */
                         goToTutorMain(currentActivity);
                     }
@@ -656,7 +697,6 @@ public class TutorProfile extends Fragment {
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(), "Upload image Failed", Toast.LENGTH_LONG).show(); }
                 });
-
 
     }
 }

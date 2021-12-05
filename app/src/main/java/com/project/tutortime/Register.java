@@ -63,7 +63,7 @@ public class Register extends AppCompatActivity {
             @Override
             public int getCount() { return super.getCount(); }
             @Override /* Disable selection of the Hint (first selection) */
-            public boolean isEnabled(int position) { return ((position == 0) ? false : true); }
+            public boolean isEnabled(int position) { return (position != 0); }
             @Override /* Set the color of the Hint (first selection) to Grey */
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);

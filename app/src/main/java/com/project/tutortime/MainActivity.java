@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
     FirebaseAuth fAuth;
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
 
@@ -194,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     String first_name = snapshot.getValue(String.class);
-                    firstHello.setText("Hello, "+first_name+"!");
+                    firstHello.setText(getResources().getString(R.string.hello)+", "+first_name+"!");
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) { }

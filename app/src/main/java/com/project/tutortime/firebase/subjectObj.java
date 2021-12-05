@@ -16,9 +16,9 @@ public class subjectObj implements Serializable {
         ComputerScience("Computer Science"),
         Citizenship("Citizenship"),
         Bible("Bible");
-        private String friendlyName;
+        private final String friendlyName;
 
-        private SubName(String friendlyName){
+        SubName(String friendlyName){
             this.friendlyName = friendlyName;
         }
 
@@ -31,9 +31,9 @@ public class subjectObj implements Serializable {
         online("online"),
         frontal("frontal"),
         onlinefrontal("online/frontal");
-        private String friendlyName;
+        private final String friendlyName;
 
-        private Type(String friendlyName){
+        Type(String friendlyName){
             this.friendlyName = friendlyName;
         }
 

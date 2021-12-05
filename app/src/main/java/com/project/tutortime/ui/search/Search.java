@@ -87,8 +87,7 @@ public class Search extends Fragment {
                             list.add(which);
                             Collections.sort(list);
                         } else {
-                            int i = list.indexOf(which);
-                            list.remove(i);
+                            list.remove((Integer) which);
                         }
                     }
                 });

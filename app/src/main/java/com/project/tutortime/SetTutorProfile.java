@@ -5,18 +5,22 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -30,6 +34,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +51,10 @@ import com.project.tutortime.firebase.subjectObj;
 import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -54,6 +62,7 @@ public class SetTutorProfile extends AppCompatActivity {
     TextView delImage;
     EditText PhoneNumber, description;
     Button profile, addSub, addImage;
+    //Spinner citySpinner;
     ImageView img;
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
@@ -74,37 +83,87 @@ public class SetTutorProfile extends AppCompatActivity {
 
         fAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        delImage = findViewById(R.id.deleteImage);
+        //delImage = findViewById(R.id.deleteImage);
         PhoneNumber = findViewById(R.id.editPhoneNumber);
-        description = findViewById(R.id.editDescription);
-        addSub = findViewById(R.id.editSubject);
-        profile = findViewById(R.id.buttonProfile);
-        addImage = findViewById(R.id.btnAddImage);
+        TextInputLayout descriptionInputLayout = findViewById(R.id.editDescription);
+        description = descriptionInputLayout.getEditText();
+        addSub = findViewById(R.id.addSubject);
+        profile = findViewById(R.id.btnSaveProfile);
+        addImage = findViewById(R.id.btnUpdateImage);
         img = findViewById(R.id.imageView);
+        //citySpinner = findViewById(R.id.spinnerCity);
         subjectList = (ListView) findViewById(R.id.subList);
         ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
 
-        delImage.setOnClickListener(new View.OnClickListener() {
+
+//        PhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus) PhoneNumber.setHint("");
+//                else PhoneNumber.setHint("Enter Phone Number");
+//            }
+//        });
+
+
+        PhoneNumber.setHint("Enter Phone Number");
+        PhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                    StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
-                    photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            // File deleted successfully
-                            Log.d("Picture", "onSuccess: deleted file");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Uh-oh, an error occurred!
-                            Log.d("Picture", "onFailure: did not delete file");
-                        }
-                    });
-                }
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) PhoneNumber.setHint("");
+                else PhoneNumber.setHint("Enter Phone Number");
+            }
         });
+
+
+//        /* Select City Spinner Code () */
+//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
+//            @Override
+//            public View getView(int position, View convertView, ViewGroup parent) {
+//                View v = super.getView(position, convertView, parent);
+//                if (position == 0) { // Hint
+//                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
+//                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
+//                return v; }
+//            @Override
+//            public int getCount() { return super.getCount(); }
+//            @Override /* Disable selection of the Hint (first selection) */
+//            public boolean isEnabled(int position) { return ((position == 0) ? false : true); }
+//            @Override /* Set the color of the Hint (first selection) to Grey */
+//            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+//                View view = super.getDropDownView(position, convertView, parent);
+//                TextView tv = (TextView)view;
+//                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
+//                return view; }
+//        };
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        String[] cities = getResources().getStringArray(R.array.Cities);
+//        adapter.add("Choose City");
+//        adapter.addAll(cities);
+//        citySpinner.setAdapter(adapter);
+//        citySpinner.setSelection(0); //display hint
+//        /* END Select City Spinner Code () */
+
+//        delImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                    StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
+//                    photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                        @Override
+//                        public void onSuccess(Void aVoid) {
+//                            // File deleted successfully
+//                            Log.d("Picture", "onSuccess: deleted file");
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception exception) {
+//                            // Uh-oh, an error occurred!
+//                            Log.d("Picture", "onFailure: did not delete file");
+//                        }
+//                    });
+//                }
+//        });
 
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,6 +200,13 @@ public class SetTutorProfile extends AppCompatActivity {
                     PhoneNumber.setError("PhoneNumber is required.");
                     return;
                 }
+//                if (citySpinner.getSelectedItemPosition()==0) {
+//                    TextView errorText = (TextView)citySpinner.getSelectedView();
+//                    errorText.setError("City is required.");
+//                    Toast.makeText(SetTutorProfile.this, "City is required.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 if (list.isEmpty()) {
                     Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
                             Toast.LENGTH_SHORT).show();
@@ -333,7 +399,7 @@ public class SetTutorProfile extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == GALLERY_REQUEST_COD && resultCode == RESULT_OK && data != null) {
+        if (requestCode == GALLERY_REQUEST_COD && resultCode == Activity.RESULT_OK && data != null) {
             try {
                 imageData = data.getData();
                 /* crop the image bmp to square */
@@ -342,15 +408,38 @@ public class SetTutorProfile extends AppCompatActivity {
                 selectedImage = getResizedBitmap(selectedImage, 200);// 400 is for example, replace with desired size
                 /* show the new image on screen */
                 img.setImageBitmap(selectedImage);
+
+
+//                File tempDir= Environment.getExternalStorageDirectory();
+//                tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
+//                tempDir.mkdir();
+//                File tempFile = File.createTempFile("some", ".jpg", tempDir);
+//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+//                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+//                byte[] bitmapData = bytes.toByteArray();
+//                //write the bytes in file
+//                FileOutputStream fos = new FileOutputStream(tempFile);
+//                fos.write(bitmapData);
+//                fos.flush();
+//                fos.close();
+//                imageData = Uri.fromFile(tempFile);
+
+
                 /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                 String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), selectedImage, "Title", null);
-                imageData = Uri.parse(path);
+                if (path!=null) imageData = Uri.parse(path);
+                else {
+                    imageData = null;
+                    Toast.makeText(getApplicationContext(), "Upload image Failed", Toast.LENGTH_LONG).show();
+                }
                 /* Note that a new image has been created in the gallery
                  * but the image will be deleted after uploading it to the server.
                  * (In the 'fileUploader' method below) */
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -405,7 +494,7 @@ public class SetTutorProfile extends AppCompatActivity {
                         /* Set the image URL AFTER After the image has been successfully uploaded */
                         mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
                         /* remove the cropped image from gallery */
-                        getApplicationContext().getContentResolver().delete(imageData, null, null);
+                        if (imageData!=null) getApplicationContext().getContentResolver().delete(imageData, null, null);
                         goToTutorMain();
                     }
                 })

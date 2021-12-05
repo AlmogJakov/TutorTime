@@ -23,8 +23,8 @@ import java.util.List;
 
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder>{
 
-    private Context mContext;
-    private List<Notifications> mNotifications;
+    private final Context mContext;
+    private final List<Notifications> mNotifications;
 
 
     public NotificationsAdapter(Context mContext, List<Notifications> mNotifications) {
