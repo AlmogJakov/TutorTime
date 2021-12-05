@@ -46,6 +46,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
+import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.subjectObj;
 
 import org.w3c.dom.Text;
@@ -59,7 +60,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class SetTutorProfile extends AppCompatActivity {
-    TextView delImage;
     EditText PhoneNumber, description;
     Button profile, addSub, addImage;
     //Spinner citySpinner;
@@ -72,6 +72,8 @@ public class SetTutorProfile extends AppCompatActivity {
     String imgURL;
     private DatabaseReference mDatabase;
     private static final int GALLERY_REQUEST_COD = 1;
+    boolean del = false;
+    //String teacherID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,43 +170,78 @@ public class SetTutorProfile extends AppCompatActivity {
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(intent, GALLERY_REQUEST_COD);
+                if (del == true) {
+                    final Dialog d = new Dialog(SetTutorProfile.this);
+                    Button editImage, deleteImage;
+                    d.setContentView(R.layout.image_dialog);
+                    //d.setTitle("Add Subject");
+                    d.setCancelable(true);
+                    editImage = d.findViewById(R.id.btnEditImage);
+                    deleteImage = d.findViewById(R.id.DeleteImage);
+                    editImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent();
+                            intent.setType("image/*");
+                            intent.setAction(Intent.ACTION_GET_CONTENT);
+                            startActivityForResult(intent, GALLERY_REQUEST_COD);
+                            del = true;
+                            d.dismiss();
+                        }
+                    });
+
+                    deleteImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            img.setImageDrawable(null);
+                            img.setBackgroundResource(R.mipmap.ic_launcher_round);
+                            del = false;
+                            d.dismiss();
+                        }
+                    });
+                    d.show();
+                }
+                else{
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent, GALLERY_REQUEST_COD);
+                    del = true;
+                }
             }
         });
 
         subjectList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
-                createEditDialog(a,s);
-            }
-        });
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
+            createEditDialog(a,s);
+        }
+    });
 
         addSub.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                createDialog(a);
-            }
-        });
+        @Override
+        public void onClick(View v) {
+            createDialog(a);
+        }
+    });
 
         profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String userID = fAuth.getCurrentUser().getUid();
-                String pNum = PhoneNumber.getText().toString().trim();
-                String descrip = description.getText().toString().trim();
-                if (TextUtils.isEmpty(pNum)) {
-                    PhoneNumber.setError("PhoneNumber is required.");
-                    return;
-                }
+        @Override
+        public void onClick(View v) {
+            String userID = fAuth.getCurrentUser().getUid();
+            String pNum = PhoneNumber.getText().toString().trim();
+            String descrip = description.getText().toString().trim();
 
-                if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
-                    PhoneNumber.setError("Invalid phoneNumber.");
-                    return;
-                }
+            if (TextUtils.isEmpty(pNum)) {
+                PhoneNumber.setError("PhoneNumber is required.");
+                return;
+            }
+
+            if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
+                PhoneNumber.setError("Invalid phoneNumber.");
+                return;
+            }
 //                if (citySpinner.getSelectedItemPosition()==0) {
 //                    TextView errorText = (TextView)citySpinner.getSelectedView();
 //                    errorText.setError("City is required.");
@@ -212,27 +249,27 @@ public class SetTutorProfile extends AppCompatActivity {
 //                            Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
-                if (list.isEmpty()) {
-                    Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                FireBaseTeacher t = new FireBaseTeacher();
-                /* set isTeacher to teacher status (1=teacher,0=customer) */
-                mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
-                /* add the teacher to database */
-                /* img=null because there is no need to store url before the image was successfully uploaded */
-                String teacherID = t.addTeacherToDB(pNum, descrip, userID, list, null); // imgURL
-                /* upload the image and ON SUCCESS store url on the teacher database */
-                /* if no image to upload */
-                if (imageData==null) {
-                    goToTutorMain();
-                } else {
-                    uploadImageAndGoToMain(teacherID);
-                }
+            if (list.isEmpty()) {
+                Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
+                        Toast.LENGTH_SHORT).show();
+                return;
             }
-        });
-    }
+            FireBaseTeacher t = new FireBaseTeacher();
+            /* set isTeacher to teacher status (1=teacher,0=customer) */
+            mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
+            /* add the teacher to database */
+            /* img=null because there is no need to store url before the image was successfully uploaded */
+            String teacherID = t.addTeacherToDB(pNum, descrip, userID, list, null); // imgURL
+            /* upload the image and ON SUCCESS store url on the teacher database */
+            /* if no image to upload */
+            if (imageData==null) {
+                goToTutorMain();
+            } else {
+                uploadImageAndGoToMain(teacherID);
+            }
+        }
+    });
+}
 
     private void goToTutorMain() {
         /* were logging in as tutor (tutor status value = 1).

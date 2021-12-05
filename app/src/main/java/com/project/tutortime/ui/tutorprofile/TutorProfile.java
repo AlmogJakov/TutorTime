@@ -82,6 +82,7 @@ public class TutorProfile extends Fragment {
     private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     Uri imageData;
     String imgURL;
+    boolean del = false;
 
     public ImageView getImageDisplay() {
         return img;
@@ -186,7 +187,7 @@ public class TutorProfile extends Fragment {
         updateImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imgURL != null) {
+                if (imgURL != null && del == false) {
                     final Dialog d = new Dialog(getActivity());
                     Button editImage, deleteImage;
                     d.setContentView(R.layout.image_dialog);
@@ -201,6 +202,7 @@ public class TutorProfile extends Fragment {
                             intent.setType("image/*");
                             intent.setAction(Intent.ACTION_GET_CONTENT);
                             startActivityForResult(intent, GALLERY_REQUEST_COD);
+                            del = false;
                             d.dismiss();
                         }
                     });
@@ -208,32 +210,9 @@ public class TutorProfile extends Fragment {
                     deleteImage.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            FireBaseTeacher fbteacher = new FireBaseTeacher();
-                            new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                    teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                                    //System.out.println(imgURL);
-                                    if (imgURL != null) {
-                                        fbteacher.setImgUrl(teacherID, null);
-                                        img.setImageDrawable(null);
-                                        img.setBackgroundResource(R.mipmap.ic_launcher_round);
-                                        FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-                                        StorageReference storageReference = firebaseStorage.getReference(imgURL);
-                                        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Log.e("Picture", "#deleted");
-                                                imgURL=null;
-                                            }
-                                        });
-                                    }
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                }
-                            });
+                            img.setImageDrawable(null);
+                            img.setBackgroundResource(R.mipmap.ic_launcher_round);
+                            del = true;
                             d.dismiss();
                         }
                     });
@@ -244,6 +223,7 @@ public class TutorProfile extends Fragment {
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
                     startActivityForResult(intent, GALLERY_REQUEST_COD);
+                    del = false;
                 }
             }
         });
@@ -259,6 +239,30 @@ public class TutorProfile extends Fragment {
                 String city = citySpinner.getSelectedItem().toString();
 //                if (imageData != null)
 //                    fileUploader();
+                if (del == true) {
+                    FireBaseTeacher fbteacher = new FireBaseTeacher();
+                    new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                            //System.out.println(imgURL);
+                            if (imgURL != null)
+                                fbteacher.setImgUrl(teacherID, null);
+                            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                            StorageReference storageReference = firebaseStorage.getReference(imgURL);
+                            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e("Picture", "#deleted");
+                                    imgURL = null;
+                                }
+                            });
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+                }
                 if (TextUtils.isEmpty(firstName)) {
                     fname.setError("First name is required.");
                     return;
@@ -378,7 +382,7 @@ public class TutorProfile extends Fragment {
                 description.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("description").getValue(String.class));
 
-                 imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
+                imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgURL != null) { /* The image exists! */
                     /* The image has already been downloaded from the server for display
                      * in the navigation bar, so take the existing image. */
