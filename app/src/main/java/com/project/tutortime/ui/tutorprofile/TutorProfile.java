@@ -203,7 +203,6 @@ public class TutorProfile extends Fragment {
                             startActivityForResult(intent, GALLERY_REQUEST_COD);
                             d.dismiss();
                         }
-
                     });
 
                     deleteImage.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +213,7 @@ public class TutorProfile extends Fragment {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
                                     teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                                    System.out.println(imgURL);
+                                    //System.out.println(imgURL);
                                     if (imgURL != null) {
                                         fbteacher.setImgUrl(teacherID, null);
                                         img.setImageDrawable(null);
@@ -247,18 +246,7 @@ public class TutorProfile extends Fragment {
                     startActivityForResult(intent, GALLERY_REQUEST_COD);
                 }
             }
-
         });
-
-
-
-
-                        /////////////////////////////////////////////////////
-//                Intent intent = new Intent();
-//                intent.setType("image/*");
-//                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                startActivityForResult(intent, GALLERY_REQUEST_COD);
-
 
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -281,6 +269,10 @@ public class TutorProfile extends Fragment {
                 }
                 if (TextUtils.isEmpty(pNum)) {
                     pnumber.setError("PhoneNumber is required.");
+                    return;
+                }
+                if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
+                    pnumber.setError("Invalid phoneNumber.");
                     return;
                 }
                 if (citySpinner.getSelectedItemPosition()==0) {

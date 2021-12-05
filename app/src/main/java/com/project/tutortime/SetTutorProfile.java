@@ -200,6 +200,11 @@ public class SetTutorProfile extends AppCompatActivity {
                     PhoneNumber.setError("PhoneNumber is required.");
                     return;
                 }
+
+                if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
+                    PhoneNumber.setError("Invalid phoneNumber.");
+                    return;
+                }
 //                if (citySpinner.getSelectedItemPosition()==0) {
 //                    TextView errorText = (TextView)citySpinner.getSelectedView();
 //                    errorText.setError("City is required.");
