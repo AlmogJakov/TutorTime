@@ -40,7 +40,7 @@
     <EditText
         android:id="@+id/PriceEdit"
         android:layout_width="275dp"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
         android:ems="10"
@@ -53,7 +53,7 @@
     <EditText
         android:id="@+id/ExpEdit"
         android:layout_width="275dp"
-        android:layout_height="42dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="48dp"
         android:ems="10"
