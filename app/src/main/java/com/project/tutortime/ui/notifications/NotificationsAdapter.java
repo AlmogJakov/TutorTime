@@ -47,6 +47,9 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if(notifications.isNote()){
             holder.Open.setVisibility(View.GONE);
         }
+        else{
+
+        }
     }
 
     @Override

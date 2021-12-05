@@ -58,6 +58,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SetTutorProfile extends AppCompatActivity {
     EditText PhoneNumber, description;
@@ -344,6 +345,7 @@ public class SetTutorProfile extends AppCompatActivity {
                 list.add(s);
                 a.notifyDataSetChanged();
                 listSub.add(nameSub);
+                addNotification(fAuth.getCurrentUser().getUid().toString());
                 d.dismiss();
             }
         });
@@ -417,6 +419,7 @@ public class SetTutorProfile extends AppCompatActivity {
                 list.add(s);
                 listSub.add(nameSub);
                 a.notifyDataSetChanged();
+                addNotification(fAuth.getCurrentUser().getUid());
                 d.dismiss();
             }
         });
@@ -546,5 +549,15 @@ public class SetTutorProfile extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Upload imageFailed", Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+    private void addNotification(String userid){
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("UserID",userid);
+        map.put("Remarks","Congratulations! You are a teacher!");
+        map.put("TeacherEmail","");
+        map.put("UserEmail","");
+        map.put("Subject","");
+        map.put("RequestStatus","");
+        FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
     }
 }

@@ -11,6 +11,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="end"
+        android:id="@+id/close"
         android:background="@drawable/popup_close_circle"
         android:gravity="center"
         android:text="X"
@@ -21,6 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:id="@+id/popupTitle"
         android:text="New Request!"
         android:textColor="@color/white"
         android:textSize="15sp"
@@ -41,6 +43,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/from"
             android:text="From:"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -48,6 +51,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/subject"
             android:text="Subject:"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -55,6 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/formOfLearning"
             android:text="Form of learning:"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -62,6 +67,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/remarks"
             android:text="Remarks:"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -69,6 +75,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/requestStatus"
             android:text="Request status:"
             android:textColor="@color/white"
             android:textStyle="bold" />
@@ -81,12 +88,14 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/acceptBtn"
             android:text="Accept"
             android:textStyle="bold"
             android:background="@color/white"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/declineBtn"
             android:text="Decline"
             android:textStyle="bold"
             android:background="@color/black"/>
