@@ -237,32 +237,7 @@ public class TutorProfile extends Fragment {
                 String firstName = fname.getText().toString().trim();
                 String lastName = lname.getText().toString().trim();
                 String city = citySpinner.getSelectedItem().toString();
-//                if (imageData != null)
-//                    fileUploader();
-                if (del == true) {
-                    FireBaseTeacher fbteacher = new FireBaseTeacher();
-                    new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                            //System.out.println(imgURL);
-                            if (imgURL != null)
-                                fbteacher.setImgUrl(teacherID, null);
-                            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-                            StorageReference storageReference = firebaseStorage.getReference(imgURL);
-                            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Log.e("Picture", "#deleted");
-                                    imgURL = null;
-                                }
-                            });
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });
-                }
+
                 if (TextUtils.isEmpty(firstName)) {
                     fname.setError("First name is required.");
                     return;
@@ -305,6 +280,21 @@ public class TutorProfile extends Fragment {
                         fbUser.setFName(userID, firstName);
                         fbUser.setLName(userID, lastName);
                         fbUser.setCity(userID, city);
+
+                        if (del) {
+                            teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                            if (imgURL != null)
+                                fbteacher.setImgUrl(teacherID, null);
+                            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                            StorageReference storageReference = firebaseStorage.getReference(imgURL);
+                            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e("Picture", "#deleted");
+                                    imgURL = null;
+                                }
+                            });
+                        }
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) { }
