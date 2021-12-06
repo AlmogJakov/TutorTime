@@ -1,7 +1,9 @@
 package com.project.tutortime.ui.notifications;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,12 +85,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             Accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CustomAlert("Your contact information sent successfully","Notification");
                     holder.popup.dismiss();
                 }
             });
             Decline.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    CustomAlert("You decided not accept this student request","Notification");
                     holder.popup.dismiss();
                 }
             });
@@ -136,5 +140,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
         });
 
+    }
+    private void CustomAlert( String message,String title ) {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+        dialog.setTitle(title)
+                .setIcon(R.drawable.bell)
+                .setMessage(message)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                    }
+                }).show();
     }
 }
