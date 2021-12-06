@@ -188,8 +188,9 @@ public class Register extends AppCompatActivity {
             map.put("Remarks","Welcome to TutorTime!");
             map.put("TeacherEmail","");
             map.put("UserEmail",email);
-            map.put("Subject","Welcome");
+            map.put("Subject","");
             map.put("RequestStatus","");
+            map.put("isNote",true);
             FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
         }
 }

@@ -48,6 +48,7 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.subjectObj;
+import com.project.tutortime.ui.notifications.Notifications;
 
 import org.w3c.dom.Text;
 
@@ -558,6 +559,7 @@ public class SetTutorProfile extends AppCompatActivity {
         map.put("UserEmail","");
         map.put("Subject","");
         map.put("RequestStatus","");
+        map.put("isNote",true);
         FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
     }
 }

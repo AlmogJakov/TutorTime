@@ -1,10 +1,12 @@
 package com.project.tutortime.ui.notifications;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,12 +44,55 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @Override
     public void onBindViewHolder(@NonNull NotificationsViewHolder holder, int position) {
         Notifications notifications = mNotifications.get(position);
+        if(notifications.getRequestStatus().equals("")){
+            notifications.setNote(true);
+        }
         getUser(notifications.getUserID(),holder.UserName);
         holder.Remarks.setText(notifications.getRemarks());
         if(notifications.isNote()){
             holder.Open.setVisibility(View.GONE);
         }
         else{
+            holder.popup.setContentView(R.layout.popup_notifications);
+            holder.Open.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.popup.show();
+                }
+            });
+            holder.popup.findViewById(R.id.closePopup).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.popup.dismiss();
+                }
+            });
+            //edit the popup window textview
+            TextView remarks = (TextView)holder.popup.findViewById(R.id.remarks);
+            TextView from = (TextView)holder.popup.findViewById(R.id.from);
+            TextView subject = (TextView)holder.popup.findViewById(R.id.subject);
+            TextView requestStatus = (TextView)holder.popup.findViewById(R.id.requestStatus);
+            TextView formOfLearning = (TextView) holder.popup.findViewById(R.id.formOfLearning);
+            remarks.append(notifications.getRemarks());
+            from.append(notifications.getUserEmail());
+            subject.append(notifications.getSubject());
+            requestStatus.append(notifications.getRequestStatus());
+            formOfLearning.append(notifications.getFormOfLearning()+" ");
+            //allow the user to accept or decline the request
+            Button Accept = (Button)holder.popup.findViewById(R.id.acceptBtn);
+            Button Decline = (Button)holder.popup.findViewById(R.id.declineBtn);
+            Accept.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.popup.dismiss();
+                }
+            });
+            Decline.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.popup.dismiss();
+                }
+            });
+
 
         }
     }
@@ -62,11 +107,15 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         public TextView UserName;
         public TextView Remarks;
         public ImageView Open;
+        public Dialog popup;
+
         public NotificationsViewHolder(@NonNull View itemView) {
             super(itemView);
-            UserName = itemView.findViewById(R.id.UserName);
-            Remarks = itemView.findViewById(R.id.Remarks);
-            Open = itemView.findViewById(R.id.open);
+            popup = new Dialog(mContext);
+            UserName = (TextView)itemView.findViewById(R.id.UserName);
+            Remarks = (TextView)itemView.findViewById(R.id.Remarks);
+            Open = (ImageView)itemView.findViewById(R.id.open);
+
         }
     }
     private void getUser(String UserID,TextView username){

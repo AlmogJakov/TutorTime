@@ -11,9 +11,9 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_gravity="end"
-        android:id="@+id/close"
         android:background="@drawable/popup_close_circle"
         android:gravity="center"
+        android:id="@+id/closePopup"
         android:text="X"
         android:textColor="@color/white"
         android:textStyle="bold" />

@@ -40,7 +40,7 @@ public class Notifications extends Fragment {
     private String FormOfLearning;
     private String Remarks;
     private String RequestStatus;
-    private boolean isNote = true;
+    private boolean isNote ;
 
 
     private NotificationsViewModel NotificationsViewModel;
@@ -62,7 +62,7 @@ public class Notifications extends Fragment {
         Remarks = remarks;
         RequestStatus = requestStatus;
         UserID = userid;
-        isNote = true;
+        isNote = false;
     }
 
     public boolean isNote() {
