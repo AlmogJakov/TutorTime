@@ -1,10 +1,13 @@
 package com.project.tutortime.ui.tutorprofile;
 
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -64,6 +67,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class TutorProfile extends Fragment {
 
@@ -594,7 +598,8 @@ public class TutorProfile extends Fragment {
                 /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), selectedImage, "Title", null);
+                // https://stackoverflow.com/questions/61654022/java-lang-illegalstateexception-failed-to-build-unique-file-storage-emulated
+                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), selectedImage, "IMG_" + Calendar.getInstance().getTime(), null);
                 if (path!=null) imageData = Uri.parse(path);
                 else {
                     imageData = null;

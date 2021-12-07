@@ -59,6 +59,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class SetTutorProfile extends AppCompatActivity {
@@ -474,7 +475,7 @@ public class SetTutorProfile extends AppCompatActivity {
                 /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), selectedImage, "Title", null);
+                String path = MediaStore.Images.Media.insertImage(getApplicationContext().getContentResolver(), selectedImage, "IMG_" + Calendar.getInstance().getTime(), null);
                 if (path!=null) imageData = Uri.parse(path);
                 else {
                     imageData = null;
