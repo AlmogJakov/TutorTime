@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp">
+
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
@@ -26,6 +27,7 @@
             android:id="@+id/UserName"
             android:textColor="@color/common_google_signin_btn_text_light_pressed"
             android:textStyle="bold" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +44,8 @@
         android:layout_alignParentEnd="true"
         android:src="@drawable/open_icon"
         android:id="@+id/open"/>
+
+
 
 
 </RelativeLayout>

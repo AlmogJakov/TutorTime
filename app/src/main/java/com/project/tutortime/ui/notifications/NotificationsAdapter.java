@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +45,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotificationsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull NotificationsViewHolder holder,int position) {
         Notifications notifications = mNotifications.get(position);
         getUser(FirebaseAuth.getInstance().getUid(),holder.UserName);
         holder.Remarks.setText(notifications.getRemarks());
@@ -60,6 +61,14 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             default:
                 holder.Open.setVisibility(View.GONE);
         }
+        //allow the user to delete notification by pressing the bell icon
+        holder.Bell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteDialog(notifications,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
+            }
+        });
+
     }
 
     @Override
@@ -72,6 +81,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         public TextView UserName;
         public TextView Remarks;
         public ImageView Open;
+        public ImageView Bell;
         public Dialog popup_request;
         public Dialog popup_accepted;
 
@@ -82,6 +92,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             UserName = (TextView)itemView.findViewById(R.id.UserName);
             Remarks = (TextView)itemView.findViewById(R.id.Remarks);
             Open = (ImageView)itemView.findViewById(R.id.open);
+            Bell = (ImageView)itemView.findViewById(R.id.bell);
 
         }
     }
@@ -229,6 +240,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         map.put("NotificationKey",key);
         if(key!=null)FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
     }
+    private void deleteDialog(Notifications notifications, int position,String userID){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
+        dialog.setTitle("Delete notification")
+                .setIcon(R.drawable.bell)
+                .setMessage("Are you sure?")
+                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialoginterface, int i) {
+                    }
+                }).setNegativeButton("Yes",new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialoginterface, int i) {
+                removeNotification(notifications,position,userID);
+            }
+        }).show();
+    }
+
 
 
 
