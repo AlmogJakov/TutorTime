@@ -552,15 +552,21 @@ public class SetTutorProfile extends AppCompatActivity {
                     }
                 });
     }
-    private void addNotification(String userid){
-        HashMap<String,Object> map = new HashMap<>();
-        map.put("UserID",userid);
-        map.put("Remarks","Congratulations! You are a teacher!");
+    private void addNotification(String userID) {
+        HashMap<String, Object> map = new HashMap<>();
+        String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
         map.put("TeacherEmail","");
+        map.put("TeacherName","");
         map.put("UserEmail","");
         map.put("Subject","");
+        map.put("FormOfLearning","");
+        map.put("Remarks","Congratulations! You are a teacher!");
         map.put("RequestStatus","");
-        map.put("isNote",true);
-        FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
+        map.put("PhoneNumber","");
+        map.put("sendTo","");
+        map.put("sentFrom",fAuth.getCurrentUser().getUid());
+        map.put("NotificationKey",key);
+        if (key != null)
+            FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
     }
 }

@@ -182,15 +182,20 @@ public class Register extends AppCompatActivity {
         });
 
     }
-            private void addNotification(String userid,String email){
-            HashMap<String,Object> map = new HashMap<>();
-            map.put("UserID",userid);
-            map.put("Remarks","Welcome to TutorTime!");
-            map.put("TeacherEmail","");
-            map.put("UserEmail",email);
-            map.put("Subject","");
-            map.put("RequestStatus","");
-            map.put("isNote",true);
-            FirebaseDatabase.getInstance().getReference().child("notifications").child(userid).push().setValue(map);
-        }
+    private void addNotification(String userID,String email){
+        HashMap<String,Object> map = new HashMap<>();
+        String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
+        map.put("TeacherEmail","");
+        map.put("TeacherName","");
+        map.put("UserEmail",email);
+        map.put("Subject","");
+        map.put("FormOfLearning","");
+        map.put("Remarks","Welcome to TutorTime!");
+        map.put("RequestStatus","");
+        map.put("PhoneNumber","");
+        map.put("sendTo","");
+        map.put("sentFrom",fAuth.getCurrentUser().getUid());
+        map.put("NotificationKey",key);
+        if(key!=null)FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
+    }
 }

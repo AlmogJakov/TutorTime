@@ -33,14 +33,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class Notifications extends Fragment {
-    private String UserID;
     private String TeacherEmail;
+    private String TeacherName;
     private String UserEmail;
     private String Subject;
     private String FormOfLearning;
     private String Remarks;
     private String RequestStatus;
-    private boolean isNote ;
+    private String PhoneNumber;
+    private String sendTo;
+    private String sentFrom;
+    private String NotificationKey;
 
 
     private NotificationsViewModel NotificationsViewModel;
@@ -53,25 +56,6 @@ public class Notifications extends Fragment {
 
     }
 
-    public Notifications(String teacherEmail, String userEmail, String subject,
-                         String formOfLearning, String remarks, String requestStatus,String userid) {
-        TeacherEmail = teacherEmail;
-        UserEmail = userEmail;
-        Subject = subject;
-        FormOfLearning = formOfLearning;
-        Remarks = remarks;
-        RequestStatus = requestStatus;
-        UserID = userid;
-        isNote = false;
-    }
-
-    public boolean isNote() {
-        return isNote;
-    }
-
-    public void setNote(boolean note) {
-        isNote = note;
-    }
 
     public String getTeacherEmail() {
         return TeacherEmail;
@@ -81,12 +65,16 @@ public class Notifications extends Fragment {
         TeacherEmail = teacherEmail;
     }
 
-    public String getUserEmail() {
-        return UserEmail;
+    public String getTeacherName() {
+        return TeacherName;
     }
 
-    public String getUserID() {
-        return UserID;
+    public void setTeacherName(String teacherName) {
+        TeacherName = teacherName;
+    }
+
+    public String getUserEmail() {
+        return UserEmail;
     }
 
     public void setUserEmail(String userEmail) {
@@ -123,6 +111,38 @@ public class Notifications extends Fragment {
 
     public void setRequestStatus(String requestStatus) {
         RequestStatus = requestStatus;
+    }
+
+    public String getPhoneNumber() {
+        return PhoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        PhoneNumber = phoneNumber;
+    }
+
+    public String getSendTo() {
+        return sendTo;
+    }
+
+    public void setSendTo(String sendTo) {
+        this.sendTo = sendTo;
+    }
+
+    public String getSentFrom() {
+        return sentFrom;
+    }
+
+    public void setSentFrom(String sentFrom) {
+        this.sentFrom = sentFrom;
+    }
+
+    public String getNotificationKey() {
+        return NotificationKey;
+    }
+
+    public void setNotificationKey(String notificationKey) {
+        NotificationKey = notificationKey;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
