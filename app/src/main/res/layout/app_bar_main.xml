@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/toolbarApp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/Theme.TutorTime.AppBarOverlay">
@@ -22,10 +23,9 @@
 <!--                android:type="linear" />-->
 <!--        </shape>-->
 
+
         <androidx.appcompat.widget.Toolbar
-            android:centerColor="#009688"
-            android:endColor="#00695C"
-            android:startColor="#4DB6AC"
+            app:layout_constraintTop_toTopOf="parent"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -36,11 +36,23 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+
+    <ImageView
+        android:id="@+id/colorLine"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="#71fff1"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="top|center"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarApp" />
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_main" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
-        app:backgroundTint="#9a65e6"
+        app:backgroundTint="#161616"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

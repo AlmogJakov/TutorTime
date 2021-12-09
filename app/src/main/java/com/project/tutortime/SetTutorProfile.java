@@ -486,8 +486,6 @@ public class SetTutorProfile extends AppCompatActivity {
                  * (In the 'fileUploader' method below) */
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

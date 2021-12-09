@@ -627,8 +627,6 @@ public class TutorProfile extends Fragment {
                  * (In the 'fileUploader' method below) */
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }

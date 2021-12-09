@@ -24,6 +24,8 @@ public class LoadingScreen extends AppCompatActivity {
 
         /* DISABLE landscape orientation  */
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        /* HIDE APP NAME FROM TOOLBAR (TITLE BAR) */
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
 //        /* Unnecessary teacher remover
 //        * Should be removed! for developers ONLY!
