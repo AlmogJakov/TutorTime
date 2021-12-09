@@ -8,17 +8,19 @@ public class userObj implements Serializable {
     private String email;
     private String city;
     private String teacherID;
+    private String gender;
     private int IsTeacher;
 
 
     public userObj(){
     }
 
-    public userObj(String fName, String lName, String email, String city){
+    public userObj(String fName, String lName, String email, String city, String gender){
         this.fName=fName;
         this.lName=lName;
         this.email=email;
         this.city=city;
+        this.gender=gender;
         this.IsTeacher=-1;
     }
 
@@ -53,6 +55,10 @@ public class userObj implements Serializable {
     public void setCity(String city) {
         this.city = city;
     }
+
+    public String getGender() { return gender; }
+
+    public void setGender(String gender) { this.gender = gender; }
 
     public String getTeacherID() {
         return teacherID;

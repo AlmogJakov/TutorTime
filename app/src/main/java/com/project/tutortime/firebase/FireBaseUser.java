@@ -5,12 +5,12 @@ import com.google.firebase.database.DatabaseReference;
 
 public class FireBaseUser extends firebaseBaseModel {
     FirebaseAuth fAuth;
-    public void addUserToDB(String fName, String lName, String email, String city, String id){
-        writeNewUser(fName,lName,email,city, id);
+    public void addUserToDB(String fName, String lName, String email, String city, String gender, String id){
+        writeNewUser(fName,lName,email,city, gender, id);
     }
 
-    public void writeNewUser(String fName, String lName, String email, String city, String id){
-        userObj user = new userObj(fName,lName,email, city);
+    public void writeNewUser(String fName, String lName, String email, String city, String gender, String id){
+        userObj user = new userObj(fName,lName,email, city, gender);
         myRef.child("users").child(id).setValue(user);
     }
 

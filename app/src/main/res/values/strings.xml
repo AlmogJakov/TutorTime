@@ -26,6 +26,11 @@
 
     <string name="sign_up">Sign Up</string>
 
+    <string-array name="Gender">
+        <item>male</item>
+        <item>female</item>
+    </string-array>
+
     <string-array name="Options1">
         <item>Select subject</item>
         <item>Math</item>

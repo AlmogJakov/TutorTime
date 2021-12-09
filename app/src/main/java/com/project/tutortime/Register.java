@@ -28,12 +28,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.project.tutortime.firebase.FireBaseUser;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
     EditText mFName, mLName, mEmail, mPassword; // mCity
     Button mRegisterBtn;
-    Spinner mCityspinner;
+    Spinner mCityspinner, mGenderspinner;
     TextView mLoginBtn;
     FirebaseAuth fAuth;
 
@@ -50,6 +51,40 @@ public class Register extends AppCompatActivity {
         mEmail = findViewById(R.id.editEmail);
         mPassword = findViewById(R.id.editPass);
         mCityspinner = (Spinner)findViewById(R.id.selectCity);
+        mGenderspinner = (Spinner)findViewById(R.id.selectGender);
+
+//        ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this, R.array.Gender, android.R.layout.simple_spinner_item);
+//        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        mGenderspinner.setAdapter(a);
+
+        /* Select Gender Spinner Code () */
+        ArrayAdapter<String> a = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                if (position == 0) { // Hint
+                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
+                return v; }
+            @Override
+            public int getCount() { return super.getCount(); }
+            @Override /* Disable selection of the Hint (first selection) */
+            public boolean isEnabled(int position) { return (position != 0); }
+            @Override /* Set the color of the Hint (first selection) to Grey */
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView)view;
+                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
+                return view; }
+        };
+        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        String[] select_gender = getResources().getStringArray(R.array.Gender);
+        a.add("Choose Gender");
+        a.addAll(select_gender);
+        mGenderspinner.setAdapter(a);
+        mGenderspinner.setSelection(0); //display hint
+        /* END Select City Spinner Code () */
+
 
         /* Select City Spinner Code () */
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
@@ -102,6 +137,7 @@ public class Register extends AppCompatActivity {
                 String password = mPassword.getText().toString().trim();
                 //String city = mCity.getText().toString().trim();
                 String city = mCityspinner.getSelectedItem().toString();
+                String gender = mGenderspinner.getSelectedItem().toString();
 
                 if (TextUtils.isEmpty(fName)) {
                     mFName.setError("First name is required.");
@@ -125,6 +161,15 @@ public class Register extends AppCompatActivity {
 
                 if (password.length() < 6) {
                     mPassword.setError("Password must contains at least 6 digits.");
+                    return;
+                }
+
+                /* if Gender Box == Gender Hint then the user didn't choose gender */
+                if (TextUtils.equals(gender,"Choose Gender")) {
+                    Toast.makeText(Register.this, "Gender is required. ", Toast.LENGTH_SHORT).show();
+                    TextView errorText = (TextView)mGenderspinner.getSelectedView();
+                    errorText.setError("Gender is required.");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
                     return;
                 }
 
@@ -159,7 +204,7 @@ public class Register extends AppCompatActivity {
                             /* END send verification link */
                             FireBaseUser u = new FireBaseUser();
                             String userID = fAuth.getCurrentUser().getUid();
-                            u.addUserToDB(fName, lName, email, city, userID);
+                            u.addUserToDB(fName, lName, email, city, gender, userID);
                             /* add welcome notification to user */
                             addNotification(userID, email);
                             fAuth.signOut();
