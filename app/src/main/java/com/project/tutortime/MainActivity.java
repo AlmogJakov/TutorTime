@@ -15,12 +15,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -147,42 +152,24 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
+
     private void loadTutorImageToNavigation(View navHeaderView) {
         String userID = fAuth.getCurrentUser().getUid();
+        ImageView profile = (ImageView)navHeaderView.findViewById(R.id.imageView);
         mDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String teacherID = dataSnapshot.child("users").child(userID).child("teacherID").getValue(String.class);
-                if (teacherID!=null) {
-                    DataSnapshot imageLink = dataSnapshot.child("teachers").child(teacherID).child("imgUrl");
-                    /* if the link exists (case of Tutor with no profile image) */
-                    if (imageLink!=null&&imageLink.getValue()!=null) {
-                        System.out.println(imageLink.getValue());
-//                        ImageView profile = (ImageView)navHeaderView.findViewById(R.id.imageView);
-                        ImageView profile = (ImageView)navHeaderView.findViewById(R.id.imageView);
-                        StorageReference imagesRef = storageRef.child(imageLink.getValue().toString());
-                        /* allow 1MB (1024*1024) KB download */
-                        imagesRef.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                profile.setImageBitmap(bmp);
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                /* If the user registers as a tutor with an image,
-                                then the address of the image will be saved immediately
-                                in the database, but the image will not be uploaded immediately
-                                 - so an error will occur and we will get here. */
-                                Toast.makeText(getApplicationContext(), "Image loading error. No Such Image file or Path found!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                }
+                if (teacherID==null) return;
+                DataSnapshot imageLink = dataSnapshot.child("teachers").child(teacherID).child("imgUrl");
+                if (imageLink==null||imageLink.getValue()==null) return;
+                StorageReference storageReference = storage.getReference().child(imageLink.getValue().toString());
+                Glide.with(getApplicationContext()).load(storageReference).into(profile);
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Image loading error. " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

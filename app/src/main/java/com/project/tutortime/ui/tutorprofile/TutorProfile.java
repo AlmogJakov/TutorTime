@@ -37,6 +37,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.navigation.NavigationView;
@@ -81,16 +82,12 @@ public class TutorProfile extends Fragment {
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
-    FirebaseAuth fAuth = FirebaseAuth.getInstance();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+    FirebaseStorage storage = FirebaseStorage.getInstance();
     private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     Uri imageData;
     String imgURL;
     boolean del = false;
-
-    public ImageView getImageDisplay() {
-        return img;
-    }
 
     private static final int GALLERY_REQUEST_COD = 1;
 
@@ -124,6 +121,18 @@ public class TutorProfile extends Fragment {
         ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
+
+        /* Disable all Buttons & Text Edit Fields - until all data received from FireBase */
+        fname.setEnabled(false);
+        lname.setEnabled(false);
+        pnumber.setEnabled(false);
+        description.setEnabled(false);
+        saveProfile.setEnabled(false);
+        addSub.setEnabled(false);
+        updateImage.setVisibility(View.GONE);
+        citySpinner.setEnabled(false);
+        subjectList.setEnabled(false);
+        /* END Disable all Buttons & Text Edit Fields */
 
         /* Select City Spinner Code () */
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item) {
@@ -378,31 +387,15 @@ public class TutorProfile extends Fragment {
 
                 imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgURL != null) { /* The image exists! */
-                    /* The image has already been downloaded from the server for display
-                     * in the navigation bar, so take the existing image. */
-                    NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
-                    View navHeaderView = navigationView.getHeaderView(0);
-                    ImageView prof = (ImageView)navHeaderView.findViewById(R.id.imageView);
-                    img.setImageDrawable(prof.getDrawable());
+                    StorageReference storageReference = storage.getReference().child(imgURL);
+                    Glide.with(getContext()).load(storageReference).into(img);
 
-//                    StorageReference mImageStorage = FirebaseStorage.getInstance().getReference();
-//                    StorageReference ref = mImageStorage.child(imgAdd);
-//                    ref.getBytes(1024*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-//                        @Override
-//                        public void onSuccess(byte[] bytes) {
-//                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//                            img.setImageBitmap(bmp);
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception exception) {
-//                                /* If the user registers as a tutor with an image,
-//                                then the address of the image will be saved immediately
-//                                in the database, but the image will not be uploaded immediately
-//                                 - so an error will occur and we will get here. */
-//                            Toast.makeText(getContext(), "Image loading error. No Such Image file or Path found!", Toast.LENGTH_SHORT).show();
-//                        }
-//                    });
+//                    /* The image has already been downloaded from the server for display
+//                     * in the navigation bar, so take the existing image. */
+//                    NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
+//                    View navHeaderView = navigationView.getHeaderView(0);
+//                    ImageView prof = (ImageView)navHeaderView.findViewById(R.id.imageView);
+//                    img.setImageDrawable(prof.getDrawable());
                 }
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
                         child("sub").getChildren()) {
@@ -416,9 +409,25 @@ public class TutorProfile extends Fragment {
                 ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
                 subjectList.setAdapter(a);
                 a.notifyDataSetChanged();
+
+
+                /* Enable all Buttons & Text Edit Fields - data already received from FireBase */
+                fname.setEnabled(true);
+                lname.setEnabled(true);
+                pnumber.setEnabled(true);
+                description.setEnabled(true);
+                saveProfile.setEnabled(true);
+                addSub.setEnabled(true);
+                updateImage.setVisibility(View.VISIBLE);
+                citySpinner.setEnabled(true);
+                subjectList.setEnabled(true);
+                /* END Enable all Buttons & Text Edit Fields */
+
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) { }
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getContext(), "onCreate error. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
