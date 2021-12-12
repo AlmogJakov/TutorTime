@@ -95,13 +95,13 @@
                     android:id="@+id/editPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:textColorHint="#808080"
                     android:background="#00000000"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:padding="10dp"
                     android:text=""
-                    android:textSize="15sp"
-                    android:inputType="phone" />
+                    android:textColorHint="#808080"
+                    android:textSize="15sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -191,7 +191,7 @@
                 android:layout_marginTop="20dp"
                 android:hint="About Me"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:layout_constraintTop_toBottomOf="@+id/layout_contact_no">
+                app:layout_constraintTop_toBottomOf="@+id/txtCities">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -251,6 +251,15 @@
                     app:layout_constraintStart_toStartOf="parent" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/txtCities"
+                android:layout_width="290dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="Select cities"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_contact_no" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

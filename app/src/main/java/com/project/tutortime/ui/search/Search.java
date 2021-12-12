@@ -54,7 +54,7 @@ public class Search extends Fragment {
         nameSpinner = v.findViewById(R.id.selectSub);
         nameSpinner.setAdapter(new ArrayAdapter<>
                 (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
-        
+
         citySpinner = v.findViewById(R.id.selectCity);
         String[] cities = getResources().getStringArray(R.array.Cities);
         boolean[] selectCity = new boolean[cities.length];

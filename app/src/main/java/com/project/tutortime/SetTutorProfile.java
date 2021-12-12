@@ -6,8 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
@@ -60,9 +62,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class SetTutorProfile extends AppCompatActivity {
+    TextView citySpinner;
     EditText PhoneNumber, description;
     Button profile, addSub, addImage;
     //Spinner citySpinner;
@@ -76,7 +82,9 @@ public class SetTutorProfile extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private static final int GALLERY_REQUEST_COD = 1;
     boolean del = false;
-    //String teacherID;
+    // List of mountains that the teacher tutor
+    ArrayList<String> listCities = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +104,17 @@ public class SetTutorProfile extends AppCompatActivity {
         profile = findViewById(R.id.btnSaveProfile);
         addImage = findViewById(R.id.btnUpdateImage);
         img = findViewById(R.id.imageView);
-        //citySpinner = findViewById(R.id.spinnerCity);
+        citySpinner = findViewById(R.id.txtCities);
         subjectList = (ListView) findViewById(R.id.subList);
         ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
+
+
+        String[] cities = getResources().getStringArray(R.array.Cities);
+        boolean[] selectCities = new boolean[cities.length];
+        ArrayList<Integer> listCitiesNum = new ArrayList<>();
+        setSpinnerCity(citySpinner, selectCities, listCitiesNum, cities);
 
 
 //        PhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -120,7 +134,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 else PhoneNumber.setHint("Enter Phone Number");
             }
         });
-
 
 //        /* Select City Spinner Code () */
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
@@ -215,36 +228,36 @@ public class SetTutorProfile extends AppCompatActivity {
         });
 
         subjectList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
-            createEditDialog(a,s);
-        }
-    });
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
+                createEditDialog(a,s);
+            }
+        });
 
         addSub.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            createDialog(a);
-        }
-    });
+            @Override
+            public void onClick(View v) {
+                createDialog(a);
+            }
+        });
 
         profile.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            String userID = fAuth.getCurrentUser().getUid();
-            String pNum = PhoneNumber.getText().toString().trim();
-            String descrip = description.getText().toString().trim();
+            @Override
+            public void onClick(View v) {
+                String userID = fAuth.getCurrentUser().getUid();
+                String pNum = PhoneNumber.getText().toString().trim();
+                String descrip = description.getText().toString().trim();
 
-            if (TextUtils.isEmpty(pNum)) {
-                PhoneNumber.setError("PhoneNumber is required.");
-                return;
-            }
+                if (TextUtils.isEmpty(pNum)) {
+                    PhoneNumber.setError("PhoneNumber is required.");
+                    return;
+                }
 
-            if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
-                PhoneNumber.setError("Invalid phoneNumber.");
-                return;
-            }
+                if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
+                    PhoneNumber.setError("Invalid phoneNumber.");
+                    return;
+                }
 //                if (citySpinner.getSelectedItemPosition()==0) {
 //                    TextView errorText = (TextView)citySpinner.getSelectedView();
 //                    errorText.setError("City is required.");
@@ -252,27 +265,94 @@ public class SetTutorProfile extends AppCompatActivity {
 //                            Toast.LENGTH_SHORT).show();
 //                    return;
 //                }
-            if (list.isEmpty()) {
-                Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
-                        Toast.LENGTH_SHORT).show();
-                return;
+
+                if (listCitiesNum.isEmpty()) {
+                    Toast.makeText(SetTutorProfile.this, "You must choose at least one city",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (list.isEmpty()) {
+                    Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                FireBaseTeacher t = new FireBaseTeacher();
+                /* set isTeacher to teacher status (1=teacher,0=customer) */
+                mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
+                /* add the teacher to database */
+                /* img=null because there is no need to store url before the image was successfully uploaded */
+                String teacherID = t.addTeacherToDB(pNum, descrip, userID, listCities, list, null); // imgURL
+                /* upload the image and ON SUCCESS store url on the teacher database */
+                /* if no image to upload */
+                if (imageData==null) {
+                    goToTutorMain();
+                } else {
+                    uploadImageAndGoToMain(teacherID);
+                }
             }
-            FireBaseTeacher t = new FireBaseTeacher();
-            /* set isTeacher to teacher status (1=teacher,0=customer) */
-            mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
-            /* add the teacher to database */
-            /* img=null because there is no need to store url before the image was successfully uploaded */
-            String teacherID = t.addTeacherToDB(pNum, descrip, userID, list, null); // imgURL
-            /* upload the image and ON SUCCESS store url on the teacher database */
-            /* if no image to upload */
-            if (imageData==null) {
-                goToTutorMain();
-            } else {
-                uploadImageAndGoToMain(teacherID);
+        });
+    }
+    // Creating a dialogue for choosing cities where the teacher tutor
+    private void setSpinnerCity(TextView citySpinner, boolean[] selectCities,
+                            ArrayList<Integer> listCitiesNum, String[] cities) {
+        citySpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(SetTutorProfile.this);
+                builder.setTitle("Select cities");
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(cities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            listCitiesNum.add(which);
+                            listCities.add(cities[which]);
+                            Collections.sort(listCitiesNum);
+                        } else {
+                            listCitiesNum.remove((Integer) which);
+                            listCities.remove(cities[which]);
+                        }
+                    }
+                });
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < listCitiesNum.size(); i++) {
+                            stringBuilder.append(cities[listCitiesNum.get(i)]);
+                            //listCities.add(cities[listCitiesNum.get(i)]);
+                            if (i != listCitiesNum.size() - 1) {
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        citySpinner.setText(stringBuilder.toString());
+                            for (String s : listCities) {
+                            System.out.println(s);
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectCities.length; i++) {
+                            selectCities[i] = false;
+                            listCitiesNum.clear();
+                            listCities.clear();
+                            citySpinner.setText("Select cities");
+                        }
+                    }
+                });
+                builder.show();
             }
-        }
-    });
-}
+        });
+    }
 
     private void goToTutorMain() {
         /* were logging in as tutor (tutor status value = 1).

@@ -2,13 +2,15 @@ package com.project.tutortime.firebase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class FireBaseTeacher extends firebaseBaseModel{
     FireBaseUser u = new FireBaseUser();
 
-    public String addTeacherToDB(String phoneNum, String description, String userid, List<subjectObj> sub, String imgUrl){
+    public String addTeacherToDB(String phoneNum, String description, String userid, List<String> ServiceCities,
+                                 List<subjectObj> sub, String imgUrl){
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
-        teacherObj teacher = new teacherObj(phoneNum, description, userid, sub,  imgUrl);
+        teacherObj teacher = new teacherObj(phoneNum, description, userid, ServiceCities, sub,  imgUrl);
         String teacherId = myRef.push().getKey();
         u.getUserRef().child("teacherID").setValue(teacherId);
         myRef.child("teachers").child(teacherId).setValue(teacher);
