@@ -69,6 +69,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TutorProfile extends Fragment {
 
@@ -250,64 +252,57 @@ public class TutorProfile extends Fragment {
                 String firstName = fname.getText().toString().trim();
                 String lastName = lname.getText().toString().trim();
                 String city = citySpinner.getSelectedItem().toString();
-
                 if (TextUtils.isEmpty(firstName)) {
                     fname.setError("First name is required.");
-                    return;
-                }
+                    return; }
                 if (TextUtils.isEmpty(lastName)) {
                     lname.setError("Last name is required.");
-                    return;
-                }
+                    return; }
                 if (TextUtils.isEmpty(pNum)) {
                     pnumber.setError("PhoneNumber is required.");
-                    return;
-                }
+                    return; }
                 if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
                     pnumber.setError("Invalid phoneNumber.");
-                    return;
-                }
+                    return; }
                 if (citySpinner.getSelectedItemPosition()==0) {
                     TextView errorText = (TextView)citySpinner.getSelectedView();
                     errorText.setError("City is required.");
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 if (list.isEmpty()) {
                     Toast.makeText(getActivity(), "You must choose at least one subject",
                             Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                FireBaseTeacher fbteacher = new FireBaseTeacher();
-                FireBaseUser fbUser = new FireBaseUser();
+                    return; }
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        /* get teacher ID */
                         teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                        fbteacher.setPhoneNum(teacherID, pNum);
-                        fbteacher.setDescription(teacherID, descrip);
-                        //System.out.println(imgURL);
-                        // TODO: REMOVE PREVIOUS IMAGE
-                        if(imgURL != null) fbteacher.setImgUrl(teacherID, imgURL);
-                        fbUser.setFName(userID, firstName);
-                        fbUser.setLName(userID, lastName);
-                        fbUser.setCity(userID, city);
-
+                        /* Make a list of all the RealTime DataBase commands to execute
+                            (for the purpose of executing all the commands at once) */
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        if (imgURL != null) childUpdates.put("teachers/" + teacherID + "/imgUrl", imgURL);
+                        childUpdates.put("teachers/" + teacherID + "/phoneNum", pNum);
+                        childUpdates.put("teachers/" + teacherID + "/description", descrip);
+                        childUpdates.put("users/" + userID + "/fName", firstName);
+                        childUpdates.put("users/" + userID + "/lName", lastName);
+                        childUpdates.put("users/" + userID + "/city", city);
+                        /* If the user deleted the image - delete it from the storage and add
+                            a delete command to childUpdates (to delete it URL from the RealTime DataBase) */
                         if (del) {
-                            teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                            if (imgURL != null)
-                                fbteacher.setImgUrl(teacherID, null);
+                            if (imgURL != null) childUpdates.put("teachers/" + teacherID + "/imgUrl", null);
                             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                             StorageReference storageReference = firebaseStorage.getReference(imgURL);
                             storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.e("Picture", "#deleted");
-                                    imgURL = null;
-                                }
+                                    imgURL = null; }
                             });
                         }
+                        /* Finally, execute all RealTime DataBase commands in one command (safely). */
+                        myRef.updateChildren(childUpdates);
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) { }
