@@ -63,7 +63,7 @@ public class Login extends AppCompatActivity {
             String userID = fAuth.getCurrentUser().getUid();
             /* redirects to the appropriate page depending on the user status */
             getInside(userID);
-            testMessage(userID);
+            //testMessage(userID);
         }
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +121,7 @@ public class Login extends AppCompatActivity {
                                 String userID = fAuth.getCurrentUser().getUid();
                                 /* redirects to the appropriate page depending on the user status */
                                 getInside(userID);
-                                testMessage(userID);
+                                //testMessage(userID);
                             }
                         } else {
                             Toast.makeText(Login.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -209,16 +209,27 @@ public class Login extends AppCompatActivity {
         /* END loading screen section */
         finish();
     }
-    private void testMessage(String userID){
-        HashMap<String, Object> map = new HashMap<>();
-        String key = FirebaseDatabase.getInstance().getReference().child("chats").child(userID).push().getKey();
-        map.put("lastMessage","test message");
-        map.put("sendTo","");
-        map.put("sentFrom",fAuth.getCurrentUser().getUid());
-        map.put("senderName","Test");
-        map.put("chatID",key);
-        if (key != null)
-            FirebaseDatabase.getInstance().getReference().child("chats").child(userID).child(key).setValue(map);
-    }
+//    private void testMessage(String userID){
+//            //send contact request
+//            String studentid = "JyoevIP7cpZGMocgpWk5g4pLwM43";//student
+//            String teacherid = "L9g6rBsZqigUC4zTPSBwGNBK5p73";//teacher
+//            HashMap<String, Object> map = new HashMap<>();
+//            String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
+//            map.put("TeacherEmail","shalevasor@gmail.com");
+//            map.put("TeacherName","Shalev");
+//            map.put("UserEmail","shaevsor@gmail.com");
+//            map.put("Subject","Math");
+//            map.put("FormOfLearning","online");
+//            map.put("Remarks","math teaching request");
+//            map.put("RequestStatus","Waiting for response");//to remove
+//            map.put("PhoneNumber","0547774447");
+//            map.put("sendTo",teacherid);//to remove
+//            map.put("sentFrom",studentid);
+//            map.put("NotificationKey",key);
+//            if (key != null)
+//                FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
+//            //after the user accept we adding to the chats
+//
+//    }
 
 }

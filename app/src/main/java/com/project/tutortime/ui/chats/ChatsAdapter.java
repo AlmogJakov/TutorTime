@@ -3,6 +3,7 @@ package com.project.tutortime.ui.chats;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
@@ -47,9 +49,16 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
     @Override
     public void onBindViewHolder(@NonNull ChatsViewHolder holder, int position) {
         Chat chat = mChats.get(position); //get the specific chat
-        getUser(FirebaseAuth.getInstance().getCurrentUser().getUid(),holder.UserName,holder.ProfilePicture);//user information
+        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        getUser(userID,holder.UserName,holder.ProfilePicture);//user information
         holder.lastMessage.setText(chat.getLastMessage());//set the last message that sent
-        holder.UserName.setText(chat.getSenderName()); // set the sender UserName
+        if(userID.equals(chat.getTeacherID())) { //set the correct name
+            holder.UserName.setText(chat.getStudentName());
+        }
+        else{
+            holder.UserName.setText(chat.getTeacherName());
+        }
+        userOnlineStatus(holder);
         holder.ProfilePicture.setOnClickListener(new View.OnClickListener() { //when click on profile picture he can remove the chat
             @Override
             public void onClick(View v) {
@@ -150,7 +159,31 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         }).show();
     }
 
+    /**
+     * This method check if the user is online and set the background to green or black depend on the user status
+     * @param holder hold the profile picture for the background
+     */
+    private void userOnlineStatus(ChatsViewHolder holder){
+        DatabaseReference connectedRef = FirebaseDatabase.getInstance().getReference(".info/connected");
+        connectedRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean connected = snapshot.getValue(Boolean.class);
+                if (connected) {
+                    holder.ProfilePicture.setBackgroundResource(R.drawable.chats_profile_circle_online);
+                } else {
+                    holder.ProfilePicture.setBackgroundResource(R.drawable.chats_profile_circle_online);
 
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
+}
 
 

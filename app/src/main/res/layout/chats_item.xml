@@ -9,7 +9,7 @@
         android:id="@+id/profilePicture"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/chats_profile_circle" />
+        android:background="@drawable/chats_profile_circle_offline" />
 
 
     <LinearLayout

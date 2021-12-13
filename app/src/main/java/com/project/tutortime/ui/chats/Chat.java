@@ -35,71 +35,80 @@ import java.util.List;
 public class Chat extends Fragment {
 
     private String lastMessage;
-    private String sendTO;
-    private String sentFrom;
+    private String studentID;
+    private String teacherID;
     private String chatID;
-    private String senderName;
+    private String studentName;
+    private String teacherName;
 
 
     private RecyclerView recyclerView;
     private ChatsAdapter chatsAdapter;
     private List<Chat> chats;
 
+    public Chat(String lastMessage, String studentID, String teacherID, String chatID, String studentName, String teacherName) {
+        this.lastMessage = lastMessage;
+        this.studentID = studentID;
+        this.teacherID = teacherID;
+        this.chatID = chatID;
+        this.studentName = studentName;
+        this.teacherName = teacherName;
+    }
+    public Chat(){
+
+    }
+
     public String getLastMessage() {
         return lastMessage;
     }
 
-    public void setLastMessage(String message) {
-        this.lastMessage = message;
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
-    public String getSendTO() {
-        return sendTO;
+    public String getStudentID() {
+        return studentID;
     }
 
-    public void setSendTO(String sendTO) {
-        this.sendTO = sendTO;
+    public void setStudentID(String studentID) {
+        this.studentID = studentID;
     }
 
-    public String getSentFrom() {
-        return sentFrom;
+    public String getTeacherID() {
+        return teacherID;
     }
 
-    public void setSentFrom(String sentFrom) {
-        this.sentFrom = sentFrom;
+    public void setTeacherID(String teacherID) {
+        this.teacherID = teacherID;
     }
 
     public String getChatID() {
         return chatID;
     }
 
-    public void setChatID(String msgID) {
-        this.chatID = msgID;
-    }
-
-    public String getSenderName() {
-        return senderName;
-    }
-
-    public void setSenderName(String senderName) {
-        this.senderName = senderName;
-    }
-
-    public static Chat newInstance() {
-        return new Chat();
-    }
-
-    public Chat(){
-
-    }
-
-    public Chat(String lastMessage, String sendTO, String sentFrom, String chatID, String senderName) {
-        this.lastMessage = lastMessage;
-        this.sendTO = sendTO;
-        this.sentFrom = sentFrom;
+    public void setChatID(String chatID) {
         this.chatID = chatID;
-        this.senderName = senderName;
     }
+
+    public String getStudentName() {
+        return studentName;
+    }
+
+    public void setStudentName(String studentName) {
+        this.studentName = studentName;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
+
+
+
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

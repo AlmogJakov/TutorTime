@@ -235,7 +235,8 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             @Override
             public void onClick(View v) {
                 sendContactInformation(notifications.getSubject(),notifications.getSendTo(),notifications.getTeacherEmail());
-                CustomAlert("Your contact information sent successfully","Notification");
+                addToChats(notifications);
+                CustomAlert("Your contact information sent successfully,and your chat is active","Notification");
                 //removed automatically since the user already accepted it
                 removeNotification(notifications,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
                 holder.popup_request.dismiss();
@@ -318,6 +319,34 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 removeNotification(notifications,position,userID);
             }
         }).show();
+    }
+
+    private void addToChats(Notifications notifications){
+        HashMap<String, Object> mapTeacher = new HashMap<>();
+        String studentid = "JyoevIP7cpZGMocgpWk5g4pLwM43";//student
+        String teacherid = "L9g6rBsZqigUC4zTPSBwGNBK5p73";//teacher;
+        //teacher chats
+        String key = FirebaseDatabase.getInstance().getReference().child("chats").child(studentid).push().getKey();
+        mapTeacher.put("lastMessage","Chat with "+notifications.getTeacherName()+" is active now");//student name should be here
+        mapTeacher.put("teacherID",studentid);
+        mapTeacher.put("studentID",FirebaseAuth.getInstance().getCurrentUser().getUid());
+        mapTeacher.put("teacherName",notifications.getTeacherName());
+        mapTeacher.put("studentName",notifications.getTeacherName());
+        mapTeacher.put("chatID",key);
+        if (key != null)
+            FirebaseDatabase.getInstance().getReference().child("chats").child(studentid).child(key).setValue(mapTeacher);
+        //user chats
+        HashMap<String, Object> mapStudent = new HashMap<>();
+        String key2 = FirebaseDatabase.getInstance().getReference().child("chats").child(teacherid).push().getKey();
+        mapTeacher.put("lastMessage","Chat with "+notifications.getTeacherName()+" is active now");//student name should be here
+        mapTeacher.put("teacherID",teacherid);
+        mapTeacher.put("studentID",studentid);
+        mapTeacher.put("teacherName",notifications.getTeacherName());
+        mapTeacher.put("studentName",notifications.getTeacherName());
+        mapStudent.put("chatID",key2);
+        if (key != null)
+            FirebaseDatabase.getInstance().getReference().child("chats").child(teacherid).child(key).setValue(mapStudent);
+
     }
 
 
