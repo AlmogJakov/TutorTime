@@ -63,6 +63,7 @@ public class Login extends AppCompatActivity {
             String userID = fAuth.getCurrentUser().getUid();
             /* redirects to the appropriate page depending on the user status */
             getInside(userID);
+            testMessage(userID);
         }
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +121,7 @@ public class Login extends AppCompatActivity {
                                 String userID = fAuth.getCurrentUser().getUid();
                                 /* redirects to the appropriate page depending on the user status */
                                 getInside(userID);
+                                testMessage(userID);
                             }
                         } else {
                             Toast.makeText(Login.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -206,6 +208,17 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
         /* END loading screen section */
         finish();
+    }
+    private void testMessage(String userID){
+        HashMap<String, Object> map = new HashMap<>();
+        String key = FirebaseDatabase.getInstance().getReference().child("chats").child(userID).push().getKey();
+        map.put("lastMessage","test message");
+        map.put("sendTo","");
+        map.put("sentFrom",fAuth.getCurrentUser().getUid());
+        map.put("senderName","Test");
+        map.put("chatID",key);
+        if (key != null)
+            FirebaseDatabase.getInstance().getReference().child("chats").child(userID).child(key).setValue(map);
     }
 
 }

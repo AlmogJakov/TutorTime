@@ -32,6 +32,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * This class represent Notification and allows to read the notification data from the database
+ */
+
 public class Notifications extends Fragment {
     private String TeacherEmail;
     private String TeacherName;
@@ -147,6 +151,7 @@ public class Notifications extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        //set the notification fragment and the recycler view
        View view = inflater.inflate(R.layout.fragment_notifications,container,false);
        recyclerView = view.findViewById(R.id.recycler_view);
        recyclerView.setHasFixedSize(true);
@@ -154,16 +159,21 @@ public class Notifications extends Fragment {
        notifications = new ArrayList<>();
        notificationsAdapter = new NotificationsAdapter(getContext(),notifications);
        recyclerView.setAdapter(notificationsAdapter);
-       readNotifications();
+       readNotifications(); //read each notification from the database
        return view;
     }
 
+    /**
+     * This method allows to read the notification data from the database
+     */
     private void readNotifications() {
+        //get the value of the notification
         FirebaseDatabase.getInstance().getReference().child("notifications")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //if some of the notification data has changed then it will updated
                         for (DataSnapshot dss : snapshot.getChildren()) {
                             notifications.add(dss.getValue(Notifications.class));
                         }
@@ -178,23 +188,6 @@ public class Notifications extends Fragment {
                 });
     }
 
-//    public View onCreateView(@NonNull LayoutInflater inflater,
-//                             ViewGroup container, Bundle savedInstanceState) {
-//        NotificationsViewModel =
-//                new ViewModelProvider(this).get(NotificationsViewModel.class);
-//
-//        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
-//        View root = binding.getRoot();
-//
-//        final TextView textView = binding.textNotifications;
-//        NotificationsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
-//        return root;
-//    }
 
     @Override
     public void onDestroyView() {

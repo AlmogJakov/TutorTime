@@ -428,7 +428,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 list.add(s);
                 a.notifyDataSetChanged();
                 listSub.add(nameSub);
-                addNotification(fAuth.getCurrentUser().getUid().toString());
                 d.dismiss();
             }
         });

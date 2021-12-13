@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/chats_profile_circle" />
+
+
+    <LinearLayout
+        android:layout_width="274dp"
+        android:layout_height="62dp"
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="6dp"
+        android:layout_toStartOf="@id/open"
+        android:layout_toEndOf="@id/profilePicture"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/UserNameChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/last_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:maxLines="1"
+            android:textColor="@color/common_google_signin_btn_text_light" />
+
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/open"
+        android:layout_width="49dp"
+        android:layout_height="59dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:src="@drawable/open_icon" />
+
+
+
+
+</RelativeLayout>

@@ -25,11 +25,13 @@ import com.project.tutortime.firebase.userObj;
 
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * This class adapter the Notification fragment and the view holder
+ */
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder>{
 
     private final Context mContext;
-    private final List<Notifications> mNotifications;
+    private final List<Notifications> mNotifications; //list of the current notifications
 
 
     public NotificationsAdapter(Context mContext, List<Notifications> mNotifications) {
@@ -40,16 +42,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     @NonNull
     @Override
     public NotificationsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //set the notification layout
         View view = LayoutInflater.from(mContext).inflate(R.layout.notification_item,parent,false);
         return new NotificationsAdapter.NotificationsViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NotificationsViewHolder holder,int position) {
+        //set the notification the the current position
         Notifications notifications = mNotifications.get(position);
-        getUser(FirebaseAuth.getInstance().getUid(),holder.UserName);
-        holder.Remarks.setText(notifications.getRemarks());
-        //the request was accepted
+        getUser(FirebaseAuth.getInstance().getUid(),holder.UserName);//get the relevant user data
+        holder.Remarks.setText(notifications.getRemarks()); //set the notification remarks
+        //the types of the notifications handle here
         switch (notifications.getRequestStatus()){
             case "Accepted":
                 readContactInformation(holder,notifications);
@@ -57,11 +61,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             case "Waiting for response":
                 readTeachingRequest(holder,notifications);
                 break;
-            //the request was decline or it is system notice
+            //the request was decline or it is a system notice
             default:
                 holder.Open.setVisibility(View.GONE);
         }
-        //allow the user to delete notification by pressing the bell icon
+        //allow the user to delete notification by pressing on the bell icon
         holder.Bell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +79,10 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     public int getItemCount() {
         return mNotifications.size();
     }
+
+    /**
+     * This class holds the notification view objects ass well as the popup windows
+     */
 
     public class NotificationsViewHolder extends RecyclerView.ViewHolder {
 
@@ -96,14 +104,21 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
         }
     }
+
+    /**
+     * This method set the current user data
+     * @param UserID the id of the user
+     * @param username the name of the user
+     */
     private void getUser(String UserID,TextView username){
+        //get the user data from the database
         FirebaseDatabase.getInstance().getReference().child("users").child(UserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
                 userObj userobj = snapshot.getValue(userObj.class);
                 if(userobj!=null){
-                    username.setText(userobj.getfName());
+                    username.setText(userobj.getfName());//set the user first name
                 }
 
             }
@@ -115,6 +130,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         });
 
     }
+
+    /**
+     * This message allows to create a custom alert dialog with the user
+     * @param message - the message of the alert
+     * @param title - the title of the alert
+     */
     private void CustomAlert( String message,String title ) {
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setTitle(title)
@@ -125,6 +146,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                     }
                 }).show();
     }
+
+    /**
+     * This method allows to remove notfication from the list view and from the database
+     * @param notifications - the notification that the user wants to remove
+     * @param position - the current position in the list
+     * @param userID - the id of the user
+     */
     private void removeNotification(Notifications notifications, int position,String userID) {
         //remove from list view
         mNotifications.remove(notifications);
@@ -134,20 +162,30 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         FirebaseDatabase.getInstance().getReference().child("notifications").child(userID)
                 .child(notifications.getNotificationKey()).removeValue();
     }
+
+    /**
+     * This method read the teacher contact information
+     * @param holder the view holder
+     * @param notifications the notification with the contact information
+     */
     private void readContactInformation(NotificationsViewHolder holder,Notifications notifications ) {
+        //set the contact information
         holder.popup_accepted.setContentView(R.layout.popup_notification_contact_information);
         TextView teacherName = holder.popup_accepted.findViewById(R.id.teacherName);
         TextView teacherEmail = holder.popup_accepted.findViewById(R.id.teacherEmail);
         TextView teacherPhoneNumber = holder.popup_accepted.findViewById(R.id.teacherPhoneNumber);
+        //add it to the popup window
         teacherName.append(notifications.getTeacherName());
         teacherEmail.append(notifications.getTeacherEmail());
         teacherPhoneNumber.append(notifications.getPhoneNumber());
+        //allow the user to show the popup window
         holder.Open.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.popup_accepted.show();
             }
         });
+        //allow the user to close the popup window
         holder.popup_accepted.findViewById(R.id.closePopup).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,6 +193,12 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
             }
         });
     }
+
+    /**
+     * This method read the teaching request and allows the user to accept the request or decline it
+     * @param holder the view hlder
+     * @param notifications the notification of the teaching request to read
+     */
 
     private void readTeachingRequest(NotificationsViewHolder holder,Notifications notifications){
         holder.popup_request.setContentView(R.layout.popup_notifications);
@@ -186,11 +230,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         //accept or decline the request
         Button Accept = (Button)holder.popup_request.findViewById(R.id.acceptBtn);
         Button Decline = (Button)holder.popup_request.findViewById(R.id.declineBtn);
+        //allow the user to accept the request
         Accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendContactInformation(notifications.getSubject(),notifications.getSendTo(),notifications.getTeacherEmail());
                 CustomAlert("Your contact information sent successfully","Notification");
+                //removed automatically since the user already accepted it
                 removeNotification(notifications,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
                 holder.popup_request.dismiss();
             }
@@ -207,6 +253,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
 
 
     }
+
+    /**
+     * This method send the contact information of the teacher to the user as a notification
+     * @param subject the subject of the teaching request
+     * @param userID the id of the user
+     * @param email the email of the teacher
+     */
     private void sendContactInformation(String subject,String userID,String email){
         HashMap<String,Object> map = new HashMap<>();
         String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
@@ -224,6 +277,11 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         if (key != null)
             FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
     }
+    /**
+     * This method send decline notification to the user
+     * @param teacherName the first name of the teacher
+     * @param userID the id of the user
+     */
     private void sendDeclineNotification(String userID,String teacherName){
         HashMap<String,Object> map = new HashMap<>();
         String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
@@ -240,6 +298,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         map.put("NotificationKey",key);
         if(key!=null)FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
     }
+
+    /**
+     * This method create a dialog with the user to be sure that he wants the remove the notification
+     * @param notifications the notification to remove
+     * @param position the current position of the notification
+     * @param userID the user id
+     */
     private void deleteDialog(Notifications notifications, int position,String userID){
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
         dialog.setTitle("Delete notification")
