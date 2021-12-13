@@ -30,13 +30,16 @@ public class FireBaseTeacher extends firebaseBaseModel{
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String City = dataSnapshot.child("city").getValue(String.class);
-                System.out.println("HEY");
+                /* Make a list of all the RealTime DataBase commands to execute
+                 * (for the purpose of executing all the commands at once) */
                 Map<String, Object> childUpdates = new HashMap<>();
                 for (int i = 0; i < sub.size(); i++) {
+                    /* (add a command) add the subject to the Search Tree */
                     childUpdates.put("search/" + sub.get(i).getType() + "/" + sub.get(i).getsName() + "/" + City + "/" + sub.get(i).getPrice() + "/" + teacherId, teacherId);
+                    /* (add a command) add the subject to the current teacher object */
                     childUpdates.put("teachers/" + teacherId + "/sub/" + sub.get(i).getsName(), sub.get(i));
-                    System.out.println("HEY");
                 }
+                /* Finally, execute all RealTime DataBase commands in one command (safely). */
                 myRef.updateChildren(childUpdates);
             }
             @Override

@@ -526,7 +526,12 @@ public class TutorProfile extends Fragment {
         d.show();
     }
 
+    /* Subject Update - update a subject according to the previous subject and a new subject.
+     * Subject Addition - addition of a new subject ('prevSub'=null when calling the method)
+     * Subject Deletion - deletion of an old subject ('newSub'=null when calling the method) */
     public void updateList(subjectObj prevSub,subjectObj newSub) {
+        /* Make a list of all the RealTime DataBase commands to execute
+         * (for the purpose of executing all the commands at once) */
         Map<String, Object> childUpdates = new HashMap<>();
         new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -534,13 +539,18 @@ public class TutorProfile extends Fragment {
                 teacherID = dataSnapshot.child("teacherID").getValue(String.class);
                 String City = dataSnapshot.child("city").getValue(String.class);
                 if (prevSub!=null) {
+                    /* (add a command) delete the subject from the Search Tree */
                     childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName() + "/" + City + "/" + prevSub.getPrice() + "/" + teacherID, null);
+                    /* (add a command) delete the subject from the current teacher object */
                     childUpdates.put("teachers/" + teacherID + "/sub/" + prevSub.getsName(), null);
                 }
                 if (newSub!=null) {
+                    /* (add a command) add the subject to the Search Tree */
                     childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName() + "/" + City + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
+                    /* (add a command) add the subject to the current teacher object */
                     childUpdates.put("teachers/" + teacherID + "/sub/" + newSub.getsName(), newSub);
                 }
+                /* Finally, execute all RealTime DataBase commands in one command (safely). */
                 myRef.updateChildren(childUpdates);
                 //new FireBaseTeacher().setSubList(teacherID, list);
                 //myRef.child("teachers").child(teacherID).child("sub").setValue(listSub);
