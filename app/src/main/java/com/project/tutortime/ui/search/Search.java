@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,9 +36,10 @@ public class Search extends Fragment {
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
     Button addBtn;
-    Spinner nameSpinner;
+    Spinner subjectSpin;
     TextView typeSpinner;
     TextView citySpinner;
+    EditText minPrice, maxPrice;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,8 +53,8 @@ public class Search extends Fragment {
         ArrayList<Integer> listType = new ArrayList<>();
         setSpinner(typeSpinner, selectType, listType, type);
 
-        nameSpinner = v.findViewById(R.id.selectSub);
-        nameSpinner.setAdapter(new ArrayAdapter<>
+        subjectSpin = v.findViewById(R.id.selectSub);
+        subjectSpin.setAdapter(new ArrayAdapter<>
                 (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
 
         citySpinner = v.findViewById(R.id.selectCity);
@@ -61,11 +63,32 @@ public class Search extends Fragment {
         ArrayList<Integer> listCity = new ArrayList<>();
         setSpinner(citySpinner,selectCity,listCity, cities);
 
+        maxPrice = v.findViewById(R.id.max);
+        minPrice = v.findViewById(R.id.min);
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String typeResult = typeSpinner.getText().toString().trim();
+                String cityResult = citySpinner.getText().toString().trim();
+                String subjectResult = subjectSpin.getSelectedItem().toString();
+                String minResult = minPrice.getText().toString().trim();
+                String maxResult = maxPrice.getText().toString().trim();
+                int min=0, max=300;
+                try{
+                    min = Integer.parseInt(minResult);
+                    max = Integer.parseInt(maxResult);
+                }
+                catch (NumberFormatException ignored){
+
+                }
+
                 Intent intent = new Intent(getActivity(), SearchResults.class);
+                intent.putExtra("typeResult", typeResult);
+                intent.putExtra("cityResult", cityResult);
+                intent.putExtra("subjectResult", subjectResult);
+                intent.putExtra("minResult", min);
+                intent.putExtra("maxResult", max);
                 startActivity(intent);
             }
         });
