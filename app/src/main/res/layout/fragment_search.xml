@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#C6EAE6"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.search.Search">
@@ -15,7 +14,7 @@
         android:layout_margin="5dp"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="#D1C6C6"
+        app:cardBackgroundColor="#D2E1E3"
         app:cardCornerRadius="20dp"
         app:cardElevation="10dp"
         app:cardMaxElevation="12dp"
@@ -55,7 +54,7 @@
 
     <TextView
         android:id="@+id/sub"
-        android:background="#E8CEA8"
+        android:background="#BAB9B7"
         android:layout_width="293dp"
         android:layout_height="26dp"
         android:layout_marginStart="8dp"
@@ -86,7 +85,7 @@
 
     <TextView
         android:id="@+id/Learning"
-        android:background="#E8CEA8"
+        android:background="#BAB9B7"
         android:layout_width="293dp"
         android:layout_height="26dp"
         android:layout_marginStart="8dp"
@@ -116,7 +115,7 @@
 
     <TextView
         android:id="@+id/Area"
-        android:background="#E8CEA8"
+        android:background="#BAB9B7"
         android:layout_width="293dp"
         android:layout_height="32dp"
         android:layout_marginStart="8dp"
@@ -146,7 +145,7 @@
 
     <TextView
         android:id="@+id/price"
-        android:background="#E8CEA8"
+        android:background="#BAB9B7"
         android:layout_width="293dp"
         android:layout_height="27dp"
         android:layout_marginStart="8dp"
@@ -162,7 +161,7 @@
         app:layout_constraintVertical_bias="0.688" />
 
     <EditText
-        android:id="@+id/Min"
+        android:id="@+id/min"
         android:layout_width="115dp"
         android:layout_height="44dp"
         android:layout_marginTop="8dp"

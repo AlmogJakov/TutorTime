@@ -1,13 +1,12 @@
 package com.project.tutortime.ui.tutorprofile;
 
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
@@ -30,6 +28,7 @@ import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -40,7 +39,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -54,7 +52,6 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.LoadingScreen;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
-import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.databinding.FragmentTutorProfileBinding;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
@@ -62,13 +59,11 @@ import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.userObj;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,6 +71,7 @@ public class TutorProfile extends Fragment {
 
     private TutorProfileViewModel TutorProfileViewModel;
     private FragmentTutorProfileBinding binding;
+    TextView serviceCitiesSpinner;
     EditText fname, lname, pnumber, description;
     Button saveProfile, addSub, updateImage;
     String teacherID;
@@ -91,6 +87,7 @@ public class TutorProfile extends Fragment {
     Uri imageData;
     String imgURL;
     boolean del = false;
+    ArrayList<String> listCities = new ArrayList<>();
 
     private static final int GALLERY_REQUEST_COD = 1;
 
@@ -99,6 +96,14 @@ public class TutorProfile extends Fragment {
         TutorProfileViewModel = new ViewModelProvider(this).get(TutorProfileViewModel.class);
         binding = FragmentTutorProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+//        final TextView textView = binding.myTutorProfile;
+//        TutorProfileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+//            @Override
+//            public void onChanged(@Nullable String s) {
+//                textView.setText(s);
+//            }
+//        });
 
         fname = binding.myFName;
         lname = binding.myLName;
@@ -109,6 +114,7 @@ public class TutorProfile extends Fragment {
         updateImage = binding.btnUpdateImage;
         img = binding.imageView;
         subjectList = binding.subList;
+        serviceCitiesSpinner = binding.txtServiceCities;
         //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.dropdown_menu_popup_item);
         //AutoCompleteTextView editTextFilledExposedDropdown = binding.spinnerCity;
         //editTextFilledExposedDropdown.setAdapter(adapter);
@@ -116,6 +122,8 @@ public class TutorProfile extends Fragment {
         ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
+
+
 
         /* Disable all Buttons & Text Edit Fields - until all data received from FireBase */
         fname.setEnabled(false);
@@ -126,6 +134,7 @@ public class TutorProfile extends Fragment {
         addSub.setEnabled(false);
         updateImage.setVisibility(View.GONE);
         citySpinner.setEnabled(false);
+        serviceCitiesSpinner.setEnabled(false);
         subjectList.setEnabled(false);
         /* END Disable all Buttons & Text Edit Fields */
 
@@ -135,19 +144,30 @@ public class TutorProfile extends Fragment {
             public View getView(int position, View convertView, ViewGroup parent) {
                 View v = super.getView(position, convertView, parent);
                 if (position == 0) { // Hint
-                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
-                return v; }
+                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
+                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(0));
+                }
+                return v;
+            }
+
             @Override
-            public int getCount() { return super.getCount(); }
+            public int getCount() {
+                return super.getCount();
+            }
+
             @Override /* Disable selection of the Hint (first selection) */
-            public boolean isEnabled(int position) { return (position != 0); }
+            public boolean isEnabled(int position) {
+                return (position != 0);
+            }
+
             @Override /* Set the color of the Hint (first selection) to Grey */
             public View getDropDownView(int position, View convertView, ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView)view;
-                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
-                return view; }
+                TextView tv = (TextView) view;
+                if (position == 0) tv.setTextColor(Color.GRAY);
+                else tv.setTextColor(Color.BLACK);
+                return view;
+            }
         };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         String[] cities = getResources().getStringArray(R.array.Cities);
@@ -156,6 +176,26 @@ public class TutorProfile extends Fragment {
         citySpinner.setAdapter(adapter);
         citySpinner.setSelection(0); //display hint
         /* END Select City Spinner Code () */
+
+//        delImage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                StorageReference imgRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
+//                imgRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // File deleted successfully
+//                        Log.d("Picture", "onSuccess: deleted file");
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception exception) {
+//                        // Uh-oh, an error occurred!
+//                        Log.d("Picture", "onFailure: did not delete file");
+//                    }
+//                });
+//            }
+//        });
 
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,8 +245,7 @@ public class TutorProfile extends Fragment {
                         }
                     });
                     d.show();
-                }
-                else{
+                } else {
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -225,62 +264,78 @@ public class TutorProfile extends Fragment {
                 String firstName = fname.getText().toString().trim();
                 String lastName = lname.getText().toString().trim();
                 String city = citySpinner.getSelectedItem().toString();
+
                 if (TextUtils.isEmpty(firstName)) {
                     fname.setError("First name is required.");
-                    return; }
+                    return;
+                }
                 if (TextUtils.isEmpty(lastName)) {
                     lname.setError("Last name is required.");
-                    return; }
+                    return;
+                }
                 if (TextUtils.isEmpty(pNum)) {
                     pnumber.setError("PhoneNumber is required.");
-                    return; }
-                if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
+                    return;
+                }
+                if (pNum.length() != 10 && pNum.charAt(0) != 0 && pNum.charAt(1) != 5) {
                     pnumber.setError("Invalid phoneNumber.");
-                    return; }
-                if (citySpinner.getSelectedItemPosition()==0) {
-                    TextView errorText = (TextView)citySpinner.getSelectedView();
+                    return;
+                }
+                if (citySpinner.getSelectedItemPosition() == 0) {
+                    TextView errorText = (TextView) citySpinner.getSelectedView();
                     errorText.setError("City is required.");
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
-                    return; }
+                    return;
+                }
 //                if (list.isEmpty()) {
 //                    Toast.makeText(getActivity(), "You must choose at least one subject",
 //                            Toast.LENGTH_SHORT).show();
 //                    return; }
+
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
+                        /* sort thw list of service cities */
+                        Collections.sort(listCities);
                         /* get teacher ID */
                         teacherID = dataSnapshot.child("teacherID").getValue(String.class);
                         /* Make a list of all the RealTime DataBase commands to execute
                             (for the purpose of executing all the commands at once) */
                         Map<String, Object> childUpdates = new HashMap<>();
-                        if (imgURL != null) childUpdates.put("teachers/" + teacherID + "/imgUrl", imgURL);
+                        if (imgURL != null)
+                            childUpdates.put("teachers/" + teacherID + "/imgUrl", imgURL);
                         childUpdates.put("teachers/" + teacherID + "/phoneNum", pNum);
                         childUpdates.put("teachers/" + teacherID + "/description", descrip);
+                        childUpdates.put("teachers/" + teacherID + "/serviceCities", listCities);
                         childUpdates.put("users/" + userID + "/fName", firstName);
                         childUpdates.put("users/" + userID + "/lName", lastName);
                         childUpdates.put("users/" + userID + "/city", city);
                         /* If the user deleted the image - delete it from the storage and add
                             a delete command to childUpdates (to delete it URL from the RealTime DataBase) */
                         if (del) {
-                            if (imgURL != null) childUpdates.put("teachers/" + teacherID + "/imgUrl", null);
+                            if (imgURL != null)
+                                childUpdates.put("teachers/" + teacherID + "/imgUrl", null);
                             FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                             StorageReference storageReference = firebaseStorage.getReference(imgURL);
                             storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Log.e("Picture", "#deleted");
-                                    imgURL = null; }
+                                    imgURL = null;
+                                }
                             });
                         }
                         /* Finally, execute all RealTime DataBase commands in one command (safely). */
                         myRef.updateChildren(childUpdates);
                     }
+
                     @Override
-                    public void onCancelled(DatabaseError databaseError) { }
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
                 });
-                if (imageData==null) {
+
+                if (imageData == null) {
                     goToTutorMain(requireActivity());
                 } else {
                     uploadImageAndGoToMain(teacherID);
@@ -289,6 +344,7 @@ public class TutorProfile extends Fragment {
         });
         return root;
     }
+
 
     /* get fragment activity (to do actions on the activity) */
     private void goToTutorMain(Activity currentActivity) {
@@ -312,10 +368,10 @@ public class TutorProfile extends Fragment {
         currentActivity.finish();
     }
 
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -331,6 +387,30 @@ public class TutorProfile extends Fragment {
                         break;
                     }
                 }
+
+                for (DataSnapshot citySnapsot : dataSnapshot.child("teachers").child(teacherID).
+                        child("serviceCities").getChildren()) {
+                    String serviceCity = citySnapsot.getValue(String.class);
+                    listCities.add(serviceCity);
+                }
+                if (listCities.isEmpty()){
+                    serviceCitiesSpinner.setText("Select cities");
+                }
+                else {
+                    serviceCitiesSpinner.setText(printList(listCities));
+                }
+
+                /* Variable for teacher tutor cities */
+                String[] arrCities = getResources().getStringArray(R.array.Cities);
+                boolean[] selectCities = new boolean[arrCities.length];
+                ArrayList<Integer> listCitiesNum = new ArrayList<>();
+                for( int i = 0 ; i < arrCities.length ; i++){
+                    if (listCities.contains(arrCities[i])){
+                        selectCities[i] = true;
+                    }
+                }
+                setCitySpinner(serviceCitiesSpinner, selectCities, listCitiesNum, arrCities);
+
                 pnumber.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("phoneNum").getValue(String.class));
                 description.setText(dataSnapshot.child("teachers").child(teacherID).
@@ -355,7 +435,6 @@ public class TutorProfile extends Fragment {
                 subjectList.setAdapter(a);
                 a.notifyDataSetChanged();
 
-
                 /* Enable all Buttons & Text Edit Fields - data already received from FireBase */
                 fname.setEnabled(true);
                 lname.setEnabled(true);
@@ -366,13 +445,15 @@ public class TutorProfile extends Fragment {
                 updateImage.setVisibility(View.VISIBLE);
                 citySpinner.setEnabled(true);
                 subjectList.setEnabled(true);
+                serviceCitiesSpinner.setEnabled(true);
                 /* END Enable all Buttons & Text Edit Fields */
-
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Toast.makeText(getContext(), "onCreate error. " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
+
         });
     }
 
@@ -581,10 +662,6 @@ public class TutorProfile extends Fragment {
                 img.setImageBitmap(selectedImage);
 
 
-
-
-
-
                 /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -662,4 +739,64 @@ public class TutorProfile extends Fragment {
                 });
 
     }
+    private void setCitySpinner(TextView citySpinner, boolean[] selectCities, ArrayList<Integer> listCitiesNum,
+                                String[] arrCities) {
+
+        citySpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Select cities");
+                builder.setCancelable(false);
+
+                builder.setMultiChoiceItems(arrCities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            listCitiesNum.add(which);
+                            listCities.add(arrCities[which]);
+                            Collections.sort(listCitiesNum);
+                        } else {
+                            listCitiesNum.remove((Integer) which);
+                            listCities.remove(arrCities[which]);
+                        }
+                    }
+                });
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        citySpinner.setText(printList(listCities));
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectCities.length; i++) {
+                            selectCities[i] = false;
+                            listCitiesNum.clear();
+                            listCities.clear();
+                            citySpinner.setText("Select cities");
+                        }
+                    }
+                });
+
+                builder.show();
+            }
+        });
+    }
+    // Print the List of cities that the teacher tutor
+    private String printList (ArrayList < String > list) {
+        String s =list.toString();
+        s = s.replace("[","");
+        s = s.replace("]","");
+        return s;
+    }
+
 }

@@ -15,11 +15,10 @@ import java.util.Set;
 public class FireBaseTeacher extends firebaseBaseModel{
     FireBaseUser u = new FireBaseUser();
 
-    public String addTeacherToDB(String phoneNum, String description, String userid, List<String> ServiceCities,
+    public String addTeacherToDB(String phoneNum, String description, String userid, List<String> serviceCities,
                                  List<subjectObj> sub, String imgUrl){
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
-        teacherObj teacher = new teacherObj(phoneNum, description, userid, ServiceCities, imgUrl);
-        /* get teacher ID */
+        teacherObj teacher = new teacherObj(phoneNum, description, userid, serviceCities, imgUrl);
         String teacherId = myRef.push().getKey();
         /* set user 'teacherID' variable */
         u.getUserRef().child("teacherID").setValue(teacherId);
@@ -47,6 +46,10 @@ public class FireBaseTeacher extends firebaseBaseModel{
         });
 
         return teacherId;
+    }
+
+    public void setServiceCities(String teacherId, ArrayList<subjectObj> serviceCities){
+        myRef.child("teachers").child(teacherId).child("serviceCities").setValue(serviceCities);
     }
 
     public void setSubList(String teacherId, ArrayList<subjectObj> listSub){
