@@ -18,7 +18,7 @@ public class teacherObj implements Serializable {
     }
 
     public teacherObj(String phoneNum, String description, String userid, List<String> service_cities,
-            String imgUrl) {
+             String imgUrl) {
         this.phoneNum=phoneNum;
         this.description=description;
         this.serviceCities = new ArrayList<String>(service_cities);
