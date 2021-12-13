@@ -33,7 +33,7 @@ public class subjectObj implements Serializable {
         HINT("Select learning type"),
         online("online"),
         frontal("frontal"),
-        onlinefrontal("online/frontal");
+        both("both");
         private final String friendlyName;
 
         Type(String friendlyName){
@@ -94,6 +94,7 @@ public class subjectObj implements Serializable {
 
     private String sName;
     private String type;
+    private String key;
     private int price;
     private String experience;
 
@@ -121,6 +122,14 @@ public class subjectObj implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
     public int getPrice() {

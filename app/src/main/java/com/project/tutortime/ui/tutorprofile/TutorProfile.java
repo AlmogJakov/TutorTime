@@ -82,6 +82,7 @@ public class TutorProfile extends Fragment {
     Spinner citySpinner;
     ImageView img;
     ListView subjectList;
+    userObj userOBJ;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
@@ -98,14 +99,6 @@ public class TutorProfile extends Fragment {
         TutorProfileViewModel = new ViewModelProvider(this).get(TutorProfileViewModel.class);
         binding = FragmentTutorProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-
-//        final TextView textView = binding.myTutorProfile;
-//        TutorProfileViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
 
         fname = binding.myFName;
         lname = binding.myLName;
@@ -163,26 +156,6 @@ public class TutorProfile extends Fragment {
         citySpinner.setAdapter(adapter);
         citySpinner.setSelection(0); //display hint
         /* END Select City Spinner Code () */
-
-//        delImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                StorageReference imgRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
-//                imgRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        // File deleted successfully
-//                        Log.d("Picture", "onSuccess: deleted file");
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        // Uh-oh, an error occurred!
-//                        Log.d("Picture", "onFailure: did not delete file");
-//                    }
-//                });
-//            }
-//        });
 
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -270,10 +243,10 @@ public class TutorProfile extends Fragment {
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
                     return; }
-                if (list.isEmpty()) {
-                    Toast.makeText(getActivity(), "You must choose at least one subject",
-                            Toast.LENGTH_SHORT).show();
-                    return; }
+//                if (list.isEmpty()) {
+//                    Toast.makeText(getActivity(), "You must choose at least one subject",
+//                            Toast.LENGTH_SHORT).show();
+//                    return; }
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -307,23 +280,6 @@ public class TutorProfile extends Fragment {
                     @Override
                     public void onCancelled(DatabaseError databaseError) { }
                 });
-//                /* were logging in as tutor (tutor status value = 1).
-//                     pass 'Status' value (1) to MainActivity. */
-//                final ArrayList<Integer> arr = new ArrayList<Integer>();
-//                arr.add(1);
-//                //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
-//                Intent intent = new Intent(getActivity(), MainActivity.class);
-//                /* disable returning to SetTutorProfile class after opening main
-//                 * activity, since we don't want the user to re-choose Profile
-//                 * because the tutor profile data still exists with no use!
-//                 * (unless we implementing method to remove the previous data) */
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                intent.putExtra("status",arr);
-//                /* finish last activities to prevent last MainActivity to run with Customer view */
-//                getActivity().finish();
-//                startActivity(intent);
-//                getActivity().getFragmentManager().popBackStack();
                 if (imageData==null) {
                     goToTutorMain(requireActivity());
                 } else {
@@ -345,7 +301,7 @@ public class TutorProfile extends Fragment {
         Intent intent = new Intent(currentActivity, MainActivity.class);
         /* disable returning to SetTutorProfile class after opening main
          * activity, since we don't want the user to re-choose Profile
-         * because the tutor profile data still exists with no use!
+         * -> because the tutor profile data still exists with no use!
          * (unless we implementing method to remove the previous data) */
         intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -384,13 +340,6 @@ public class TutorProfile extends Fragment {
                 if (imgURL != null) { /* The image exists! */
                     StorageReference storageReference = storage.getReference().child(imgURL);
                     Glide.with(getContext()).load(storageReference).into(img);
-
-//                    /* The image has already been downloaded from the server for display
-//                     * in the navigation bar, so take the existing image. */
-//                    NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
-//                    View navHeaderView = navigationView.getHeaderView(0);
-//                    ImageView prof = (ImageView)navHeaderView.findViewById(R.id.imageView);
-//                    img.setImageDrawable(prof.getDrawable());
                 }
                 for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
                         child("sub").getChildren()) {
@@ -398,6 +347,7 @@ public class TutorProfile extends Fragment {
                             subSnapsot.child("type").getValue(String.class),
                             subSnapsot.child("price").getValue(Integer.class),
                             subSnapsot.child("experience").getValue(String.class));
+                    sub.setKey(subSnapsot.getKey());
                     list.add(sub);
                     listSub.add(sub.getsName());
                 }
@@ -476,9 +426,9 @@ public class TutorProfile extends Fragment {
                 if (type == "Select learning type") {
                     Toast.makeText(getActivity(), "Learning type is required.", Toast.LENGTH_SHORT).show();
                     return; }
-                subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
-                list.add(s);
-                updateList();
+                subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
+                list.add(newSub);
+                updateList(null,newSub);
                 listSub.add(nameSub);
                 d.dismiss();
             }
@@ -546,12 +496,12 @@ public class TutorProfile extends Fragment {
                 if (listSub.contains(nameSub) && !nameSub.equals(currSub.getsName())) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
-                subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
+                subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 /* remove the last entry (before the edit) */
                 list.remove(currSub);
                 /*  */
-                list.add(s);
-                updateList();
+                list.add(newSub);
+                updateList(currSub,newSub);
                 listSub.add(nameSub);
                 d.dismiss();
             }
@@ -561,7 +511,7 @@ public class TutorProfile extends Fragment {
             public void onClick(View view) {
                 list.remove(currSub);
                 listSub.remove(currSub.getsName());
-                updateList();
+                updateList(currSub,null);
                 a.notifyDataSetChanged();
                 d.dismiss();
             }
@@ -576,12 +526,24 @@ public class TutorProfile extends Fragment {
         d.show();
     }
 
-    public void updateList() {
+    public void updateList(subjectObj prevSub,subjectObj newSub) {
+        Map<String, Object> childUpdates = new HashMap<>();
         new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                new FireBaseTeacher().setSubList(teacherID, list);
+                String City = dataSnapshot.child("city").getValue(String.class);
+                if (prevSub!=null) {
+                    childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName() + "/" + City + "/" + prevSub.getPrice() + "/" + teacherID, null);
+                    childUpdates.put("teachers/" + teacherID + "/sub/" + prevSub.getsName(), null);
+                }
+                if (newSub!=null) {
+                    childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName() + "/" + City + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
+                    childUpdates.put("teachers/" + teacherID + "/sub/" + newSub.getsName(), newSub);
+                }
+                myRef.updateChildren(childUpdates);
+                //new FireBaseTeacher().setSubList(teacherID, list);
+                //myRef.child("teachers").child(teacherID).child("sub").setValue(listSub);
                 ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
                 subjectList.setAdapter(a);
                 a.notifyDataSetChanged();
@@ -623,22 +585,6 @@ public class TutorProfile extends Fragment {
                     imageData = null;
                     Toast.makeText(getActivity(), "Upload image Failed", Toast.LENGTH_LONG).show();
                 }
-
-
-//                File tempDir= Environment.getExternalStorageDirectory();
-//                tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
-//                tempDir.mkdir();
-//                File tempFile = File.createTempFile("some", ".jpg", tempDir);
-//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//                byte[] bitmapData = bytes.toByteArray();
-//                //write the bytes in file
-//                FileOutputStream fos = new FileOutputStream(tempFile);
-//                fos.write(bitmapData);
-//                fos.flush();
-//                fos.close();
-//                imageData = Uri.fromFile(tempFile);
-
 
                 /* Note that a new image has been created in the gallery
                  * but the image will be deleted after uploading it to the server.

@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class teacherObj implements Serializable {
     private String phoneNum;
-    private List<subjectObj> sub;
+    //private List<subjectObj> sub;
     private String description;
     private String userID;
     private List<String> serviceCities;
@@ -18,14 +18,13 @@ public class teacherObj implements Serializable {
     }
 
     public teacherObj(String phoneNum, String description, String userid, List<String> service_cities,
-                      List<subjectObj> sub, String imgUrl) {
+            String imgUrl) {
         this.phoneNum=phoneNum;
         this.description=description;
         this.serviceCities = new ArrayList<String>(service_cities);
-        this.sub= new ArrayList<subjectObj>(sub);
+        //this.sub= new ArrayList<subjectObj>(sub);
         this.userID = userid;
         this.imgUrl=imgUrl;
-
     }
 
     public String getPhoneNum() {
@@ -36,13 +35,13 @@ public class teacherObj implements Serializable {
         this.phoneNum = phoneNum;
     }
 
-    public List<subjectObj> getSub() {
-        return sub;
-    }
-
-    public void setSub(List<subjectObj> sub) {
-        this.sub = sub;
-    }
+//    public List<subjectObj> getSub() {
+//        return sub;
+//    }
+//
+//    public void setSub(List<subjectObj> sub) {
+//        this.sub = sub;
+//    }
 
     public String getDescription() {
         return description;

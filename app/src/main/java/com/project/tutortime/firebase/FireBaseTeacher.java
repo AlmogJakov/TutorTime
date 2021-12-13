@@ -1,7 +1,15 @@
 package com.project.tutortime.firebase;
 
+import android.widget.ArrayAdapter;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class FireBaseTeacher extends firebaseBaseModel{
@@ -10,10 +18,31 @@ public class FireBaseTeacher extends firebaseBaseModel{
     public String addTeacherToDB(String phoneNum, String description, String userid, List<String> ServiceCities,
                                  List<subjectObj> sub, String imgUrl){
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
-        teacherObj teacher = new teacherObj(phoneNum, description, userid, ServiceCities, sub,  imgUrl);
+        teacherObj teacher = new teacherObj(phoneNum, description, userid, ServiceCities, imgUrl);
+        /* get teacher ID */
         String teacherId = myRef.push().getKey();
+        /* set user 'teacherID' variable */
         u.getUserRef().child("teacherID").setValue(teacherId);
+        /* set the teacher object */
         myRef.child("teachers").child(teacherId).setValue(teacher);
+        /* ADD ALL TEACHER SUBJECTS IN ONE COMMAND */
+        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String City = dataSnapshot.child("city").getValue(String.class);
+                System.out.println("HEY");
+                Map<String, Object> childUpdates = new HashMap<>();
+                for (int i = 0; i < sub.size(); i++) {
+                    childUpdates.put("search/" + sub.get(i).getType() + "/" + sub.get(i).getsName() + "/" + City + "/" + sub.get(i).getPrice() + "/" + teacherId, teacherId);
+                    childUpdates.put("teachers/" + teacherId + "/sub/" + sub.get(i).getsName(), sub.get(i));
+                    System.out.println("HEY");
+                }
+                myRef.updateChildren(childUpdates);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+
         return teacherId;
     }
 

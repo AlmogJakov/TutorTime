@@ -417,16 +417,13 @@ public class SetTutorProfile extends AppCompatActivity {
 //                }
                 if (listSub.contains(nameSub)) {
                     Toast.makeText(SetTutorProfile.this, "You already have selected this subject.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 if (nameSub == "Select subject") {
                     Toast.makeText(SetTutorProfile.this, "Subject is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 if (type == "Select learning type") {
                     Toast.makeText(SetTutorProfile.this, "Learning type is required.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                    return; }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 list.add(s);
                 a.notifyDataSetChanged();

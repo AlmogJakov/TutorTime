@@ -126,7 +126,6 @@ public class Register extends AppCompatActivity {
             finish();
         }
 
-
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -141,28 +140,19 @@ public class Register extends AppCompatActivity {
 
                 if (TextUtils.isEmpty(fName)) {
                     mFName.setError("First name is required.");
-                    return;
-                }
-
+                    return; }
                 if (TextUtils.isEmpty(lName)) {
                     mLName.setError("Last name is required.");
-                    return;
-                }
-
+                    return; }
                 if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is required.");
-                    return;
-                }
-
+                    return; }
                 if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password is required.");
-                    return;
-                }
-
+                    return; }
                 if (password.length() < 6) {
                     mPassword.setError("Password must contains at least 6 digits.");
-                    return;
-                }
+                    return; }
 
                 /* if Gender Box == Gender Hint then the user didn't choose gender */
                 if (TextUtils.equals(gender,"Choose Gender")) {
