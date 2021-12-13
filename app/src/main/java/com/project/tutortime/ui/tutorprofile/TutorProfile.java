@@ -439,7 +439,8 @@ public class TutorProfile extends Fragment {
 
     public void createDialog(ArrayAdapter a) {
         final Dialog d = new Dialog(getActivity());
-        EditText priceEdit, expEdit;
+        Spinner priceEdit;
+        EditText expEdit;
         Button addBtn, closeBtn;
         Spinner nameSpinner, typeSpinner;
         d.setContentView(R.layout.subject_add_dialog);
@@ -450,6 +451,10 @@ public class TutorProfile extends Fragment {
         addBtn = d.findViewById(R.id.btnAddS);
         closeBtn = d.findViewById(R.id.btnCloseS);
         nameSpinner = d.findViewById(R.id.spinnerSubName);
+
+        priceEdit.setAdapter(new ArrayAdapter<>
+                (getActivity(), android.R.layout.simple_spinner_item, subjectObj.Prices.values()));
+
         nameSpinner.setAdapter(new ArrayAdapter<>
                 (getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
         typeSpinner = d.findViewById(R.id.spinnerLType);
@@ -458,12 +463,14 @@ public class TutorProfile extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String price = priceEdit.getText().toString().trim();
+                //String price = priceEdit.getText().toString().trim();
+                String price = priceEdit.getSelectedItem().toString().trim();
                 String exp = expEdit.getText().toString().trim();
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
-                if (price.isEmpty()) {
-                    priceEdit.setError("Price is required.");
+                if (price == "Select Price") {
+                    //priceEdit.setError("Price is required.");
+                    Toast.makeText(getActivity(), "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }
                 if (listSub.contains(nameSub)) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
@@ -490,7 +497,8 @@ public class TutorProfile extends Fragment {
 
     public void createEditDialog(ArrayAdapter a, subjectObj currSub) {
         final Dialog d = new Dialog(getActivity());
-        EditText priceEdit, expEdit;
+        Spinner priceEdit;
+        EditText expEdit;
         Button saveBtn, deleteBtn, closeBtn;
         Spinner nameSpinner, typeSpinner;
         d.setContentView(R.layout.subject_edit_dialog);
@@ -502,6 +510,10 @@ public class TutorProfile extends Fragment {
         closeBtn = d.findViewById(R.id.btnClose);
         deleteBtn = d.findViewById(R.id.btnDelete);
         nameSpinner = d.findViewById(R.id.spinSubName);
+
+        priceEdit.setAdapter(new ArrayAdapter<>
+                (getActivity(), android.R.layout.simple_spinner_item, subjectObj.Prices.values()));
+
         ArrayAdapter nameAd = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,
                 subjectObj.SubName.values());
         nameSpinner.setAdapter(nameAd);
@@ -514,18 +526,20 @@ public class TutorProfile extends Fragment {
         typeSpinner.setAdapter(typeAd);
         typeSpinner.setSelection(subjectObj.Type.valueOf(currSub.getType().
                 replaceAll("/", "")).ordinal());
-        priceEdit.setText(Integer.toString((currSub.getPrice())));
+        priceEdit.setSelection(currSub.getPricesEnumPosition(currSub.getPrice()));
         expEdit.setText((currSub.getExperience()));
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String price = priceEdit.getText().toString().trim();
+                //String price = priceEdit.getText().toString().trim();
+                String price = priceEdit.getSelectedItem().toString().trim();
                 String exp = expEdit.getText().toString().trim();
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
-                if (price.isEmpty()) {
-                    priceEdit.setError("Price is required.");
+                if (price == "Select Price") {
+                    //priceEdit.setError("Price is required.");
+                    Toast.makeText(getActivity(), "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }
                 if (nameSub.isEmpty() || nameSub.equals(subjectObj.SubName.HINT)) {
                     Toast.makeText(getActivity(), "Subject is required.", Toast.LENGTH_SHORT).show();
@@ -534,7 +548,7 @@ public class TutorProfile extends Fragment {
                     Toast.makeText(getActivity(), "Learning type is required.", Toast.LENGTH_SHORT).show();
                     return; }
                 /* if the subject already exists BUT IN THE ENTRY THAT CURRENTLY EDITING - IT'S OK!  */
-                if (listSub.contains(nameSub) && nameSub != currSub.getsName()) {
+                if (listSub.contains(nameSub) && !nameSub.equals(currSub.getsName())) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
