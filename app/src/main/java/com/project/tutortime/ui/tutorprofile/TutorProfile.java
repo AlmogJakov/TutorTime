@@ -394,9 +394,11 @@ public class TutorProfile extends Fragment {
                     listCities.add(serviceCity);
                 }
                 if (listCities.isEmpty()){
-                    serviceCitiesSpinner.setText("Select cities");
+                    serviceCitiesSpinner.setTextColor(Color.GRAY);
+                    serviceCitiesSpinner.setText("Select service cities");
                 }
                 else {
+                    serviceCitiesSpinner.setTextColor(Color.BLACK);
                     serviceCitiesSpinner.setText(printList(listCities));
                 }
 
@@ -746,7 +748,7 @@ public class TutorProfile extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Select cities");
+                builder.setTitle("Select service cities");
                 builder.setCancelable(false);
 
                 builder.setMultiChoiceItems(arrCities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
@@ -766,7 +768,14 @@ public class TutorProfile extends Fragment {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        citySpinner.setText(printList(listCities));
+                        if(listCities.isEmpty()){
+                            serviceCitiesSpinner.setTextColor(Color.GRAY);
+                            citySpinner.setText("Select service cities");
+                        }
+                        else{
+                            serviceCitiesSpinner.setTextColor(Color.BLACK);
+                            citySpinner.setText(printList(listCities));
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -782,7 +791,8 @@ public class TutorProfile extends Fragment {
                             selectCities[i] = false;
                             listCitiesNum.clear();
                             listCities.clear();
-                            citySpinner.setText("Select cities");
+                            serviceCitiesSpinner.setTextColor(Color.GRAY);
+                            citySpinner.setText("Select service cities");
                         }
                     }
                 });

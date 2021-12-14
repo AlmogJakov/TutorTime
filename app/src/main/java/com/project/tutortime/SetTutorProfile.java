@@ -300,7 +300,7 @@ public class SetTutorProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(SetTutorProfile.this);
-                builder.setTitle("Select cities");
+                builder.setTitle("Select service cities");
                 builder.setCancelable(false);
                 builder.setMultiChoiceItems(cities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -318,17 +318,14 @@ public class SetTutorProfile extends AppCompatActivity {
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int i = 0; i < listCitiesNum.size(); i++) {
-                            stringBuilder.append(cities[listCitiesNum.get(i)]);
-                            //listCities.add(cities[listCitiesNum.get(i)]);
-                            if (i != listCitiesNum.size() - 1) {
-                                stringBuilder.append(", ");
-                            }
+                        if(listCities.isEmpty()){
+                            citySpinner.setTextColor(Color.GRAY);
+                            citySpinner.setText("Select service cities");
                         }
-                        citySpinner.setText(stringBuilder.toString());
-                            for (String s : listCities) {
-                            System.out.println(s);
+                        else{
+                            citySpinner.setTextColor(Color.BLACK);
+                            Collections.sort(listCities);
+                            citySpinner.setText(printList(listCities));
                         }
                     }
                 });
@@ -345,7 +342,8 @@ public class SetTutorProfile extends AppCompatActivity {
                             selectCities[i] = false;
                             listCitiesNum.clear();
                             listCities.clear();
-                            citySpinner.setText("Select cities");
+                            citySpinner.setTextColor(Color.GRAY);
+                            citySpinner.setText("Select service cities");
                         }
                     }
                 });
@@ -652,5 +650,13 @@ public class SetTutorProfile extends AppCompatActivity {
         map.put("NotificationKey",key);
         if (key != null)
             FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
+    }
+
+    // Print the List of cities that the teacher tutor
+    private String printList (ArrayList < String > list) {
+        String s =list.toString();
+        s = s.replace("[","");
+        s = s.replace("]","");
+        return s;
     }
 }
