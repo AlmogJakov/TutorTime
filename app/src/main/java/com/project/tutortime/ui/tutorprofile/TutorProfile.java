@@ -52,6 +52,7 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.LoadingScreen;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
+import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.databinding.FragmentTutorProfileBinding;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
@@ -278,9 +279,23 @@ public class TutorProfile extends Fragment {
                     pnumber.setError("PhoneNumber is required.");
                     return;
                 }
-                if (pNum.length() != 10 && pNum.charAt(0) != 0 && pNum.charAt(1) != 5) {
+                if (pNum.charAt(0) != '0' || pNum.charAt(1) != '5' || pNum.length() != 10) {
                     pnumber.setError("Invalid phoneNumber.");
                     return;
+                }
+                if (list.isEmpty()) {
+                    Toast.makeText(getActivity(), "You must choose at least one subject",
+                            Toast.LENGTH_SHORT).show();
+                    return; }
+                boolean flage = false;
+                for (subjectObj sub : list) {
+                    if(sub.getType() == "frontal" ||  sub.getType() == "both")
+                        flage = true;
+                    if (listCities.isEmpty() && flage) {
+                        Toast.makeText(getActivity(), "You must choose at least one service city",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
                 if (citySpinner.getSelectedItemPosition() == 0) {
                     TextView errorText = (TextView) citySpinner.getSelectedView();
@@ -289,10 +304,6 @@ public class TutorProfile extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-//                if (list.isEmpty()) {
-//                    Toast.makeText(getActivity(), "You must choose at least one subject",
-//                            Toast.LENGTH_SHORT).show();
-//                    return; }
 
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -341,8 +352,10 @@ public class TutorProfile extends Fragment {
                 } else {
                     uploadImageAndGoToMain(teacherID);
                 }
+
             }
         });
+
         return root;
     }
 
