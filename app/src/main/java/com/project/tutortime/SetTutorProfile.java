@@ -254,10 +254,27 @@ public class SetTutorProfile extends AppCompatActivity {
                     return;
                 }
 
-                if (pNum.length() != 10 && pNum.charAt(0) != 0 &&  pNum.charAt(1) != 5) {
+                if (pNum.charAt(0) != '0' || pNum.charAt(1) != '5' || pNum.length() != 10) {
+                    System.out.println(pNum);
                     PhoneNumber.setError("Invalid phoneNumber.");
                     return;
                 }
+                if (list.isEmpty()) {
+                    Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                boolean flage = false;
+                for (subjectObj sub : list) {
+                    if(sub.getType() == "frontal" ||  sub.getType() == "both")
+                        flage = true;
+                    if (listCities.isEmpty() && flage) {
+                        Toast.makeText(SetTutorProfile.this, "You must choose at least one service city",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
 //                if (citySpinner.getSelectedItemPosition()==0) {
 //                    TextView errorText = (TextView)citySpinner.getSelectedView();
 //                    errorText.setError("City is required.");
@@ -266,17 +283,6 @@ public class SetTutorProfile extends AppCompatActivity {
 //                    return;
 //                }
 
-                if (listCitiesNum.isEmpty()) {
-                    Toast.makeText(SetTutorProfile.this, "You must choose at least one city",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (list.isEmpty()) {
-                    Toast.makeText(SetTutorProfile.this, "You must choose at least one subject",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 FireBaseTeacher t = new FireBaseTeacher();
                 /* set isTeacher to teacher status (1=teacher,0=customer) */
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
@@ -295,7 +301,7 @@ public class SetTutorProfile extends AppCompatActivity {
     }
     // Creating a dialogue for choosing cities where the teacher tutor
     private void setSpinnerCity(TextView citySpinner, boolean[] selectCities,
-                            ArrayList<Integer> listCitiesNum, String[] cities) {
+                                ArrayList<Integer> listCitiesNum, String[] cities) {
         citySpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
