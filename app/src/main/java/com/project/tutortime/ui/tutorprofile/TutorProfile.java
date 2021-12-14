@@ -52,6 +52,7 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.LoadingScreen;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
+import com.project.tutortime.SetTutorProfile;
 import com.project.tutortime.databinding.FragmentTutorProfileBinding;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
@@ -593,6 +594,12 @@ public class TutorProfile extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (listSub.size()==1) {
+                    Toast.makeText(getActivity(), "You can not delete the only subject " +
+                                    "defined for you. You must define at least one subject.",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
                 list.remove(currSub);
                 listSub.remove(currSub.getsName());
                 updateList(currSub,null);
