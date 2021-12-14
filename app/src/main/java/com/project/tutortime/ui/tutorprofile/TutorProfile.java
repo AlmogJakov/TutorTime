@@ -120,6 +120,7 @@ public class TutorProfile extends Fragment {
         //editTextFilledExposedDropdown.setAdapter(adapter);
         citySpinner = binding.spinnerCity;
         ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+
         subjectList.setAdapter(a);
         a.notifyDataSetChanged();
 
