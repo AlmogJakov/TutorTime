@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
                 //DatabaseReference refer = dataSnapshot.getRef();
                 //Query query = refer.
                 //System.out.println("Search childs: "+counter);
-                String[] values = new String[] { "Tutor1", "Tutor2"};
+                String[] values = new String[] { "Tutor1", "Tutor2", "Tutor3"};
                 final TutorAdapter adapter = new TutorAdapter(getContext(), values);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
