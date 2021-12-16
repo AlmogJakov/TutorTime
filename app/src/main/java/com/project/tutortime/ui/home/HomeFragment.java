@@ -24,6 +24,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
 import com.project.tutortime.TutorAdapter;
+
 import com.project.tutortime.databinding.FragmentHomeBinding;
 import com.project.tutortime.firebase.userObj;
 
@@ -69,7 +70,7 @@ public class HomeFragment extends Fragment {
                 //DatabaseReference refer = dataSnapshot.getRef();
                 //Query query = refer.
                 //System.out.println("Search childs: "+counter);
-                String[] values = new String[] { "Tutor1", "Tutor2", "Tutor3"};
+                String[] values = new String[] { "David", "Yogev", "Avihu"};
                 final TutorAdapter adapter = new TutorAdapter(getContext(), values);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();

@@ -35,4 +35,9 @@
         <item name="boxStrokeColor">#fff</item>
         <item name="boxStrokeWidth">2dp</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/soft_gray</item>
+        <item name="colorControlActivated">#DAA520</item>
+    </style>
 </resources>
