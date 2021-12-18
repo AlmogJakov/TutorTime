@@ -266,7 +266,7 @@ public class SetTutorProfile extends AppCompatActivity {
                 }
                 boolean flage = false;
                 for (subjectObj sub : list) {
-                    if(sub.getType() == "frontal" ||  sub.getType() == "both")
+                    if(sub.getType().equals("frontal")  ||  sub.getType().equals("both"))
                         flage = true;
                     if (listCities.isEmpty() && flage) {
                         Toast.makeText(SetTutorProfile.this, "You must choose at least one service city",

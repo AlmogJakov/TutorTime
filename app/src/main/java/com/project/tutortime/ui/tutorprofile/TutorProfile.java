@@ -289,7 +289,8 @@ public class TutorProfile extends Fragment {
                     return; }
                 boolean flage = false;
                 for (subjectObj sub : list) {
-                    if(sub.getType() == "frontal" ||  sub.getType() == "both")
+                    //System.out.println(sub.getType());
+                    if(sub.getType().equals("frontal")  ||  sub.getType().equals("both"))
                         flage = true;
                     if (listCities.isEmpty() && flage) {
                         Toast.makeText(getActivity(), "You must choose at least one service city",
@@ -308,7 +309,7 @@ public class TutorProfile extends Fragment {
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        /* sort thw list of service cities */
+                        /* sort the list of service cities */
                         Collections.sort(listCities);
                         /* get teacher ID */
                         teacherID = dataSnapshot.child("teacherID").getValue(String.class);
@@ -323,6 +324,17 @@ public class TutorProfile extends Fragment {
                         childUpdates.put("users/" + userID + "/fName", firstName);
                         childUpdates.put("users/" + userID + "/lName", lastName);
                         childUpdates.put("users/" + userID + "/city", city);
+
+                        ///////////////////////////////////
+                        /* (add a command) add the subject to the Search Tree */
+//                        for(subjectObj sList : list) {
+//                            for (String sCity : listCities) {
+//                                childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+//                                        + "/" + sCity + "/" + sList.getPrice() + "/teacherID", teacherID);
+//                            }
+//                        }
+
+                        ///////////////////////////////////
                         /* If the user deleted the image - delete it from the storage and add
                             a delete command to childUpdates (to delete it URL from the RealTime DataBase) */
                         if (del) {
@@ -643,13 +655,19 @@ public class TutorProfile extends Fragment {
                 String City = dataSnapshot.child("city").getValue(String.class);
                 if (prevSub!=null) {
                     /* (add a command) delete the subject from the Search Tree */
-                    childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName() + "/" + City + "/" + prevSub.getPrice() + "/" + teacherID, null);
+                    for(String sCity : listCities) {
+                        childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
+                                + "/" + sCity + "/" + prevSub.getPrice() + "/teacherID", null);
+                    }
                     /* (add a command) delete the subject from the current teacher object */
                     childUpdates.put("teachers/" + teacherID + "/sub/" + prevSub.getsName(), null);
                 }
                 if (newSub!=null) {
                     /* (add a command) add the subject to the Search Tree */
-                    childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName() + "/" + City + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
+                    for(String sCity : listCities) {
+                        childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
+                                + "/" + sCity + "/" + newSub.getPrice() + "/teacherID", teacherID);
+                    }
                     /* (add a command) add the subject to the current teacher object */
                     childUpdates.put("teachers/" + teacherID + "/sub/" + newSub.getsName(), newSub);
                 }
@@ -763,6 +781,8 @@ public class TutorProfile extends Fragment {
     }
     private void setCitySpinner(TextView citySpinner, boolean[] selectCities, ArrayList<Integer> listCitiesNum,
                                 String[] arrCities) {
+        ArrayList<String> addTempCities = new ArrayList<>();
+        ArrayList<String> removeTempCities = new ArrayList<>();
 
         citySpinner.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -771,16 +791,19 @@ public class TutorProfile extends Fragment {
                 builder.setTitle("Select service cities");
                 builder.setCancelable(false);
 
+
                 builder.setMultiChoiceItems(arrCities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which, boolean isChecked) {
                         if (isChecked) {
                             listCitiesNum.add(which);
                             listCities.add(arrCities[which]);
+                            addTempCities.add(arrCities[which]);
                             Collections.sort(listCitiesNum);
                         } else {
                             listCitiesNum.remove((Integer) which);
                             listCities.remove(arrCities[which]);
+                            removeTempCities.add(arrCities[which]);
                         }
                     }
                 });
@@ -791,11 +814,15 @@ public class TutorProfile extends Fragment {
                         if(listCities.isEmpty()){
                             serviceCitiesSpinner.setTextColor(Color.GRAY);
                             citySpinner.setText("Select service cities");
+                            removeServiceCities(removeTempCities);
                         }
                         else{
                             serviceCitiesSpinner.setTextColor(Color.BLACK);
                             citySpinner.setText(printList(listCities));
+                            addServiceCities(addTempCities);
+                            removeServiceCities(removeTempCities);
                         }
+
                     }
                 });
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -807,13 +834,15 @@ public class TutorProfile extends Fragment {
                 builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < selectCities.length; i++) {
+                        for (int i = 0; i < selectCities.length; i++)
                             selectCities[i] = false;
-                            listCitiesNum.clear();
-                            listCities.clear();
-                            serviceCitiesSpinner.setTextColor(Color.GRAY);
-                            citySpinner.setText("Select service cities");
-                        }
+                        for(String rCity : listCities)
+                            removeTempCities.add(rCity);
+                        listCitiesNum.clear();
+                        listCities.clear();
+                        serviceCitiesSpinner.setTextColor(Color.GRAY);
+                        citySpinner.setText("Select service cities");
+                        removeServiceCities(removeTempCities);
                     }
                 });
 
@@ -821,12 +850,61 @@ public class TutorProfile extends Fragment {
             }
         });
     }
-    // Print the List of cities that the teacher tutor
+
+    /* Print the List of cities that the teacher tutor */
     private String printList (ArrayList < String > list) {
         String s =list.toString();
         s = s.replace("[","");
         s = s.replace("]","");
         return s;
+    }
+
+    /* Delete cities and subjects frome firebase in the tree search */
+    public ArrayList<String> removeServiceCities(ArrayList < String > removeList) {
+        Collections.sort(removeList);
+        Map<String, Object> childUpdates = new HashMap<>();
+        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                for(subjectObj sList : list) {
+                    for (String rCity : removeList) {
+                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                + "/" + rCity + "/" + sList.getPrice() + "/teacherID", null);
+                    }
+                }
+                myRef.updateChildren(childUpdates);
+                removeList.clear();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        return removeList;
+    }
+
+    /* Add cities and subjects to firebase in the tree search */
+    public ArrayList<String> addServiceCities(ArrayList < String > addList) {
+        Collections.sort(addList);
+        Map<String, Object> childUpdates = new HashMap<>();
+        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                for(subjectObj sList : list) {
+                    for (String aCity : addList) {
+                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherID);
+                    }
+                }
+                myRef.updateChildren(childUpdates);
+                addList.clear();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+        return addList;
     }
 
 }
