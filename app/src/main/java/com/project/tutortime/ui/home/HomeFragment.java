@@ -1,47 +1,35 @@
 package com.project.tutortime.ui.home;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.project.tutortime.R;
-import com.project.tutortime.TutorAdapter;
+import com.project.tutortime.adapter.TutorAdapter;
 
+import com.project.tutortime.adapter.TutorAdapterItem;
 import com.project.tutortime.databinding.FragmentHomeBinding;
-import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 public class HomeFragment extends Fragment {
 
@@ -77,19 +65,21 @@ public class HomeFragment extends Fragment {
                 String name = dataSnapshot.child("users").child(userID).child("fName").getValue(String.class);
                 //hello.append(" " + name + ",");
                 hello.setText("שלום " + name + ",");
-                if (!dataSnapshot.child("search").exists()) return;
+                //if (!dataSnapshot.child("search").exists()) return;
                 //long counter = dataSnapshot.child("search").getChildrenCount();
                 //String teacher = dataSnapshot.child("search").getChildren();
                 //DatabaseReference refer = dataSnapshot.getRef();
                 //Query query = refer.
                 //System.out.println("Search childs: "+counter);
-
+                List<TutorAdapterItem> teachersToShow = new ArrayList<>();
                 Random random = new Random();
-                int questionCount = (int) dataSnapshot.child("teachers").getChildrenCount();
+                int teachersNum = (int) dataSnapshot.child("teachers").getChildrenCount();
                 Set<Integer> data = new LinkedHashSet<>();
-                while (data.size()<3 && questionCount>3) {
-                    int rand = random.nextInt(questionCount);
+                System.out.println("yto: ");
+                while (data.size()<3 && teachersNum>=3) {
+                    int rand = random.nextInt(teachersNum);
                     if (!data.contains(rand)) data.add(rand);
+                    System.out.println("yo: ");
                 }
                 int counter = 0;
                 for(DataSnapshot ds : dataSnapshot.child("teachers").getChildren()) {
@@ -105,6 +95,8 @@ public class HomeFragment extends Fragment {
                             System.out.println("Found tutor without user information. Tutor ID:" + ds.getKey());
                             continue;
                         }
+                        TutorAdapterItem item = new TutorAdapterItem(user,teacher,sub);
+                        teachersToShow.add(item);
                         System.out.println("teacher: "+teacher.getPhoneNum());
                         System.out.println("imgUrl: "+teacher.getImgUrl());
                         System.out.println("sub: "+sub);
@@ -112,9 +104,9 @@ public class HomeFragment extends Fragment {
                     }
                     counter++;
                 }
-                
+
                 String[] values = new String[] { "David", "Yogev", "Avihu"};
-                final TutorAdapter adapter = new TutorAdapter(getContext(), values);
+                final TutorAdapter adapter = new TutorAdapter(getContext(), teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
