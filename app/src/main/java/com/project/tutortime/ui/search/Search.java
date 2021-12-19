@@ -29,6 +29,7 @@ import com.project.tutortime.R;
 import com.project.tutortime.firebase.subjectObj;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 
@@ -40,6 +41,7 @@ public class Search extends Fragment {
     TextView typeSpinner;
     TextView citySpinner;
     EditText minPrice, maxPrice;
+    DialogInterface t;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class Search extends Fragment {
         typeSpinner = v.findViewById(R.id.learn);
         boolean[] selectType = new boolean[type.length];
         ArrayList<Integer> listType = new ArrayList<>();
-        setSpinner(typeSpinner, selectType, listType, type);
+        setSpinner(typeSpinner, selectType, listType, type, "Online/Frontal");
 
         subjectSpin = v.findViewById(R.id.selectSub);
         subjectSpin.setAdapter(new ArrayAdapter<>
@@ -59,9 +61,13 @@ public class Search extends Fragment {
 
         citySpinner = v.findViewById(R.id.selectCity);
         String[] cities = getResources().getStringArray(R.array.Cities);
-        boolean[] selectCity = new boolean[cities.length];
+        String[] Cities = new String[cities.length+1];
+        Cities[0] =  getResources().getString(R.string.All);
+        System.arraycopy(cities, 0, Cities, 1, cities.length);
+
+        boolean[] selectCity = new boolean[Cities.length];
         ArrayList<Integer> listCity = new ArrayList<>();
-        setSpinner(citySpinner,selectCity,listCity, cities);
+        setSpinnerForCity(citySpinner,selectCity,listCity, Cities, "Select City");
 
         maxPrice = v.findViewById(R.id.max);
         minPrice = v.findViewById(R.id.min);
@@ -89,6 +95,7 @@ public class Search extends Fragment {
                 intent.putExtra("subjectResult", subjectResult);
                 intent.putExtra("minResult", min);
                 intent.putExtra("maxResult", max);
+                intent.putExtra("sortBy", 0);
                 startActivity(intent);
             }
         });
@@ -96,12 +103,12 @@ public class Search extends Fragment {
 
     }
 
-    private void setSpinner(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type) {
+    private void setSpinner(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type, String title) {
         typeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Select type");
+                builder.setTitle(title);
                 builder.setCancelable(false);
                 builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -148,37 +155,76 @@ public class Search extends Fragment {
         });
     }
 
-    private ArrayAdapter<String> getAdapter() {
-        return new ArrayAdapter<String>(this.getActivity(), android.R.layout.simple_spinner_dropdown_item) {
+
+    private void setSpinnerForCity(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type, String title) {
+        typeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View v = super.getView(position, convertView, parent);
-                if (position == 0) { // Hint
-                    ((TextView) v.findViewById(android.R.id.text1)).setText("");
-                    ((TextView) v.findViewById(android.R.id.text1)).setHint(getItem(0));
-                }
-                return v;
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(title);
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (which == 0){
+                            if (isChecked){
+                                list.clear();
+                                for (int i = 0; i < type.length; i++) {
+                                    list.add(i);
+                                    selectType[i] = true;
+                                }
+                            }
+                            else {
+                                list.clear();
+                                Arrays.fill(selectType, false);
+                            }
+                        }
+                        else if (isChecked) {
+                            list.remove((Integer) 0);
+                            selectType[0] = false;
+                            list.add(which);
+                            Collections.sort(list);
+                        } else {
+                            selectType[0] = false;
+                            list.remove((Integer) 0);
+                            list.remove((Integer) which);
+                        }
+                    }
+                });
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i) != 0){
+                                stringBuilder.append(type[list.get(i)]);
+                                if (i != list.size() - 1) {
+                                    stringBuilder.append(", ");
+                                }
+                            }
+                        }
+                        typeSpinner.setText(stringBuilder.toString());
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectType.length; i++) {
+                            selectType[i] = false;
+                            list.clear();
+                            typeSpinner.setText("");
+                        }
+                    }
+                });
+                builder.show();
             }
-
-            @Override
-            public int getCount() {
-                return super.getCount();
-            }
-
-            @Override /* Disable selection of the Hint (first selection) */
-            public boolean isEnabled(int position) {
-                return (position != 0);
-            }
-
-            @Override /* Set the color of the Hint (first selection) to Grey */
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if (position == 0) tv.setTextColor(Color.GRAY);
-                else tv.setTextColor(Color.BLACK);
-                return view;
-            }
-        };
+        });
     }
 
     private void almog() {
@@ -202,5 +248,6 @@ public class Search extends Fragment {
             }
         });
     }
+
 
 }
