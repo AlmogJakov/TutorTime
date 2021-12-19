@@ -28,7 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.Login;
 import com.project.tutortime.R;
-import com.project.tutortime.TutorAdapter;
+import com.project.tutortime.adapter.TutorAdapter;
 import com.project.tutortime.firebase.subjectObj;
 
 import java.util.ArrayList;
@@ -97,9 +97,9 @@ public class SearchResults extends AppCompatActivity {
                 listview = findViewById(R.id.featuresList);
                 String[] values = new String[names.size()];
                 values = names.toArray(values);
-                final TutorAdapter adapter = new TutorAdapter(SearchResults.this, values);
-                listview.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                //final TutorAdapter adapter = new TutorAdapter(SearchResults.this, values);
+                //listview.setAdapter(adapter);
+                //adapter.notifyDataSetChanged();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
