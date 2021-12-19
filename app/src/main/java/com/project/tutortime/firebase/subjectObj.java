@@ -98,8 +98,7 @@ public class subjectObj implements Serializable {
     private int price;
     private String experience;
 
-    public subjectObj(){
-    }
+    public subjectObj(){ }
 
     public subjectObj(String sName, String type, int price, String experience){
         this.sName=sName;
