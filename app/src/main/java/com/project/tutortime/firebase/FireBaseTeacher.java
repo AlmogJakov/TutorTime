@@ -32,12 +32,28 @@ public class FireBaseTeacher extends firebaseBaseModel{
                 /* Make a list of all the RealTime DataBase commands to execute
                  * (for the purpose of executing all the commands at once) */
                 Map<String, Object> childUpdates = new HashMap<>();
-                for (int i = 0; i < sub.size(); i++) {
-                    /* (add a command) add the subject to the Search Tree */
-                    childUpdates.put("search/" + sub.get(i).getType() + "/" + sub.get(i).getsName() + "/" + City + "/" + sub.get(i).getPrice() + "/" + teacherId, teacherId);
+                /* (add a command) add the subject to the Search Tree */
+                for(subjectObj sList : sub) {
+                    for (String aCity : serviceCities) {
+                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                    + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherId);
+                        }
+                        else{
+                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                    + "/" + sList.getPrice() + "/teacherID", teacherId);
+                        }
+                    }
                     /* (add a command) add the subject to the current teacher object */
-                    childUpdates.put("teachers/" + teacherId + "/sub/" + sub.get(i).getsName(), sub.get(i));
+                    childUpdates.put("teachers/" + teacherId + "/sub/" + sList.getsName(), sList);
                 }
+//                for (int i = 0; i < sub.size(); i++) {
+//                    /* (add a command) add the subject to the Search Tree */
+//                    childUpdates.put("search/" + sub.get(i).getType() + "/" + sub.get(i).getsName() +
+//                            "/" + City + "/" + sub.get(i).getPrice() + "/" + teacherId, teacherId);
+//                    /* (add a command) add the subject to the current teacher object */
+//                    childUpdates.put("teachers/" + teacherId + "/sub/" + sub.get(i).getsName(), sub.get(i));
+//                }
                 /* Finally, execute all RealTime DataBase commands in one command (safely). */
                 myRef.updateChildren(childUpdates);
             }

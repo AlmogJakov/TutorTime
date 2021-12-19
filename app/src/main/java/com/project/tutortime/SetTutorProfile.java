@@ -65,6 +65,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class SetTutorProfile extends AppCompatActivity {
@@ -84,6 +85,8 @@ public class SetTutorProfile extends AppCompatActivity {
     boolean del = false;
     // List of mountains that the teacher tutor
     ArrayList<String> listCities = new ArrayList<>();
+    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+    String teacherID;
 
 
     @Override
@@ -303,6 +306,8 @@ public class SetTutorProfile extends AppCompatActivity {
     /* Creating a dialogue for choosing cities where the teacher tutor */
     private void setSpinnerCity(TextView citySpinner, boolean[] selectCities,
                                 ArrayList<Integer> listCitiesNum, String[] cities) {
+        ArrayList<String> addTempCities = new ArrayList<>();
+        ArrayList<String> removeTempCities = new ArrayList<>();
         citySpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -315,10 +320,12 @@ public class SetTutorProfile extends AppCompatActivity {
                         if (isChecked) {
                             listCitiesNum.add(which);
                             listCities.add(cities[which]);
+                            // addTempCities.add(cities[which]);
                             Collections.sort(listCitiesNum);
                         } else {
                             listCitiesNum.remove((Integer) which);
                             listCities.remove(cities[which]);
+                            //removeTempCities.add(cities[which]);
                         }
                     }
                 });
@@ -328,11 +335,14 @@ public class SetTutorProfile extends AppCompatActivity {
                         if(listCities.isEmpty()){
                             citySpinner.setTextColor(Color.GRAY);
                             citySpinner.setText("Select service cities");
+                            //removeServiceCities(removeTempCities);
                         }
                         else{
                             citySpinner.setTextColor(Color.BLACK);
                             Collections.sort(listCities);
                             citySpinner.setText(printList(listCities));
+                            //addServiceCities(addTempCities);
+                            //removeServiceCities(removeTempCities);
                         }
                     }
                 });
@@ -345,13 +355,15 @@ public class SetTutorProfile extends AppCompatActivity {
                 builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < selectCities.length; i++) {
+                        for (int i = 0; i < selectCities.length; i++)
                             selectCities[i] = false;
-                            listCitiesNum.clear();
-                            listCities.clear();
-                            citySpinner.setTextColor(Color.GRAY);
-                            citySpinner.setText("Select service cities");
-                        }
+//                        for(String rCity : listCities)
+//                            removeTempCities.add(rCity);
+                        listCitiesNum.clear();
+                        listCities.clear();
+                        citySpinner.setTextColor(Color.GRAY);
+                        citySpinner.setText("Select service cities");
+                        //removeServiceCities(removeTempCities);
                     }
                 });
                 builder.show();
@@ -657,4 +669,56 @@ public class SetTutorProfile extends AppCompatActivity {
         s = s.replace("]","");
         return s;
     }
+
+//    /* Delete cities and subjects frome firebase in the tree search */
+//    public ArrayList<String> removeServiceCities(ArrayList < String > removeList) {
+//        Collections.sort(removeList);
+//        Map<String, Object> childUpdates = new HashMap<>();
+//        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+//                for(subjectObj sList : list) {
+//                    for (String rCity : removeList) {
+//                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+//                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+//                                    + "/" + rCity + "/" + sList.getPrice() + "/teacherID", null);
+//                        }
+//                    }
+//                }
+//                myRef.updateChildren(childUpdates);
+//                removeList.clear();
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+//        return removeList;
+//    }
+//
+//    /* Add cities and subjects to firebase in the tree search */
+//    public ArrayList<String> addServiceCities(ArrayList < String > addList) {
+//        Collections.sort(addList);
+//        Map<String, Object> childUpdates = new HashMap<>();
+//        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+//                for(subjectObj sList : list) {
+//                    for (String aCity : addList) {
+//                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+//                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+//                                    + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherID);
+//                        }
+//                    }
+//                }
+//                myRef.updateChildren(childUpdates);
+//                addList.clear();
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//            }
+//        });
+//        return addList;
+//    }
 }

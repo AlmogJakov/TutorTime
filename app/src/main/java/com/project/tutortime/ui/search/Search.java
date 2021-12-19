@@ -62,7 +62,7 @@ public class Search extends Fragment {
         citySpinner = v.findViewById(R.id.selectCity);
         String[] cities = getResources().getStringArray(R.array.Cities);
         String[] Cities = new String[cities.length+1];
-        Cities[0] =  getResources().getString(R.string.All);
+        //Cities[0] =  getResources().getString(R.string.All); /////////////////////////
         System.arraycopy(cities, 0, Cities, 1, cities.length);
 
         boolean[] selectCity = new boolean[Cities.length];
