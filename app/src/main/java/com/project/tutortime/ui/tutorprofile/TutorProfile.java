@@ -287,13 +287,20 @@ public class TutorProfile extends Fragment {
                     Toast.makeText(getActivity(), "You must choose at least one subject",
                             Toast.LENGTH_SHORT).show();
                     return; }
+                int count = 0;
                 boolean flage = false;
                 for (subjectObj sub : list) {
-                    //System.out.println(sub.getType());
+                    count++;
                     if(sub.getType().equals("frontal")  ||  sub.getType().equals("both"))
                         flage = true;
                     if (listCities.isEmpty() && flage) {
                         Toast.makeText(getActivity(), "You must choose at least one service city",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(listCities.size() != 0 && count == list.size() && flage == false){
+                        Toast.makeText(getActivity(), "You have chosen to transfer private lessons" +
+                                        " only online, do not select service cities",
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -325,16 +332,6 @@ public class TutorProfile extends Fragment {
                         childUpdates.put("users/" + userID + "/lName", lastName);
                         childUpdates.put("users/" + userID + "/city", city);
 
-                        ///////////////////////////////////
-                        /* (add a command) add the subject to the Search Tree */
-//                        for(subjectObj sList : list) {
-//                            for (String sCity : listCities) {
-//                                childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-//                                        + "/" + sCity + "/" + sList.getPrice() + "/teacherID", teacherID);
-//                            }
-//                        }
-
-                        ///////////////////////////////////
                         /* If the user deleted the image - delete it from the storage and add
                             a delete command to childUpdates (to delete it URL from the RealTime DataBase) */
                         if (del) {
@@ -652,22 +649,35 @@ public class TutorProfile extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                String City = dataSnapshot.child("city").getValue(String.class);
+                //String City = dataSnapshot.child("city").getValue(String.class);
                 if (prevSub!=null) {
                     /* (add a command) delete the subject from the Search Tree */
-                    for(String sCity : listCities) {
+                    if(prevSub.getType().equals("online")) {
                         childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
-                                + "/" + sCity + "/" + prevSub.getPrice() + "/teacherID", null);
+                                + "/" + prevSub.getPrice() + "/teacherID", null);
+                    }
+                    else{
+                        for (String sCity : listCities) {
+                            childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
+                                    + "/" + sCity + "/" + prevSub.getPrice() + "/teacherID", null);
+                        }
                     }
                     /* (add a command) delete the subject from the current teacher object */
                     childUpdates.put("teachers/" + teacherID + "/sub/" + prevSub.getsName(), null);
                 }
                 if (newSub!=null) {
                     /* (add a command) add the subject to the Search Tree */
-                    for(String sCity : listCities) {
+                    if(newSub.getType().equals("online")){
                         childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
-                                + "/" + sCity + "/" + newSub.getPrice() + "/teacherID", teacherID);
+                                + "/" + newSub.getPrice() + "/teacherID", teacherID);
                     }
+                    else{
+                        for(String sCity : listCities) {
+                            childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
+                                    + "/" + sCity + "/" + newSub.getPrice() + "/teacherID", teacherID);
+                        }
+                    }
+
                     /* (add a command) add the subject to the current teacher object */
                     childUpdates.put("teachers/" + teacherID + "/sub/" + newSub.getsName(), newSub);
                 }
@@ -869,8 +879,10 @@ public class TutorProfile extends Fragment {
                 teacherID = dataSnapshot.child("teacherID").getValue(String.class);
                 for(subjectObj sList : list) {
                     for (String rCity : removeList) {
-                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                + "/" + rCity + "/" + sList.getPrice() + "/teacherID", null);
+                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                    + "/" + rCity + "/" + sList.getPrice() + "/teacherID", null);
+                        }
                     }
                 }
                 myRef.updateChildren(childUpdates);
@@ -893,8 +905,10 @@ public class TutorProfile extends Fragment {
                 teacherID = dataSnapshot.child("teacherID").getValue(String.class);
                 for(subjectObj sList : list) {
                     for (String aCity : addList) {
-                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherID);
+                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                    + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherID);
+                        }
                     }
                 }
                 myRef.updateChildren(childUpdates);

@@ -264,8 +264,10 @@ public class SetTutorProfile extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+                int count = 0;
                 boolean flage = false;
                 for (subjectObj sub : list) {
+                    count++;
                     if(sub.getType().equals("frontal")  ||  sub.getType().equals("both"))
                         flage = true;
                     if (listCities.isEmpty() && flage) {
@@ -273,15 +275,13 @@ public class SetTutorProfile extends AppCompatActivity {
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }
+                    if(listCities.size() != 0 && count == list.size() && flage == false){
+                        Toast.makeText(SetTutorProfile.this, "You have chosen to transfer" +
+                                        " private lessons only online, do not select service cities",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
-
-//                if (citySpinner.getSelectedItemPosition()==0) {
-//                    TextView errorText = (TextView)citySpinner.getSelectedView();
-//                    errorText.setError("City is required.");
-//                    Toast.makeText(SetTutorProfile.this, "City is required.",
-//                            Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
 
                 FireBaseTeacher t = new FireBaseTeacher();
                 /* set isTeacher to teacher status (1=teacher,0=customer) */
@@ -299,7 +299,8 @@ public class SetTutorProfile extends AppCompatActivity {
             }
         });
     }
-    // Creating a dialogue for choosing cities where the teacher tutor
+
+    /* Creating a dialogue for choosing cities where the teacher tutor */
     private void setSpinnerCity(TextView citySpinner, boolean[] selectCities,
                                 ArrayList<Integer> listCitiesNum, String[] cities) {
         citySpinner.setOnClickListener(new View.OnClickListener() {
@@ -408,17 +409,8 @@ public class SetTutorProfile extends AppCompatActivity {
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
                 if (price == "Select Price") {
-                    //priceEdit.setError("Price is required.");
                     Toast.makeText(SetTutorProfile.this, "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }
-//                if (nameSub.isEmpty() || nameSub.equals(subjectObj.SubName.HINT)) {
-//                    Toast.makeText(SetTutorProfile.this, "Subject is required.", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                if (type.isEmpty() || type.equals(subjectObj.Type.HINT)) {
-//                    Toast.makeText(SetTutorProfile.this, "Learning type is required.", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
                 if (listSub.contains(nameSub)) {
                     Toast.makeText(SetTutorProfile.this, "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
