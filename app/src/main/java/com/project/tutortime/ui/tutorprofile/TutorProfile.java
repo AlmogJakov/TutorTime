@@ -654,12 +654,12 @@ public class TutorProfile extends Fragment {
                     /* (add a command) delete the subject from the Search Tree */
                     if(prevSub.getType().equals("online")) {
                         childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
-                                + "/" + prevSub.getPrice() + "/teacherID", null);
+                                + "/" + prevSub.getPrice() + "/" + teacherID, null);
                     }
                     else{
                         for (String sCity : listCities) {
                             childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
-                                    + "/" + sCity + "/" + prevSub.getPrice() + "/teacherID", null);
+                                    + "/" + sCity + "/" + prevSub.getPrice() + "/" + teacherID, null);
                         }
                     }
                     /* (add a command) delete the subject from the current teacher object */
@@ -669,12 +669,12 @@ public class TutorProfile extends Fragment {
                     /* (add a command) add the subject to the Search Tree */
                     if(newSub.getType().equals("online")){
                         childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
-                                + "/" + newSub.getPrice() + "/teacherID", teacherID);
+                                + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
                     }
                     else{
                         for(String sCity : listCities) {
                             childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
-                                    + "/" + sCity + "/" + newSub.getPrice() + "/teacherID", teacherID);
+                                    + "/" + sCity + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
                         }
                     }
 
@@ -883,7 +883,7 @@ public class TutorProfile extends Fragment {
                     for (String rCity : removeList) {
                         if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
                             childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                    + "/" + rCity + "/" + sList.getPrice() + "/teacherID", null);
+                                    + "/" + rCity + "/" + sList.getPrice() + "/" + teacherID, null);
                         }
                     }
                 }
@@ -909,7 +909,7 @@ public class TutorProfile extends Fragment {
                     for (String aCity : addList) {
                         if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
                             childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                    + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherID);
+                                    + "/" + aCity + "/" + sList.getPrice() + "/" + teacherID, teacherID);
                         }
                     }
                 }
