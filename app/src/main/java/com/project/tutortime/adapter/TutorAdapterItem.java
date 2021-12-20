@@ -12,4 +12,16 @@ public class TutorAdapterItem {
         this.teacher = teacher;
         this.subName = subName;
     }
+
+    public userObj getUser() {
+        return user;
+    }
+
+    public teacherObj getTeacher() {
+        return teacher;
+    }
+
+    public String getSubName() {
+        return subName;
+    }
 }

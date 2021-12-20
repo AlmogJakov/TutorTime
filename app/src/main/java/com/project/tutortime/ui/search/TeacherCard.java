@@ -16,7 +16,7 @@ import com.project.tutortime.R;
 
 public class TeacherCard extends AppCompatActivity {
     ImageView image;
-    TextView price, description;
+    TextView price, description, textView;
     Button send, phone;
 
     @Override
@@ -40,6 +40,14 @@ public class TeacherCard extends AppCompatActivity {
         phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+            }
+        });
+
+
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 

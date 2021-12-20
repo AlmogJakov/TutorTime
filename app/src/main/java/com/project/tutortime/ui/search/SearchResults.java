@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,8 @@ import com.project.tutortime.R;
 import com.project.tutortime.adapter.TutorAdapter;
 import com.project.tutortime.adapter.TutorAdapterItem;
 import com.project.tutortime.firebase.subjectObj;
+import com.project.tutortime.firebase.teacherObj;
+import com.project.tutortime.firebase.userObj;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,11 +46,11 @@ public class SearchResults extends AppCompatActivity {
     private String typeResult, cityResult, subjectResult;
     private int maxResult;
     private int minResult;
+    private int kindOfSort;
     ListView listview;
     TextView sort;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-    ArrayList<String> names = new ArrayList<>();
-    CardView tutor_card_item;
+    List<TutorAdapterItem> teachersToShow = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,24 +64,17 @@ public class SearchResults extends AppCompatActivity {
             }//
         });
 
-        tutor_card_item = findViewById(R.id.tutor_card_item);
-        tutor_card_item.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TeacherCard.class);
-                startActivity(intent);
-            }
-        });
-
-
+        // get the variables
         cityResult = getIntent().getStringExtra("cityResult");
         maxResult = getIntent().getIntExtra("maxResult", 300);
         minResult = getIntent().getIntExtra("minResult", 0);
         typeResult = getIntent().getStringExtra("typeResult");
         if (typeResult.equals("Online, Frontal"))typeResult = "both";
+        else if (typeResult.equals("Frontal"))typeResult = "frontal";
+        else typeResult = "online";
         subjectResult = getIntent().getStringExtra("subjectResult");
-        System.out.println(cityResult);
-        System.out.println(typeResult);
+        kindOfSort = getIntent().getIntExtra("sort", 0);
+
         double t = maxResult;
         maxResult = ((int)Math.ceil(t/20)) * 20;
         minResult = (minResult/20) *20;
@@ -87,6 +83,7 @@ public class SearchResults extends AppCompatActivity {
         sort = findViewById(R.id.sort);
         String[] type = {"price: low to high", "price: high to low", "Rating: high to low"};
         boolean[] selectType = new boolean[type.length];
+        selectType[kindOfSort] = true;
         setSpinner(sort, selectType, type);
 
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -99,30 +96,45 @@ public class SearchResults extends AppCompatActivity {
                         for (DataSnapshot s1 : idOfTeacher) {
                             String s = s1.getKey();
                             if (s != null){
-                                String idUser = dataSnapshot.child("teachers").child(s).child("userID").getValue(String.class);
-                                if (idUser != null){
-                                    String name = dataSnapshot.child("users").child(idUser).child("fName").getValue(String.class);
-                                    if (name != null){
-                                        System.out.println(name);
-                                        names.add(name);
-                                    }
+                                teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
+                                if (teacher != null){
+                                    userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                    teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
                                 }
+//                                String idUser = dataSnapshot.child("teachers").child(s).child("userID").getValue(String.class);
+//                                if (idUser != null){
+//                                    String name = dataSnapshot.child("users").child(idUser).child("fName").getValue(String.class);
+//                                    if (name != null){
+//                                        System.out.println(name);
+//                                        names.add(name);
+//                                    }
+//                                }
                             }
                         }
 
                 }
 
                 listview = findViewById(R.id.featuresList);
-                String[] values = new String[names.size()];
-                values = names.toArray(values);
-                List<TutorAdapterItem> teachersToShow = new ArrayList<>();
                 final TutorAdapter adapter = new TutorAdapter(SearchResults.this, teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+
+                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent intent = new Intent(getApplicationContext(), TeacherCard.class);
+                        intent.putExtra("user", teachersToShow.get(position).getUser());
+                        intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
+                        intent.putExtra("sub", teachersToShow.get(position).getSubName());
+                        startActivity(intent);
+                    }
+                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+
+
     }
 
 
@@ -165,7 +177,7 @@ public class SearchResults extends AppCompatActivity {
         intent.putExtra("subjectResult", subjectResult);
         intent.putExtra("minResult", minResult);
         intent.putExtra("maxResult", maxResult);
-        intent.putExtra("sortBy", sortBy);
+        intent.putExtra("sort", sortBy);
         finish();
         startActivity(intent);
     }

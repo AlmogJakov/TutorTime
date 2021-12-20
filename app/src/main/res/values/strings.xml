@@ -27,6 +27,7 @@
     <string name="hightolow">price: high to low</string>
     <string name="rating">Rating: high to low</string>
     <string name="recommendations">Recommendations</string>
+    <string name="All">All</string>
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
