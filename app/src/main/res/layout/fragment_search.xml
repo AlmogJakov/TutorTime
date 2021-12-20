@@ -212,7 +212,6 @@
         android:id="@+id/shekel1"
         android:layout_width="28dp"
         android:layout_height="30dp"
-        android:layout_marginBottom="159dp"
         android:text="₪"
         android:textAlignment="center"
         android:textSize="20sp"

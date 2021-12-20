@@ -39,10 +39,10 @@ import com.project.tutortime.firebase.userObj;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 
 public class SearchResults extends AppCompatActivity {
-    private static final String TAG = "SearchResults";
     private String typeResult, cityResult, subjectResult;
     private int maxResult;
     private int minResult;
@@ -69,11 +69,19 @@ public class SearchResults extends AppCompatActivity {
         maxResult = getIntent().getIntExtra("maxResult", 300);
         minResult = getIntent().getIntExtra("minResult", 0);
         typeResult = getIntent().getStringExtra("typeResult");
-        if (typeResult.equals("Online, Frontal"))typeResult = "both";
-        else if (typeResult.equals("Frontal"))typeResult = "frontal";
-        else typeResult = "online";
+        String[] TypeResult = {"both", "frontal", "online"};
+        ArrayList<Integer> chooseType = new ArrayList<>();
+        if (typeResult.equals("Online, Frontal")){chooseType.add(0);chooseType.add(1);chooseType.add(2);}
+        else if (typeResult.equals("Frontal")){ chooseType.add(0);chooseType.add(1);}
+        else if (typeResult.equals("Online")) {chooseType.add(0);chooseType.add(2);}
         subjectResult = getIntent().getStringExtra("subjectResult");
         kindOfSort = getIntent().getIntExtra("sort", 0);
+        String[] Cities = cityResult.split(", ");
+//        System.out.println(cityResult);
+//        System.out.println(maxResult);
+//        System.out.println(minResult);
+//        System.out.println(typeResult);
+//        System.out.println(subjectResult);
 
         double t = maxResult;
         maxResult = ((int)Math.ceil(t/20)) * 20;
@@ -85,56 +93,54 @@ public class SearchResults extends AppCompatActivity {
         boolean[] selectType = new boolean[type.length];
         selectType[kindOfSort] = true;
         setSpinner(sort, selectType, type);
-
+        listview = findViewById(R.id.featuresList);
+        HashSet<String> used = new HashSet<>();
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int minR = minResult;
                 for (int i = 0; minR!=maxResult+20; i++, minR+= 20){
-                    Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(typeResult).child(subjectResult).child(cityResult).child(Integer.toString(minR)).getChildren();
-//                    ArrayList<String> idOfTeacher = idOfTeacher1.;
-                        for (DataSnapshot s1 : idOfTeacher) {
-                            String s = s1.getKey();
-                            if (s != null){
-                                teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
-                                if (teacher != null){
-                                    userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
-                                    teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
+                    for (String c:Cities) {
+                        for (int type:chooseType){
+                            Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[type]).child(subjectResult).child(c).child(Integer.toString(minR)).getChildren();
+                            if (type == 2) idOfTeacher = dataSnapshot.child("search").child(TypeResult[type]).child(subjectResult).child(Integer.toString(minR)).getChildren();
+                            for (DataSnapshot s1 : idOfTeacher) {
+                                String s = s1.getKey();
+                                if (s != null){
+                                    teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
+                                    if (teacher != null){
+                                        if (!used.contains(teacher.getUserID())){
+                                            userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                            teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
+                                            System.out.println(user.getfName());
+                                            used.add(teacher.getUserID());
+                                        }
+                                    }
                                 }
-//                                String idUser = dataSnapshot.child("teachers").child(s).child("userID").getValue(String.class);
-//                                if (idUser != null){
-//                                    String name = dataSnapshot.child("users").child(idUser).child("fName").getValue(String.class);
-//                                    if (name != null){
-//                                        System.out.println(name);
-//                                        names.add(name);
-//                                    }
-//                                }
                             }
                         }
-
+                    }
                 }
 
-                listview = findViewById(R.id.featuresList);
                 final TutorAdapter adapter = new TutorAdapter(SearchResults.this, teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
-                listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(getApplicationContext(), TeacherCard.class);
-                        intent.putExtra("user", teachersToShow.get(position).getUser());
-                        intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
-                        intent.putExtra("sub", teachersToShow.get(position).getSubName());
-                        startActivity(intent);
-                    }
-                });
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
-
-
+        listview.setTextFilterEnabled(true);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getApplicationContext(), TeacherCard.class);
+                intent.putExtra("user", teachersToShow.get(position).getUser());
+                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
+                intent.putExtra("sub", teachersToShow.get(position).getSubName());
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -171,7 +177,7 @@ public class SearchResults extends AppCompatActivity {
     }
 
     private void reload(int sortBy) {
-        Intent intent = new Intent(this, TeacherCard.class);
+        Intent intent = new Intent(this, SearchResults.class);
         intent.putExtra("typeResult", typeResult);
         intent.putExtra("cityResult", cityResult);
         intent.putExtra("subjectResult", subjectResult);

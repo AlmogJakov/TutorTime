@@ -88,6 +88,9 @@
         <activity
             android:name=".ui.search.SearchResults"
             tools:ignore="Instantiatable" />
+        <activity
+            android:name=".ui.search.TeacherCard"
+            tools:ignore="Instantiatable" />
     </application>
 
 </manifest>
