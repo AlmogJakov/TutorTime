@@ -420,16 +420,16 @@ public class SetTutorProfile extends AppCompatActivity {
                 String exp = expEdit.getText().toString().trim();
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
-                if (price == "Select Price") {
+                if (price.equals("Select Price")) {
                     Toast.makeText(SetTutorProfile.this, "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }
                 if (listSub.contains(nameSub)) {
                     Toast.makeText(SetTutorProfile.this, "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
-                if (nameSub == "Select subject") {
+                if (nameSub.equals("Select subject")) {
                     Toast.makeText(SetTutorProfile.this, "Subject is required.", Toast.LENGTH_SHORT).show();
                     return; }
-                if (type == "Select learning type") {
+                if (type.equals("Select learning type")) {
                     Toast.makeText(SetTutorProfile.this, "Learning type is required.", Toast.LENGTH_SHORT).show();
                     return; }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
@@ -492,7 +492,7 @@ public class SetTutorProfile extends AppCompatActivity {
                 String exp = expEdit.getText().toString().trim();
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
-                if (price == "Select Price") {
+                if (price.equals("Select Price")) {
                     //priceEdit.setError("Price is required.");
                     Toast.makeText(SetTutorProfile.this, "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }

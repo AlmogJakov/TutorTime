@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">TutorTime</string>
+    <!-- Strings used for login -->
+    <string name="Email">Email</string>
+    <string name="Password">Password</string>
+    <string name="LogIn">Log In</string>
+    <string name="CreatenewAccount">Create a new Account!</string>
+    <string name="ResetPassword">Reset Password</string>
+    <string name="ChangeLanguage">Change language</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Welcome to Tutor Time!</string>
@@ -39,7 +48,7 @@
         <item>female</item>
     </string-array>
 
-    <string-array name="Options1">
+    <string-array name="SpinnerSubName1">
         <item>Select subject</item>
         <item>Math</item>
         <item>English</item>

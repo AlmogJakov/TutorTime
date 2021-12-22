@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -33,10 +35,11 @@ import com.project.tutortime.ui.notifications.NotificationsAdapter;
 import java.util.HashMap;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
-    Button mLoginBtn;
+    Button mLoginBtn, mChangeLang;
     TextView mRegisterBtn, mResetPass;
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
@@ -53,6 +56,7 @@ public class Login extends AppCompatActivity {
         mPassword = findViewById(R.id.mypass);
         mRegisterBtn = findViewById(R.id.registerPage);
         mLoginBtn = findViewById(R.id.btnlogin);
+        mChangeLang = findViewById(R.id.btnlanguage);
         fAuth = FirebaseAuth.getInstance();
         mResetPass = findViewById(R.id.resetpass);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -65,6 +69,17 @@ public class Login extends AppCompatActivity {
             getInside(userID);
             //testMessage(userID);
         }
+
+        mChangeLang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /* show alertdialog to display list of languages, one can be selected */
+                showChangeLanguageDialog();
+            }
+
+        });
+
+
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
 
@@ -174,6 +189,52 @@ public class Login extends AppCompatActivity {
             }
         }));
         /* END Reset Password Case */
+
+    }
+
+    private void showChangeLanguageDialog() {
+        /* array of languages to display in alert dialog */
+        final String[] listItems = {"English", "עברית"};
+        AlertDialog.Builder mbuilder = new AlertDialog.Builder(Login.this);
+        mbuilder.setTitle("Choose language");
+        mbuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                if(i==0){
+                    //Hebrew
+                    setLocale("en");
+                    recreate();
+                }
+                if(i==1){
+                    //English
+                    setLocale("iw");
+                    recreate();
+                }
+                dialog.dismiss();
+
+            }
+        });
+        AlertDialog mDialog = mbuilder.create();
+        mDialog.show();
+    }
+
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        /* save data to shared  preferences */
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+    }
+
+    /* load language saved in shared preferences */
+    public void loadLocale(){
+        SharedPreferences prefs = getSharedPreferences("Setting", MainActivity.MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "");
+        setLocale(language);
     }
 
     /* after confirmed as connected this method redirects to the appropriate page depending on the user status */
@@ -208,6 +269,8 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
         /* END loading screen section */
         finish();
+
+
     }
 //    private void testMessage(String userID){
 //            //send contact request

@@ -1,5 +1,14 @@
 <resources>
     <string name="app_name">TutorTime</string>
+    <!-- Strings used for login -->
+    <string name="Email">אימייל</string>
+    <string name="Password">ססמא</string>
+    <string name="LogIn">התחברות</string>
+    <string name="CreatenewAccount">צור חשבון חדש!</string>
+    <string name="ResetPassword">איפוס ססמא</string>
+    <string name="ChangeLanguage">שנה שפה</string>
+
+
     <string name="navigation_drawer_open">פתח את כרטיסיית הניווט</string>
     <string name="navigation_drawer_close">סגור את כרטיסיית הניווט</string>
     <string name="nav_header_title">ברוך הבא אל Tutor Time!</string>
@@ -34,19 +43,19 @@
 
     <string name="sign_up">הירשם</string>
 
-    <string-array name="Options1">
-        <item>Select subject</item>
-        <item>Math</item>
-        <item>English</item>
-        <item>physics</item>
-        <item>Biology</item>
-        <item>Literature</item>
-        <item>history</item>
-        <item>chemistry</item>
-        <item>music</item>
-        <item>Computer Science</item>
-        <item>citizenship</item>
-        <item>Bible</item>
+    <string-array name="SpinnerSubName1">
+        <item>בחר מקצוע</item>
+        <item>מתמטיקה</item>
+        <item>אנגלית</item>
+        <item>פיסיקה</item>
+        <item>ביולוגיה</item>
+        <item>ספרות</item>
+        <item>היסטוריה</item>
+        <item>כימיה</item>
+        <item>מוסיקה</item>
+        <item>מדעי המחשב</item>
+        <item>אזרחות</item>
+        <item>תנ"ך</item>
     </string-array>
 
     <style name="Dialog" parent="Theme.AppCompat.Dialog">

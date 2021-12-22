@@ -2,6 +2,7 @@ package com.project.tutortime.ui.tutorprofile;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -571,6 +572,14 @@ public class TutorProfile extends Fragment {
         nameSpinner.setAdapter(nameAd);
         nameSpinner.setSelection(subjectObj.SubName.valueOf(currSub.getsName().
                 replaceAll("\\s+", "")).ordinal());
+
+        //////////////////////////////////////////////////////////////////////////////
+//        @SuppressLint("ResourceType") ArrayAdapter nameAd = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,
+//               R.array.SpinnerSubName1);
+//        nameAd.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        nameSpinner.setAdapter(nameAd);
+//        nameSpinner.setOnItemSelectedListener((AdapterView.OnItemSelectedListener) this);
+        //////////////////////////////////////////////////////////////////////////////
 
         ArrayAdapter typeAd = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item,
                 subjectObj.Type.values());

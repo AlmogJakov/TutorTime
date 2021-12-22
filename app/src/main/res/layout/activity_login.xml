@@ -12,26 +12,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Email"
-
+            android:hint="@string/Email"
             android:inputType="textEmailAddress"
-           />
+            />
 
         <EditText
             android:id="@+id/mypass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Password"
-             android:inputType="textPassword"
-         />
+            android:hint="@string/Password"
+            android:inputType="textPassword"
+            android:textDirection="locale"
+            android:textAlignment="viewStart"
+            />
 
         <Button
             android:id="@+id/btnlogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Log In"
+            android:text="@string/LogIn"
             android:textAllCaps="false" />
 
         <TextView
@@ -40,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Create a new Acount!"
+            android:text="@string/CreatenewAccount"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -50,8 +51,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="Reset Password"
+            android:text="@string/ResetPassword"
             android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/btnlanguage"
+            android:layout_width="162dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:text="@string/ChangeLanguage"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 
