@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,9 +40,9 @@ import java.util.Random;
 import java.util.Set;
 
 public class HomeFragment extends Fragment {
-
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
+    final int TUTORS_TO_SHOW = 5;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     TextView notificationsText;
     ListView listview;
@@ -69,7 +70,7 @@ public class HomeFragment extends Fragment {
                 /* Init set to store 3 random numbers */
                 Set<Integer> data = new LinkedHashSet<>();
                 /* add 3 random numbers in range (0,teachersNum) [each indicates tutor index] */
-                while (data.size()<3 && tutorsNum>data.size()) {
+                while (data.size()<TUTORS_TO_SHOW && tutorsNum>data.size()) {
                     int rand = random.nextInt(tutorsNum);
                     data.add(rand);
                 }
@@ -96,6 +97,7 @@ public class HomeFragment extends Fragment {
                 /* init the adapter with the 'tutorsToShow' list */
                 adapter = new TutorAdapter(getContext(), tutorsToShow);
                 listview.setAdapter(adapter);
+                adapter.updateListViewHeight(listview);
                 closeLoadingDialog();
             }
             @Override
