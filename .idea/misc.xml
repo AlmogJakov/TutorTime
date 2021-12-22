@@ -65,10 +65,12 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_camera.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.2708333333333333" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/progress_bar_states.xml" value="0.2898148148148148" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/scrollbar_vertical_thumb.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/side_nav_bar.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_choose_one.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_choose_status.xml" value="0.19375" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_loading_screen.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_login.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_main.xml" value="0.22282608695652173" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_set_tutor_profile.xml" value="0.19375" />
@@ -84,9 +86,12 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_search.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_slideshow.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_tutor_profile.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/include_progress_overlay.xml" value="0.19479166666666667" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/loading_dialog.xml" value="0.5" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/nav_header_main.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/popup_notification_contact_information.xml" value="0.19375" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/popup_notifications.xml" value="0.19375" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/progress_bar_states.xml" value="0.20969202898550723" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_add_dialog.xml" value="0.19655797101449277" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_edit_dialog.xml" value="0.19655797101449277" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/tutor_card_view.xml" value="0.48249027237354086" />

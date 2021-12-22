@@ -1,13 +1,18 @@
 package com.project.tutortime.ui.home;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -17,6 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.project.tutortime.LoadingDialog;
+import com.project.tutortime.MainActivity;
+import com.project.tutortime.R;
 import com.project.tutortime.adapter.TutorAdapter;
 
 import com.project.tutortime.adapter.TutorAdapterItem;
@@ -35,17 +43,23 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-    FirebaseStorage storage = FirebaseStorage.getInstance();
     TextView notificationsText;
     ListView listview;
+    ValueEventListener listViewListener;
+    TutorAdapter adapter;
+    LoadingDialog loadingDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        /* show loading dialog until all fragment resources ready */
+        loadingDialog = new LoadingDialog(getContext());
+        loadingDialog.show();
+        /* END show loading dialog until all fragment resources ready */
         notificationsText = binding.notificationsText;
         listview = binding.featuresList;
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        listViewListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 /* Init 'TutorAdapterItem' list for the adapter */
@@ -60,7 +74,7 @@ public class HomeFragment extends Fragment {
                     data.add(rand);
                 }
                 int counter = 0;
-                for(DataSnapshot ds : dataSnapshot.child("teachers").getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.child("teachers").getChildren()) {
                     /* If the pointer indicates one of the random numbers - add the tutor to the list */
                     if (data.contains(counter)) {
                         data.remove(counter);
@@ -74,24 +88,46 @@ public class HomeFragment extends Fragment {
                             continue; }
                         TutorAdapterItem item = new TutorAdapterItem(user,teacher,sub);
                         tutorsToShow.add(item);
+                        /* done adding all random tutors */
+                        if (data.size()==0) break;
                     }
                     counter++;
                 }
                 /* init the adapter with the 'tutorsToShow' list */
-                final TutorAdapter adapter = new TutorAdapter(getContext(), tutorsToShow);
+                adapter = new TutorAdapter(getContext(), tutorsToShow);
                 listview.setAdapter(adapter);
-                adapter.notifyDataSetChanged();
+                closeLoadingDialog();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
-        });
+        };
+        myRef.addListenerForSingleValueEvent(listViewListener);
         return root;
     }
-
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
+//        myRef.removeEventListener(listViewListener);
+//        listViewListener=null;
+//        myRef=null;
+//        listview = binding.featuresList;
+//        listview.setAdapter(null);
+//        binding = null;
+//        adapter.killTargets();
+//        adapter = null;
+    }
+
+    /* close Loading Dialog when all fragment resources ready */
+    public void closeLoadingDialog() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                /* wait until the adapter loaded all images */
+                while(!adapter.isAllResourcesReady()) { }
+                /* hide loading dialog (fragment resources ready) */
+                loadingDialog.cancel();
+            }
+        });
     }
 }

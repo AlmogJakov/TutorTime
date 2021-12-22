@@ -77,12 +77,15 @@ dependencies {
 
 //    implementation 'com.github.bumptech.glide:glide:4.7.1'
 //    annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
+    //implementation 'com.firebaseui:firebase-ui-storage:4.1.0'
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.0'
     // https://stackoverflow.com/questions/40380519/error-package-com-android-annotations-does-not-exist
 
     // https://stackoverflow.com/questions/45625890/support-annotation-does-not-exist-after-upgrading-to-android-studio-3-0
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    //implementation 'com.github.bumptech.glide:glide:4.9.0'
+    //annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation "com.android.support:support-annotations:28.0.0"
     annotationProcessor 'com.android.support:support-annotations:28.0.0'
 

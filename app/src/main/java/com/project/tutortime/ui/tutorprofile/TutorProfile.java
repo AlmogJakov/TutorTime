@@ -485,6 +485,7 @@ public class TutorProfile extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        //super.onDestroy();
         binding = null;
     }
 

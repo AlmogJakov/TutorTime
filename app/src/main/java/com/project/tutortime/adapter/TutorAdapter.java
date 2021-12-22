@@ -18,24 +18,33 @@ import androidx.cardview.widget.CardView;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.R;
 import com.project.tutortime.firebase.subjectObj;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
     private final Context context;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private final List<TutorAdapterItem> teachersToShow;
+    private List<Boolean> isResourceReady;
 
     public TutorAdapter(Context context, List<TutorAdapterItem> teachersToShow) {
         super(context, R.layout.tutor_card_view, teachersToShow);
         this.context = context;
         this.teachersToShow = teachersToShow;
+        this.isResourceReady = Arrays.asList(new Boolean[teachersToShow.size()]);
+        Collections.fill(isResourceReady, Boolean.FALSE);
     }
 
     @Override
@@ -54,10 +63,7 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
         String imageLink = teachersToShow.get(position).teacher.getImgUrl();
         if (imageLink!=null) {
             StorageReference storageReference = storage.getReference().child(imageLink);
-            Glide.with(context)
-                    .asBitmap()
-                    .load(storageReference)
-                    .into(new CustomTarget<Bitmap>() {
+            CustomTarget<Bitmap> target = new CustomTarget<Bitmap>() {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             profileImage.setImageBitmap(resource);
@@ -73,13 +79,29 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
                                     titleText.setTextColor(contrastColor);
                                     /* Set color for the outer frame (as the contrast of the dominant color) */
                                     profileImageBox.setCardBackgroundColor(contrastColor);
+                                    setViews(position,titleText,description,subject, price,rating);
+                                    /* Add true value for this resource (indicate that the resource is ready) */
+                                    isResourceReady.set(position,Boolean.TRUE);
                                 }
                             });
                         }
                         @Override
                         public void onLoadCleared(@Nullable Drawable placeholder) { }
-                    });
+                    };
+            Glide.with(context)
+                    .asBitmap()
+                    .load(storageReference)
+                    .into(target);
+        } else {
+            setViews(position,titleText,description,subject, price,rating);
+            /* Add true value for this resource (indicate that the resource is ready) */
+            isResourceReady.set(position,Boolean.TRUE);
         }
+        return rowView;
+    }
+
+    public void setViews(int position,TextView titleText, TextView description, TextView subject,
+                         TextView price, RatingBar rating) {
         titleText.setText(teachersToShow.get(position).user.getfName());
         description.setText(teachersToShow.get(position).teacher.getDescription());
         String subjectName = teachersToShow.get(position).subName;
@@ -87,6 +109,9 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
         subjectObj sub = teachersToShow.get(position).teacher.getSub().get(subjectName);
         price.setText(sub.getPrice()+"₪");
         rating.setRating((float) 4.5);
-        return rowView;
+    }
+
+    public Boolean isAllResourcesReady() {
+        return !isResourceReady.contains(false);
     }
 }

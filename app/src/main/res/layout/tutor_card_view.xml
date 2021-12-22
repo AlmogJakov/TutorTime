@@ -97,7 +97,7 @@
                     android:maxEms="8"
                     android:maxLines="1"
                     android:paddingTop="4dp"
-                    android:text="My Nameeeeeeeeeeeeeeeeeeeee"
+                    android:text=""
                     android:textAlignment="center"
                     android:textColor="@color/black"
                     android:textSize="16sp"
@@ -145,42 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/header"
                 android:layout_toEndOf="@+id/profile_image_box"
-                android:text="My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description.
-My Description."
+                android:text=""
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:paddingEnd="20dp"
@@ -235,7 +200,7 @@ My Description."
                     android:ellipsize="end"
                     android:maxEms="8"
                     android:maxLines="1"
-                    android:text="Computer Science" />
+                    android:text="" />
 
                 <TextView
                     android:id="@+id/price"
@@ -245,7 +210,7 @@ My Description."
                     android:ellipsize="end"
                     android:maxEms="8"
                     android:maxLines="1"
-                    android:text="50$ Per Hour" />
+                    android:text="" />
 
             </RelativeLayout>
 

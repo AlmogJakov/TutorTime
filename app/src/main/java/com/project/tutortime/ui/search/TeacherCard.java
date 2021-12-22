@@ -25,7 +25,7 @@ import java.util.Objects;
 
 public class TeacherCard extends AppCompatActivity {
     ImageView image;
-    TextView price, description, back, subject;
+    TextView price, description, back, subject, type, name, place;
     Button send, phone;
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -40,11 +40,17 @@ public class TeacherCard extends AppCompatActivity {
         phone = findViewById(R.id.phone);
         back = findViewById(R.id.textView);
         subject = findViewById(R.id.subject);
+        type = findViewById(R.id.typeOfeTeaching);
+        name = findViewById(R.id.card_teacher_name);
+        place = findViewById(R.id.AreaOfTeaching);
 
         userObj user = (userObj) getIntent().getSerializableExtra("user");
         teacherObj teacher = (teacherObj) getIntent().getSerializableExtra("teacher");
         String sub = getIntent().getStringExtra("sub");
 
+        name.setText(user.getfName() +" "+ user.getlName());
+        type.setText(getIntent().getStringExtra("type"));
+        place.setText("From: " + user.getCity());
         subject.setText(sub);
         description.setText(teacher.getDescription());
         System.out.println(sub);
