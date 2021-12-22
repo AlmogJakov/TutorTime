@@ -17,6 +17,12 @@
         android:label="@string/menu_teacher_card"
         tools:layout="@layout/fragment_tutor_profile" />
 
+    <fragment
+        android:id="@+id/nav_my_sub_list"
+        android:name="com.project.tutortime.ui.mysublist.MySubList"
+        android:label="My Subject List"
+        tools:layout="@layout/fragment_my_sub_list" />
+
     <activity
         android:id="@+id/nav_new_tutor_profile"
         android:name="com.project.tutortime.SetTutorProfile"

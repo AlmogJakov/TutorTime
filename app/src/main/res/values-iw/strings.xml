@@ -18,6 +18,7 @@
     <string name="cities_hint">ערים</string>
     <string name="menu_home">מסך הבית</string>
     <string name="menu_teacher_card">כרטיס המורה שלי</string>
+    <string name="menu_my_subject_list">רשימת המקצועות שלי</string>
     <string name="menu_new_tutor_profile">צור כרטיס מורה</string>
     <string name="menu_search">חיפוש</string>
     <string name="menu_notifications">התראות</string>

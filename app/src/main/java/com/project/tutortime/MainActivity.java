@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_new_tutor_profile, R.id.nav_tutor_profile, R.id.nav_search, R.id.nav_notifications, R.id.logout)
+                R.id.nav_home, R.id.nav_new_tutor_profile, R.id.nav_my_sub_list, R.id.nav_tutor_profile, R.id.nav_search, R.id.nav_notifications, R.id.logout)
                 .setOpenableLayout(drawer).build();
 
         /* get the array list contains the status of the user (0=customer/1=tutor) */
@@ -110,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
         if (status == 0) { /* default user (customer) */
             /* hide options - Here you can hide options from navigation bar! */
             nav_Menu.findItem(R.id.nav_tutor_profile).setVisible(false);
+            nav_Menu.findItem(R.id.nav_my_sub_list).setVisible(false);
         } else { /* tutor */
             /* hide options - Here you can hide options from navigation bar! */
             nav_Menu.findItem(R.id.nav_new_tutor_profile).setVisible(false);

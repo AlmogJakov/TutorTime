@@ -18,6 +18,7 @@
     <string name="cities_hint">Settings</string>
     <string name="menu_home">Home</string>
     <string name="menu_teacher_card">My Tutor Profile</string>
+    <string name="menu_my_subject_list">My Subject List</string>
     <string name="menu_new_tutor_profile">Create Tutor Profile</string>
     <string name="menu_search">Search</string>
     <string name="menu_notifications">Notifications</string>
@@ -151,4 +152,6 @@
         <item>Yokneam</item>
 
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

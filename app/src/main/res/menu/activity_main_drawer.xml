@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/menu_teacher_card" />
         <item
+            android:id="@+id/nav_my_sub_list"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="My Subject List" />
+        <item
             android:id="@+id/nav_new_tutor_profile"
             android:icon="@drawable/ic_menu_slideshow"
             android:noHistory="true"
