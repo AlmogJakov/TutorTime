@@ -1,16 +1,21 @@
 package com.project.tutortime.ui.search;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
@@ -25,19 +30,21 @@ import java.util.Objects;
 
 public class TeacherCard extends AppCompatActivity {
     ImageView image;
-    TextView price, description, back, subject, type, name, place;
+    TextView price, description, subject, type, name, place;
     Button send, phone;
+    ImageButton back;
     FirebaseStorage storage = FirebaseStorage.getInstance();
+    String phoneNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.card_teacher);
-        image = findViewById(R.id.image);
+        image = findViewById(R.id.imageView);
         price = findViewById(R.id.price);
         description = findViewById(R.id.description);
         send = findViewById(R.id.send);
-        phone = findViewById(R.id.phone);
+//        phone = findViewById(R.id.phone);
         back = findViewById(R.id.textView);
         subject = findViewById(R.id.subject);
         type = findViewById(R.id.typeOfeTeaching);
@@ -47,14 +54,20 @@ public class TeacherCard extends AppCompatActivity {
         userObj user = (userObj) getIntent().getSerializableExtra("user");
         teacherObj teacher = (teacherObj) getIntent().getSerializableExtra("teacher");
         String sub = getIntent().getStringExtra("sub");
-
+        phoneNum = teacher.getPhoneNum();
         name.setText(user.getfName() +" "+ user.getlName());
-        type.setText(getIntent().getStringExtra("type"));
-        place.setText("From: " + user.getCity());
+        String s="";
+        switch (teacher.getSub().get(sub).getType()) {
+            case "both": s = "Online/Frontal";break;
+            case "online": s = "Online";break;
+            case "frontal": s = "Frontal";break;
+        }
+        type.setText(s);
+        place.setText("\uD83D\uDCCD " + user.getCity());
         subject.setText(sub);
         description.setText(teacher.getDescription());
         System.out.println(sub);
-        price.setText(teacher.getSub().get(sub).getPrice()+"");
+        price.setText(teacher.getSub().get(sub).getPrice()+"₪");
         String imageLink = teacher.getImgUrl();
         if (imageLink!=null) {
             StorageReference storageReference = storage.getReference().child(imageLink);
@@ -65,20 +78,6 @@ public class TeacherCard extends AppCompatActivity {
                         @Override
                         public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                             image.setImageBitmap(resource);
-//                            Palette.generateAsync(resource, new Palette.PaletteAsyncListener() {
-//                                public void onGenerated(Palette palette) {
-//                                    //Set the background color of a layout based on the vibrant color
-//                                    int dominantColor = palette.getDominantColor(Color.WHITE);
-//                                    double y = (299 * Color.red(dominantColor) + 587 * Color.green(dominantColor) + 114 * Color.blue(dominantColor)) / 1000;
-//                                    int contrastColor = y >= 128 ? Color.BLACK : Color.WHITE;
-//                                    /* Set color for the outer frame (as the dominant color) */
-//                                    titleBackground.setBackgroundColor(dominantColor);
-//                                    /* Set color for the title text (as the contrast of the dominant color) */
-//                                    titleText.setTextColor(contrastColor);
-//                                    /* Set color for the outer frame (as the contrast of the dominant color) */
-//                                    profileImageBox.setCardBackgroundColor(contrastColor);
-//                                }
-//                            });
                         }
                         @Override
                         public void onLoadCleared(@Nullable Drawable placeholder) { }
@@ -90,11 +89,23 @@ public class TeacherCard extends AppCompatActivity {
             }
         });
 
-        phone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
+//        phone.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                AlertDialog.Builder builder = new AlertDialog.Builder(TeacherCard.this);
+//                builder.setTitle(name.getText())
+//                        .setMessage("\uD83D\uDCDE "+phoneNum)
+//                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialog, int which) {
+//
+//                            }
+//                        });
+//
+//                builder.setCancelable(false);
+//                builder.show();
+//            }
+//        });
 
 
         back.setOnClickListener(new View.OnClickListener() {

@@ -50,7 +50,7 @@ public class SearchResults extends AppCompatActivity {
     private int minResult;
     private int kindOfSort;
     private final String[] TypeResult = {"both", "frontal", "online"};
-    private ArrayList<Integer> chooseType = new ArrayList<>();
+    private boolean[] chooseType = {true,true,true};
     ArrayList<Integer> prices = new ArrayList<>();
 
     HashSet<String> used = new HashSet<>();
@@ -77,9 +77,8 @@ public class SearchResults extends AppCompatActivity {
         maxResult = getIntent().getIntExtra("maxResult", 300);
         minResult = getIntent().getIntExtra("minResult", 0);
         typeResult = getIntent().getStringExtra("typeResult");
-        if (typeResult.equals("Online, Frontal")){chooseType.add(0);chooseType.add(1);chooseType.add(2);}
-        else if (typeResult.equals("Frontal")){ chooseType.add(0);chooseType.add(1);}
-        else if (typeResult.equals("Online")) {chooseType.add(0);chooseType.add(2);}
+        if (typeResult.equals("Frontal")){ chooseType[2] = false;}
+        else if (typeResult.equals("Online")) {chooseType[1] = false;}
         subjectResult = getIntent().getStringExtra("subjectResult");
         kindOfSort = getIntent().getIntExtra("sort", 0);
         String[] Cities = cityResult.split(", ");
@@ -121,10 +120,7 @@ public class SearchResults extends AppCompatActivity {
     /** ///////// sort functions //////// */
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void sortByPriceHigh() {
-        prices.sort(Collections.reverseOrder());
-
-    }
+    private void sortByPriceHigh() { prices.sort(Collections.reverseOrder()); }
 
     private void sortByPriceLow() {
         Collections.sort(prices);
@@ -140,33 +136,79 @@ public class SearchResults extends AppCompatActivity {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (int pr: prices){
-                    for (String c:Cities) {
-                        for (int type:chooseType){
-                            Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[type]).child(subjectResult).child(c).child(Integer.toString(pr)).getChildren();
-                            if (type == 2) idOfTeacher = dataSnapshot.child("search").child(TypeResult[type]).child(subjectResult).child(Integer.toString(pr)).getChildren();
-                            for (DataSnapshot s1 : idOfTeacher) {
-                                String s = s1.getKey();
-                                if (s != null){
-                                    teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
-                                    if (teacher != null){
-                                        if (!used.contains(teacher.getUserID())){
-                                            userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
-                                            teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
-                                            used.add(teacher.getUserID());
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                if (chooseType[0])setBoth(dataSnapshot);
+                if (chooseType[1])setFrontal(dataSnapshot);
+                if (chooseType[2])setOnline(dataSnapshot);
 
                 final TutorAdapter adapter = new TutorAdapter(SearchResults.this, teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
 
             }
+
+            private void setOnline(DataSnapshot dataSnapshot) {
+                for (int pr: prices){
+                    Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[2]).child(subjectResult).child(Integer.toString(pr)).getChildren();
+                    for (DataSnapshot s1 : idOfTeacher) {
+                        String s = s1.getKey();
+                        if (s != null){
+                            teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
+                            if (teacher != null){
+                                if (!used.contains(teacher.getUserID())){
+                                    userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                    teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
+                                    used.add(teacher.getUserID());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void setFrontal(DataSnapshot dataSnapshot) {
+                for (int pr: prices){
+                    for (String c:Cities) {
+                        Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[1]).child(subjectResult).child(c).child(Integer.toString(pr)).getChildren();
+                        for (DataSnapshot s1 : idOfTeacher) {
+                            String s = s1.getKey();
+                            if (s != null){
+                                teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
+                                if (teacher != null){
+                                    if (!used.contains(teacher.getUserID())){
+                                        userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                        teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
+                                        used.add(teacher.getUserID());
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private void setBoth(DataSnapshot dataSnapshot) {
+                for (int pr: prices){
+                    Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[0]).child(subjectResult).getChildren();
+                    for (DataSnapshot s2 : idOfTeacher) {
+                        Iterable<DataSnapshot> idOfCity = s2.child(Integer.toString(pr)).getChildren();
+                        for (DataSnapshot s1 : idOfCity) {
+                            String s = s1.getKey();
+                            if (s != null){
+                                teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
+                                if (teacher != null){
+                                    if (!used.contains(teacher.getUserID())){
+                                        userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                        teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
+                                        used.add(teacher.getUserID());
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
@@ -220,24 +262,5 @@ public class SearchResults extends AppCompatActivity {
 
     private void back() {
         finish();
-    }
-
-
-
-    public static class teacher{
-        String fName, lName, description, subject;
-        int price;
-        public teacher(String _fName, String _lName, String _description, String _subject, int _price){
-            fName = _fName;
-            lName = _lName;
-            description = _description;
-            subject = _subject;
-            price = _price;
-        }
-
-    }
-    private void setRandomTeacher(){
-        String[] name = {"itay", "noa", "almog", "chen", "shira", "edi", "orna", "sharon", "tal", "roi", "bar"};
-//        int[]
     }
 }
