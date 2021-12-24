@@ -81,13 +81,47 @@ public class Search extends Fragment {
                 String minResult = minPrice.getText().toString().trim();
                 String maxResult = maxPrice.getText().toString().trim();
                 int min=0, max=300;
+
+                ///////// start check error in search ////////
+
+                if (subjectSpin.getSelectedItemPosition() == 0) {
+                    TextView errorText = (TextView) subjectSpin.getSelectedView();
+                    errorText.setError("Subject is required.");
+                    Toast.makeText(getActivity(), "Subject is required.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (typeResult.equals("")){
+                    Toast.makeText(getActivity(), "Learning type is required.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (typeResult.equals("Frontal") && cityResult.equals("")){
+                    Toast.makeText(getActivity(), "City is required.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 try{
-                    min = Integer.parseInt(minResult);
-                    max = Integer.parseInt(maxResult);
+                    System.out.println("max result is: "+maxResult);
+                    if (!maxResult.equals(""))max = Integer.parseInt(maxResult);
                 }
                 catch (NumberFormatException ignored){
-
+                    maxPrice.setError("Type a number.");
+                    Toast.makeText(getActivity(), "Type a number.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                try{
+                    if (!minResult.equals(""))min = Integer.parseInt(minResult);
+                }
+                catch (NumberFormatException ignored){
+                    minPrice.setError("Type a number.");
+                    Toast.makeText(getActivity(), "Type a number.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                /////////  end check error in search ////////
 
                 Intent intent = new Intent(getActivity(), SearchResults.class);
                 intent.putExtra("typeResult", typeResult);
