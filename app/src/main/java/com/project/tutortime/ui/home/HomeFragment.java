@@ -108,17 +108,17 @@ public class HomeFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) { }
         };
         myRef.addListenerForSingleValueEvent(listViewListener);
-        listview.setTextFilterEnabled(true);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getActivity(), TeacherCard.class);
-                intent.putExtra("user", tutorsToShow.get(position).getUser());
-                intent.putExtra("teacher", tutorsToShow.get(position).getTeacher());
-                intent.putExtra("sub", tutorsToShow.get(position).getSubName());
-                startActivity(intent);
-            }
-        });
+//        listview.setTextFilterEnabled(true);
+//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(getActivity(), TeacherCard.class);
+//                intent.putExtra("user", tutorsToShow.get(position).getUser());
+//                intent.putExtra("teacher", tutorsToShow.get(position).getTeacher());
+//                intent.putExtra("sub", tutorsToShow.get(position).getSubName());
+//                startActivity(intent);
+//            }
+//        });
         return root;
     }
 

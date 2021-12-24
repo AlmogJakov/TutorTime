@@ -1,6 +1,7 @@
 package com.project.tutortime.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -29,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.R;
 import com.project.tutortime.firebase.subjectObj;
+import com.project.tutortime.ui.search.TeacherCard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,6 +110,17 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
             /* Add true value for this resource (indicate that the resource is ready) */
             isResourceReady.set(position,Boolean.TRUE);
         }
+        CardView currentCard = (CardView)rowView.findViewById(R.id.tutor_card_item);
+        currentCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), TeacherCard.class);
+                intent.putExtra("user", teachersToShow.get(position).getUser());
+                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
+                intent.putExtra("sub", teachersToShow.get(position).getSubName());
+                getContext().startActivity(intent);
+            }
+        });
         return rowView;
     }
 
