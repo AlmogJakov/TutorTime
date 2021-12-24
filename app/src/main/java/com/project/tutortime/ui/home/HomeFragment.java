@@ -2,11 +2,13 @@ package com.project.tutortime.ui.home;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -32,6 +34,7 @@ import com.project.tutortime.adapter.TutorAdapterItem;
 import com.project.tutortime.databinding.FragmentHomeBinding;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
+import com.project.tutortime.ui.search.TeacherCard;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -49,6 +52,7 @@ public class HomeFragment extends Fragment {
     ValueEventListener listViewListener;
     TutorAdapter adapter;
     LoadingDialog loadingDialog;
+    List<TutorAdapterItem> tutorsToShow = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -64,7 +68,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 /* Init 'TutorAdapterItem' list for the adapter */
-                List<TutorAdapterItem> tutorsToShow = new ArrayList<>();
+                tutorsToShow = new ArrayList<>();
                 Random random = new Random();
                 int tutorsNum = (int)dataSnapshot.child("teachers").getChildrenCount();
                 /* Init set to store 3 random numbers */
@@ -104,6 +108,17 @@ public class HomeFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) { }
         };
         myRef.addListenerForSingleValueEvent(listViewListener);
+        listview.setTextFilterEnabled(true);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), TeacherCard.class);
+                intent.putExtra("user", tutorsToShow.get(position).getUser());
+                intent.putExtra("teacher", tutorsToShow.get(position).getTeacher());
+                intent.putExtra("sub", tutorsToShow.get(position).getSubName());
+                startActivity(intent);
+            }
+        });
         return root;
     }
 
