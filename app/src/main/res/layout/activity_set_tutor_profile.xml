@@ -74,39 +74,7 @@
             </RelativeLayout>
 
 
-
-
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_contact_no"
-                android:layout_width="0dp"
-                app:helperText="Contact No"
-                app:layout_constraintWidth_percent="0.7"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginTop="20dp"
-                android:textColorHint="#808080"
-                app:expandedHintEnabled="true"
-                app:layout_constraintTop_toBottomOf="@+id/layout_image">
-
-                <EditText
-                    android:id="@+id/editPhoneNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#00000000"
-                    android:gravity="center"
-                    android:inputType="phone"
-                    android:padding="10dp"
-                    android:text=""
-                    android:textColorHint="#808080"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-
-<!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
 <!--                android:id="@+id/layout_spinner"-->
 <!--                android:layout_width="0dp"-->
 <!--                app:helperText="City"-->
@@ -181,6 +149,34 @@
             <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layout_contact_no"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textColorHint="#808080"
+                app:expandedHintEnabled="true"
+                app:helperText="Contact No"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.504"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_image"
+                app:layout_constraintWidth_percent="0.7">
+
+                <EditText
+                    android:id="@+id/editPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:inputType="phone"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textColorHint="#808080"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editDescription"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -244,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="104dp"
-                    android:text="Save profile "
+                    android:text="Save profile"
                     android:textAllCaps="false"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

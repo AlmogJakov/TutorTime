@@ -133,25 +133,25 @@ public class  MySubList extends Fragment {
                         return;
                     }
                 }
-                new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        /* sort the list of service cities */
-                        Collections.sort(listCities);
-                        /* get teacher ID */
-                        teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("teachers/" + teacherID + "/serviceCities", listCities);
-
-                        /* Finally, execute all RealTime DataBase commands in one command (safely). */
-                        myRef.updateChildren(childUpdates);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+//                new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        /* sort the list of service cities */
+//                        Collections.sort(listCities);
+//                        /* get teacher ID */
+//                        teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+//
+//                        Map<String, Object> childUpdates = new HashMap<>();
+//                        childUpdates.put("teachers/" + teacherID + "/serviceCities", listCities);
+//
+//                        /* Finally, execute all RealTime DataBase commands in one command (safely). */
+//                        myRef.updateChildren(childUpdates);
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//                    }
+//                });
                 goToTutorMain(requireActivity());
             }
         });
@@ -180,7 +180,6 @@ public class  MySubList extends Fragment {
                         child("serviceCities").getChildren()) {
                     String serviceCity = citySnapsot.getValue(String.class);
                     listCities.add(serviceCity);
-                    System.out.println(serviceCity);
                 }
                 if (listCities.isEmpty()){
                     serviceCitiesSpinner.setTextColor(Color.GRAY);
@@ -587,6 +586,7 @@ public class  MySubList extends Fragment {
                         }
                     }
                 }
+
                 childUpdates.put("teachers/" + teacherID + "/serviceCities", currentList);
                 myRef.updateChildren(childUpdates);
                 addList.clear();

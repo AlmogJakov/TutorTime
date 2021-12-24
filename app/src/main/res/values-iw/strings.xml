@@ -8,7 +8,24 @@
     <string name="ResetPassword">איפוס ססמא</string>
     <string name="ChangeLanguage">שנה שפה</string>
 
+    <!-- Strings register -->
+    <string name="registerAcount">צור חשבון חדש</string>
+    <string name="registerFirstName">שם פרטי</string>
+    <string name="registerLastName">שם משפחה</string>
+    <string name="registerEmail">אימייל</string>
+    <string name="registerPassword">ססמה</string>
+    <string name="registerSignUp">הירשם</string>
+    <string name="registerHaveAccountLogin">יש לך חשבון? תתחבר</string>
 
+    <!-- Strings set tutor profile -->
+    <string name="setTutorProfileContactNo">מספר איש קשר</string>
+    <string name="setTutorProfileSelectServiceCities">בחר ערי שירות</string>
+    <string name="setTutorProfileAboutMe">עליי</string>
+    <string name="setTutorProfileSubjectList">רשימת מקצועות</string>
+    <string name="setTutorProfileAddSubject">הוסף מקצוע</string>
+    <string name="setTutorProfileSaveprofile">שמור פרופל</string>
+
+    <!-- Strings menu -->
     <string name="navigation_drawer_open">פתח את כרטיסיית הניווט</string>
     <string name="navigation_drawer_close">סגור את כרטיסיית הניווט</string>
     <string name="nav_header_title">ברוך הבא אל Tutor Time!</string>
@@ -23,6 +40,7 @@
     <string name="menu_search">חיפוש</string>
     <string name="menu_notifications">התראות</string>
     <string name="title_activity_welcome">שלום</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -44,32 +62,32 @@
 
     <string name="sign_up">הירשם</string>
 
-    <string-array name="SpinnerSubName1">
-        <item>בחר מקצוע</item>
-        <item>מתמטיקה</item>
-        <item>אנגלית</item>
-        <item>פיסיקה</item>
-        <item>ביולוגיה</item>
-        <item>ספרות</item>
-        <item>היסטוריה</item>
-        <item>כימיה</item>
-        <item>מוסיקה</item>
-        <item>מדעי המחשב</item>
-        <item>אזרחות</item>
-        <item>תנ"ך</item>
-    </string-array>
+<!--    <string-array name="SpinnerSubName1">-->
+<!--        <item>בחר מקצוע</item>-->
+<!--        <item>מתמטיקה</item>-->
+<!--        <item>אנגלית</item>-->
+<!--        <item>פיסיקה</item>-->
+<!--        <item>ביולוגיה</item>-->
+<!--        <item>ספרות</item>-->
+<!--        <item>היסטוריה</item>-->
+<!--        <item>כימיה</item>-->
+<!--        <item>מוסיקה</item>-->
+<!--        <item>מדעי המחשב</item>-->
+<!--        <item>אזרחות</item>-->
+<!--        <item>תנ"ך</item>-->
+<!--    </string-array>-->
 
     <style name="Dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <string-array name="Options2">
-        <item>Select learning form</item>
-        <item>online</item>
-        <item>frontal</item>
-        <item>online/frontal</item>
-    </string-array>
+<!--    <string-array name="Options2">-->
+<!--        <item>Select learning form</item>-->
+<!--        <item>online</item>-->
+<!--        <item>frontal</item>-->
+<!--        <item>online/frontal</item>-->
+<!--    </string-array>-->
 
     <string-array name="Cities">
         <item>Afula</item>

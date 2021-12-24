@@ -4,13 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2203125" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/chats_profile_circle_offline.xml" value="0.12447916666666667" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/chats_profile_circle_online.xml" value="0.12447916666666667" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/gradient_toolbar.xml" value="0.12447916666666667" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2203125" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_camera.xml" value="0.2203125" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_gallery.xml" value="0.2203125" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_search.xml" value="0.15" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_menu_slideshow.xml" value="0.2203125" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/popup_close_circle.xml" value="0.2203125" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/scrollbar_vertical_thumb.xml" value="0.2203125" />
@@ -19,10 +15,10 @@
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_choose_status.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_loading.xml" value="0.10572916666666667" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_loading_screen.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_login.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_register.xml" value="0.33" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_set_tutor_profile.xml" value="0.31852986217457885" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_set_tutor_profile.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_splash_screen.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_teacher_card.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_welcom.xml" value="0.20416666666666666" />
@@ -30,23 +26,24 @@
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/add_sub_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/app_bar_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/card.xml" value="0.184375" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/card_teacher.xml" value="0.16666666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/chats_fragment.xml" value="0.14583333333333334" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/chats_item.xml" value="0.1328125" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/card_teacher.xml" value="0.18" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/content_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/content_welcome.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/edit_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_first.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_gallery.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_home.xml" value="0.33" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_notifications.xml" value="0.12777777777777777" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_my_list_sub.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_my_sub_list.xml" value="0.25" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_mysublist.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_search.xml" value="0.22" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_search_results.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_second.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_tutor_profile.xml" value="0.22" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_tutor_profile.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/image_dialog.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/img_add_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/img_add_dialog2.xml" value="0.33" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/my_sub_list_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/my_tutor_profile.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/nav_header_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/notification_item.xml" value="0.20416666666666666" />
@@ -59,13 +56,13 @@
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/subject_edit_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/teacher_card_fragment.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/tutor_card_view.xml" value="0.184375" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/tutor_card_view2.xml" value="0.2774566473988439" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/update_profile.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/update_teacher_profile.xml" value="0.33" />
-        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/menu/activity_main_drawer.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/menu/activity_main_drawer.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/menu/main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.2203125" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+        <entry key="..\:/Users/97252/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/chats_profile_circle_offline.xml" value="0.20989583333333334" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/chats_profile_circle_online.xml" value="0.20989583333333334" />
@@ -108,5 +105,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.22" />
+      </ProjectState>
+    </option>
   </component>
 </project>

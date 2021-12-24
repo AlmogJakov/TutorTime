@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">TutorTime</string>
-    <!-- Strings used for login -->
+    <!-- Strings login -->
     <string name="Email">Email</string>
     <string name="Password">Password</string>
     <string name="LogIn">Log In</string>
@@ -8,7 +8,25 @@
     <string name="ResetPassword">Reset Password</string>
     <string name="ChangeLanguage">Change language</string>
 
+    <!-- Strings register -->
+    <string name="registerAcount">Create a New Acount</string>
+    <string name="registerFirstName">First Name</string>
+    <string name="registerLastName">Last Name</string>
+    <string name="registerEmail">Email</string>
+    <string name="registerPassword">Password</string>
+    <string name="registerSignUp">Sign Up</string>
+    <string name="registerHaveAccountLogin">Have Account? Login</string>
 
+    <!-- Strings set tutor profile -->
+    <string name="setTutorProfileContactNo">Contact No</string>
+    <string name="setTutorProfileSelectServiceCities">Select service cities</string>
+    <string name="setTutorProfileAboutMe">About Me</string>
+    <string name="setTutorProfileSubjectList">Subject List</string>
+    <string name="setTutorProfileAddSubject">Add Subject</string>
+    <string name="setTutorProfileSaveprofile">Save profile</string>
+
+
+    <!-- Strings menu -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Welcome to Tutor Time!</string>
@@ -23,6 +41,7 @@
     <string name="menu_search">Search</string>
     <string name="menu_notifications">Notifications</string>
     <string name="title_activity_welcome">Welcome</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
@@ -49,32 +68,32 @@
         <item>female</item>
     </string-array>
 
-    <string-array name="SpinnerSubName1">
-        <item>Select subject</item>
-        <item>Math</item>
-        <item>English</item>
-        <item>physics</item>
-        <item>Biology</item>
-        <item>Literature</item>
-        <item>history</item>
-        <item>chemistry</item>
-        <item>music</item>
-        <item>Computer Science</item>
-        <item>citizenship</item>
-        <item>Bible</item>
-    </string-array>
+<!--    <string-array name="SpinnerSubName1">-->
+<!--        <item>Select subject</item>-->
+<!--        <item>Math</item>-->
+<!--        <item>English</item>-->
+<!--        <item>physics</item>-->
+<!--        <item>Biology</item>-->
+<!--        <item>Literature</item>-->
+<!--        <item>history</item>-->
+<!--        <item>chemistry</item>-->
+<!--        <item>music</item>-->
+<!--        <item>Computer Science</item>-->
+<!--        <item>citizenship</item>-->
+<!--        <item>Bible</item>-->
+<!--    </string-array>-->
 
     <style name="Dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowIsFloating">true</item>
     </style>
 
-    <string-array name="Options2">
-        <item>Select learning form</item>
-        <item>online</item>
-        <item>frontal</item>
-        <item>online/frontal</item>
-    </string-array>
+<!--    <string-array name="Options2">-->
+<!--        <item>Select learning form</item>-->
+<!--        <item>online</item>-->
+<!--        <item>frontal</item>-->
+<!--        <item>online/frontal</item>-->
+<!--    </string-array>-->
 
     <string-array name="Cities">
         <item>Afula</item>
