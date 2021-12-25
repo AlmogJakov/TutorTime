@@ -27,6 +27,8 @@
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/app_bar_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/card.xml" value="0.184375" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/card_teacher.xml" value="0.18" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/chats_fragment.xml" value="0.20416666666666666" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/chats_item.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/content_main.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/content_welcome.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/edit_dialog.xml" value="0.33" />
@@ -43,6 +45,7 @@
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/image_dialog.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/img_add_dialog.xml" value="0.33" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/img_add_dialog2.xml" value="0.33" />
+        <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/loading_dialog.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/my_sub_list_fragment.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/my_tutor_profile.xml" value="0.25" />
         <entry key="..\:/Users/97252/AndroidStudioProjects/TutorTime/app/src/main/res/layout/nav_header_main.xml" value="0.20416666666666666" />

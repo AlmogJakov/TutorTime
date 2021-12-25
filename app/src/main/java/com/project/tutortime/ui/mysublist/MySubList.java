@@ -55,7 +55,7 @@ public class  MySubList extends Fragment {
 
     TextView title, serviceCitiesSpinner;
     ListView subjectList;
-    Button saveProfile, addSub;
+    Button home, addSub;
     String teacherID;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
@@ -77,7 +77,7 @@ public class  MySubList extends Fragment {
         title = binding.MyTitle;
         subjectList = binding.ListViewSubList;
         addSub = binding.btnAddSubject;
-        saveProfile = binding.SaveProfile;
+        home = binding.btnHome;
         serviceCitiesSpinner = binding.txtServiceCities;
 
         ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
@@ -85,7 +85,7 @@ public class  MySubList extends Fragment {
         a.notifyDataSetChanged();
 
         /* Disable all Buttons & Text Edit Fields - until all data received from FireBase */
-        saveProfile.setEnabled(false);
+        home.setEnabled(false);
         addSub.setEnabled(false);
         serviceCitiesSpinner.setEnabled(false);
         subjectList.setEnabled(false);
@@ -107,7 +107,7 @@ public class  MySubList extends Fragment {
             }
         });
 
-        saveProfile.setOnClickListener(new View.OnClickListener() {
+        home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (list.isEmpty()) {
@@ -133,25 +133,6 @@ public class  MySubList extends Fragment {
                         return;
                     }
                 }
-//                new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        /* sort the list of service cities */
-//                        Collections.sort(listCities);
-//                        /* get teacher ID */
-//                        teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-//
-//                        Map<String, Object> childUpdates = new HashMap<>();
-//                        childUpdates.put("teachers/" + teacherID + "/serviceCities", listCities);
-//
-//                        /* Finally, execute all RealTime DataBase commands in one command (safely). */
-//                        myRef.updateChildren(childUpdates);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//                    }
-//                });
                 goToTutorMain(requireActivity());
             }
         });
@@ -216,7 +197,7 @@ public class  MySubList extends Fragment {
                 a.notifyDataSetChanged();
 
                 /* Enable all Buttons & Text Edit Fields - data already received from FireBase */
-                saveProfile.setEnabled(true);
+                home.setEnabled(true);
                 addSub.setEnabled(true);
                 subjectList.setEnabled(true);
                 serviceCitiesSpinner.setEnabled(true);

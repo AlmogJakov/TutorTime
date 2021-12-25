@@ -288,8 +288,6 @@
 
 
 
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/layout_sublist"
                 android:layout_width="0dp"

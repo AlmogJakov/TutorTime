@@ -25,6 +25,31 @@
     <string name="setTutorProfileAddSubject">Add Subject</string>
     <string name="setTutorProfileSaveprofile">Save profile</string>
 
+    <!-- Strings my sub list -->
+    <string name="mySubListMySubjectList">My subject list</string>
+    <string name="mySubListServiceCities">Service cities</string>
+    <string name="mySubListSelectServiceCities">Select service cities</string>
+    <string name="mySubListSubjectList">Subject List</string>
+    <string name="mySubListAddSubject">Add Subject</string>
+    <string name="mySubListHome">Home</string>
+
+    <!-- Strings image dialog -->
+    <string name="imageDialogUpdate">Update</string>
+    <string name="imageDialogDelete">Delete</string>
+
+    <!-- Strings subject add dialog -->
+    <string name="subjectAddDialogAddSubject">Add subject</string>
+    <string name="subjectAddDialogExperience">Experience</string>
+    <string name="subjectAddDialogAdd">Add</string>
+    <string name="subjectAddDialogClose">Close</string>
+
+    <!-- Strings subject edit dialog -->
+    <string name="subjectEditDialogEditSubject">Edit subject</string>
+    <string name="subjectEditDialogExperience">Experience</string>
+    <string name="subjectEditDialogSAVE">SAVE</string>
+    <string name="subjectEditDialogDelete">Delete</string>
+    <string name="subjectEditDialogClose">Close</string>
+
 
     <!-- Strings menu -->
     <string name="navigation_drawer_open">Open navigation drawer</string>

@@ -25,6 +25,31 @@
     <string name="setTutorProfileAddSubject">הוסף מקצוע</string>
     <string name="setTutorProfileSaveprofile">שמור פרופל</string>
 
+    <!-- Strings my sub list -->
+    <string name="mySubListMySubjectList">רשימת המקצועות שלי</string>
+    <string name="mySubListServiceCities">ערי שירות</string>
+    <string name="mySubListSelectServiceCities">בחר ערי שירות</string>
+    <string name="mySubListSubjectList">רשימת מקצועות</string>
+    <string name="mySubListAddSubject">הוסף מקצוע</string>
+    <string name="mySubListHome">בית</string>
+
+    <!-- Strings image dialog -->
+    <string name="imageDialogUpdate">עידכון</string>
+    <string name="imageDialogDelete">מחיקה</string>
+
+    <!-- Strings subject add dialog -->
+    <string name="subjectAddDialogAddSubject">הוסף מקצוע</string>
+    <string name="subjectAddDialogExperience">נסיון</string>
+    <string name="subjectAddDialogAdd">הוסף</string>
+    <string name="subjectAddDialogClose">יציאה</string>
+
+    <!-- Strings subject edit dialog -->
+    <string name="subjectEditDialogEditSubject">עריכת מקצוע</string>
+    <string name="subjectEditDialogExperience">נסיון</string>
+    <string name="subjectEditDialogSAVE">שמור</string>
+    <string name="subjectEditDialogDelete">מחיקה</string>
+    <string name="subjectEditDialogClose">יציאה</string>
+
     <!-- Strings menu -->
     <string name="navigation_drawer_open">פתח את כרטיסיית הניווט</string>
     <string name="navigation_drawer_close">סגור את כרטיסיית הניווט</string>

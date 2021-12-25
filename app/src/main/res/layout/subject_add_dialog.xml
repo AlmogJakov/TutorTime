@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Add subject "
+        android:text="@string/subjectAddDialogAddSubject"
         android:textColor="#303F9F"
         android:textSize="25dp"
         android:textStyle="bold"
@@ -27,7 +27,7 @@
         android:layout_marginTop="68dp"
         android:layout_marginEnd="48dp"
         android:ems="10"
-        android:hint="Experience"
+        android:hint="@string/subjectAddDialogExperience"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerLType" />
 
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="200dp"
-        android:text="Add"
+        android:text="@string/subjectAddDialogAdd"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editExp" />
 
@@ -77,7 +77,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="80dp"
-        android:text="Close"
+        android:text="@string/subjectAddDialogClose"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editExp" />
 

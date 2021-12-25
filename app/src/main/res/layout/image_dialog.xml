@@ -10,7 +10,7 @@
             android:layout_width="95dp"
             android:layout_height="50dp"
             android:layout_marginTop="0dp"
-            android:text="Update"
+            android:text="@string/imageDialogUpdate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -20,7 +20,7 @@
             android:layout_width="95dp"
             android:layout_height="50dp"
             android:layout_marginTop="24dp"
-            android:text="Delete"
+            android:text="@string/imageDialogDelete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnEditImage" />
