@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 
 
 public class Login extends AppCompatActivity {
