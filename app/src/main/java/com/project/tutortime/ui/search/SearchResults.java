@@ -83,6 +83,8 @@ public class SearchResults extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        /* Prevents the fragment from destroying and hence recreating while changing language. */
+        this.setRetainInstance(true);
         binding = FragmentSearchResultsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         loadingDialog = new LoadingDialog(getContext());

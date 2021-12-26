@@ -235,7 +235,6 @@ public class TutorProfile extends Fragment {
                             childUpdates.put("teachers/" + teacherID + "/imgUrl", imgURL);
                         childUpdates.put("teachers/" + teacherID + "/phoneNum", pNum);
                         childUpdates.put("teachers/" + teacherID + "/description", descrip);
-                        //childUpdates.put("teachers/" + teacherID + "/serviceCities", listCities);
                         childUpdates.put("users/" + userID + "/fName", firstName);
                         childUpdates.put("users/" + userID + "/lName", lastName);
                         childUpdates.put("users/" + userID + "/city", city);
