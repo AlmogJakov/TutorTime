@@ -73,11 +73,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //loadLocale();
+
         /* DISABLE landscape orientation  */
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
 
         setSupportActionBar(binding.appBarMain.toolbar);
         /* Hide Floating Button */
@@ -237,4 +241,11 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("My_Lang", lang);
         editor.apply();
     }
+
+    /* load language saved in shared preferences */
+//    public void loadLocale() {
+//        SharedPreferences prefs = getSharedPreferences("Setting", MainActivity.MODE_PRIVATE);
+//        String language = prefs.getString("My_Lang", "");
+//        setLocale(language);
+//    }
 }
