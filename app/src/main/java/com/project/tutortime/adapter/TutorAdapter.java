@@ -17,7 +17,11 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -26,9 +30,11 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.common.util.ScopeUtil;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.R;
+import com.project.tutortime.databinding.FragmentTeacherCardBinding;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.ui.search.TeacherCard;
 
@@ -42,12 +48,14 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
     FirebaseStorage storage = FirebaseStorage.getInstance();
     private final List<TutorAdapterItem> teachersToShow;
     private List<Boolean> isResourceReady;
+    int id;
 
-    public TutorAdapter(Context context, List<TutorAdapterItem> teachersToShow) {
+    public TutorAdapter(Context context, List<TutorAdapterItem> teachersToShow, int id) {
         super(context, R.layout.tutor_card_view, teachersToShow);
         this.context = context;
         this.teachersToShow = teachersToShow;
         this.isResourceReady = Arrays.asList(new Boolean[teachersToShow.size()]);
+        this.id = id;
         Collections.fill(isResourceReady, Boolean.FALSE);
     }
 
@@ -114,11 +122,16 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
         currentCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), TeacherCard.class);
-                intent.putExtra("user", teachersToShow.get(position).getUser());
-                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
-                intent.putExtra("sub", teachersToShow.get(position).getSubName());
-                getContext().startActivity(intent);
+                TeacherCard myFragment = new TeacherCard(teachersToShow.get(position).getUser(), teachersToShow.get(position).getTeacher(), teachersToShow.get(position).getSubName());
+                AppCompatActivity activity = (AppCompatActivity) v.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(id, myFragment).addToBackStack(null).commit();
+
+
+//                Intent intent = new Intent(getContext(), TeacherCard.class);
+//                intent.putExtra("user", teachersToShow.get(position).getUser());
+//                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
+//                intent.putExtra("sub", teachersToShow.get(position).getSubName());
+//                getContext().startActivity(intent);
             }
         });
         return rowView;

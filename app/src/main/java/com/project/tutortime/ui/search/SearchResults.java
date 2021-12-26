@@ -152,7 +152,7 @@ public class SearchResults extends Fragment {
                 if (chooseType[1])setFrontal(dataSnapshot);
                 if (chooseType[2])setOnline(dataSnapshot);
 
-                adapter = new TutorAdapter(getActivity(), teachersToShow);
+                adapter = new TutorAdapter(getActivity(), teachersToShow, ((ViewGroup)getView().getParent()).getId());
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 closeLoadingDialog();
@@ -234,9 +234,9 @@ public class SearchResults extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(getResources().getString(R.string.Select));
                 builder.setCancelable(false);
-                builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
+                builder.setSingleChoiceItems(type, kindOfSort, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    public void onClick(DialogInterface dialog, int which) {
                         for (int i = 0; i < selectType.length; i++) {
                             if (i!= which){
                                 selectType[i]=false;

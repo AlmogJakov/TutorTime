@@ -229,4 +229,6 @@
     <string name="priceLow">Price: low to high</string>
     <string name="priceHigh">price: high to low</string>
     <string name="filter_by">Filter by</string>
+    <string name="rate_the_tutor">Rate the tutor</string>
+    <string name="opinion">Ratings</string>
 </resources>
