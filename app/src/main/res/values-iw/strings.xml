@@ -92,7 +92,32 @@
 
     <string name="sign_up">הירשם</string>
 
-<!--    <string-array name="SpinnerSubName1">-->
+<!--    Search class-->
+    <string name="search">חפש</string>
+    <string name="result">תוצאות</string>
+    <string name="learning_type">סוג לימוד</string>
+    <string name="subject">נושא</string>
+    <string name="area">אזור</string>
+    <string name="type">סוג</string>
+    <string name="city">עיר</string>
+    <string name="which_tutor_would_you_like_to_look_for">איזה מורה היית רוצה לחפש?</string>
+    <string name="max">מקסימום</string>
+    <string name="min">מינימום</string>
+    <string name="price">מחיר</string>
+    <string name="choose_city">בחר עיר</string>
+    <string name="send_message">שלח הודעה</string>
+    <string name="Online_Frontal">מקוון/פרונטלי</string>
+    <string name="Online">מקוון</string>
+    <string name="Frontal">פרונטלי</string>
+    <string name="Description">"תיאור: "</string>
+    <string name="Cancel">ביטול</string>
+    <string name="Clear">נקה הכל</string>
+    <string name="OK">אישור</string>
+    <string name="Select">בחר מיון</string>
+    <string name="priceLow">מחיר: מנמוך לגבוה</string>
+    <string name="priceHigh">מחיר: מגבוה לנמוך</string>
+
+    <!--    <string-array name="SpinnerSubName1">-->
 <!--        <item>בחר מקצוע</item>-->
 <!--        <item>מתמטיקה</item>-->
 <!--        <item>אנגלית</item>-->

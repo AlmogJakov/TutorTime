@@ -1,5 +1,6 @@
 package com.project.tutortime.ui.search;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -43,6 +44,7 @@ public class TeacherCard extends AppCompatActivity {
     CardView profileImageBox;
     RatingBar rating;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +70,13 @@ public class TeacherCard extends AppCompatActivity {
         name.setText(user.getfName() +" "+ user.getlName());
         String s="";
         switch (teacher.getSub().get(sub).getType()) {
-            case "both": s = "Online/Frontal";break;
-            case "online": s = "Online";break;
-            case "frontal": s = "Frontal";break;
+            case "both": s = getResources().getString(R.string.Online_Frontal);break;
+            case "online": s = getResources().getString(R.string.Online);break;
+            case "frontal": s = getResources().getString(R.string.Frontal);break;
         }
         subjectAndType.setText(sub +" | "+s);
         place.setText("\uD83D\uDCCD " + user.getCity());
-        description.setText("Description: "+teacher.getDescription());
+        description.setText(getResources().getString(R.string.Description)+teacher.getDescription());
         price.setText(teacher.getSub().get(sub).getPrice()+"₪");
         rating.setRating((float) 4.5);
 

@@ -64,11 +64,11 @@ public class Search extends Fragment {
         loadingDialog.show();
         addBtn = binding.buttonAcount;
 
-        String[] type = {"Online", "Frontal"};
+        String[] type = {getResources().getString(R.string.Online), getResources().getString(R.string.Frontal)};
         typeSpinner = binding.learn;
         boolean[] selectType = new boolean[type.length];
         ArrayList<Integer> listType = new ArrayList<>();
-        setSpinner(typeSpinner, selectType, listType, type, "Online/Frontal");
+        setSpinner(typeSpinner, selectType, listType, type, getResources().getString(R.string.Online_Frontal));
 
         subjectSpin = binding.selectSub;
         subjectSpin.setAdapter(new ArrayAdapter<>
@@ -82,7 +82,7 @@ public class Search extends Fragment {
 
         boolean[] selectCity = new boolean[Cities.length];
         ArrayList<Integer> listCity = new ArrayList<>();
-        setSpinnerForCity(citySpinner,selectCity,listCity, Cities, "Select City");
+        setSpinnerForCity(citySpinner,selectCity,listCity, Cities, getResources().getString(R.string.choose_city));
 
         maxPrice = binding.max;
         minPrice = binding.min;
@@ -167,7 +167,7 @@ public class Search extends Fragment {
                         }
                     }
                 });
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         StringBuilder stringBuilder = new StringBuilder();
@@ -180,13 +180,13 @@ public class Search extends Fragment {
                         typeSpinner.setText(stringBuilder.toString());
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         for (int i = 0; i < selectType.length; i++) {
@@ -237,7 +237,7 @@ public class Search extends Fragment {
                         }
                     }
                 });
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         StringBuilder stringBuilder = new StringBuilder();
@@ -252,13 +252,13 @@ public class Search extends Fragment {
                         typeSpinner.setText(stringBuilder.toString());
                     }
                 });
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
-                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+                builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         for (int i = 0; i < selectType.length; i++) {

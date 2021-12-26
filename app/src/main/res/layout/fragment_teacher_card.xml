@@ -256,7 +256,7 @@
                     android:layout_gravity="center"
                     android:layout_toEndOf="@+id/RelativeLayout01"
                     android:gravity="center"
-                    android:text="Send Message" />
+                    android:text="@string/send_message" />
 
                 <ImageButton
                     android:id="@+id/textView"

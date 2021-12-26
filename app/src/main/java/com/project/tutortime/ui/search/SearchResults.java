@@ -112,7 +112,7 @@ public class SearchResults extends Fragment {
         }
 
         sort = binding.sort;
-        String[] type = {"price: low to high", "price: high to low", "Rating: high to low"};
+        String[] type = {getResources().getString(R.string.priceLow), getResources().getString(R.string.priceHigh)};
         boolean[] selectType = new boolean[type.length];
         selectType[kindOfSort] = true;
         setSpinner(sort, selectType, type);
@@ -120,7 +120,6 @@ public class SearchResults extends Fragment {
         switch (kindOfSort){
             case 0:sortByPriceLow();break;
             case 1:sortByPriceHigh();break;
-            case 2:sortByRank();break;
         }
         setListview(Cities);
         return root;
@@ -135,9 +134,6 @@ public class SearchResults extends Fragment {
         Collections.sort(prices);
     }
 
-    private void sortByRank() {
-
-    }
 
 
     /** Fills all search card  */
@@ -229,7 +225,7 @@ public class SearchResults extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Select Sort");
+                builder.setTitle(getResources().getString(R.string.Select));
                 builder.setCancelable(false);
                 builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
                     @Override
@@ -250,6 +246,12 @@ public class SearchResults extends Fragment {
 
                         dialog.cancel();
                     }
+
+                });
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
                 });
                 builder.show();
             }
@@ -265,9 +267,6 @@ public class SearchResults extends Fragment {
     }
 
 
-    private void back() {
-        getActivity().finish();
-    }
 
     public void closeLoadingDialog() {
         AsyncTask.execute(new Runnable() {
