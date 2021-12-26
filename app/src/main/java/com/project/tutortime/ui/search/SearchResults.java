@@ -64,7 +64,7 @@ public class SearchResults extends Fragment {
     TutorAdapter adapter;
     HashSet<String> used = new HashSet<>();
     ListView listview;
-    TextView sort;
+    TextView sort, rank;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     List<TutorAdapterItem> teachersToShow = new ArrayList<>();
     LoadingDialog loadingDialog;
@@ -116,6 +116,13 @@ public class SearchResults extends Fragment {
         boolean[] selectType = new boolean[type.length];
         selectType[kindOfSort] = true;
         setSpinner(sort, selectType, type);
+
+        rank = binding.rank;
+        String[] typeRank = {"⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐","⭐⭐⭐⭐⭐"};
+        boolean[] selectTypeRenk = new boolean[typeRank.length];
+        ArrayList<Integer> rankList = new ArrayList<>();
+        setSpinner(rank, selectTypeRenk,rankList,  typeRank);
+
         listview = binding.featuresList;
         switch (kindOfSort){
             case 0:sortByPriceLow();break;
@@ -251,6 +258,56 @@ public class SearchResults extends Fragment {
                 builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
+
+    private void setSpinner(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type) {
+        typeSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getResources().getString(R.string.filter_by));
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            list.add(which);
+                            Collections.sort(list);
+                        } else {
+                            list.remove((Integer) which);
+                        }
+                    }
+                });
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < list.size(); i++) {
+                            stringBuilder.append(type[list.get(i)]);
+                            if (i != list.size() - 1) {
+                                stringBuilder.append(", ");
+                            }
+                        }
+                    }
+                });
+                builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectType.length; i++) {
+                            selectType[i] = false;
+                            list.clear();
+                        }
                     }
                 });
                 builder.show();

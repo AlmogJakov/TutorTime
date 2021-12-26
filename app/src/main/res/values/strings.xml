@@ -228,4 +228,5 @@
     <string name="Select">Select Sort</string>
     <string name="priceLow">Price: low to high</string>
     <string name="priceHigh">price: high to low</string>
+    <string name="filter_by">Filter by</string>
 </resources>

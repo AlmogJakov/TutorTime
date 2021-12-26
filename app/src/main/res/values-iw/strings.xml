@@ -116,6 +116,7 @@
     <string name="Select">בחר מיון</string>
     <string name="priceLow">מחיר: מנמוך לגבוה</string>
     <string name="priceHigh">מחיר: מגבוה לנמוך</string>
+    <string name="filter_by">סנן לפי</string>
 
     <!--    <string-array name="SpinnerSubName1">-->
 <!--        <item>בחר מקצוע</item>-->
