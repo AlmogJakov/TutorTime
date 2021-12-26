@@ -88,7 +88,7 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
                                     setViews(position,titleText,description,subject, price,rating);
                                     /* Add true value for this resource (indicate that the resource is ready) */
                                     isResourceReady.set(position,Boolean.TRUE);
-                                    System.out.println("p:"+position);
+                                    //System.out.println("p:"+position);
                                 }
                             });
                         }

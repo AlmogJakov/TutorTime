@@ -2,11 +2,13 @@ package com.project.tutortime;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.ProgressBar;
 
 // https://stackoverflow.com/questions/55060626/android-how-to-display-transparent-loading-layer-above-the-activity
 
@@ -27,5 +29,4 @@ public class LoadingDialog extends Dialog {
         View inflateView = inflater.inflate(R.layout.loading_dialog, (ViewGroup) findViewById(R.id.loading_cont));
         setContentView(inflateView);
     }
-
 }

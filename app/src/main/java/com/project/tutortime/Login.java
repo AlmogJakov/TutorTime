@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
 
-import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
+
 
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
@@ -75,7 +75,6 @@ public class Login extends AppCompatActivity {
 
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
@@ -90,7 +89,6 @@ public class Login extends AppCompatActivity {
                     mPassword.setError("password is required.");
                     return;
                 }
-
                 fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
@@ -173,7 +171,6 @@ public class Login extends AppCompatActivity {
                         });
                     }
                 });
-
                 PasswordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) { }
@@ -239,7 +236,6 @@ public class Login extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         intent.putExtra("status", arr);
                         startActivity(intent);
-
                     }
                     finish();
                 } else {

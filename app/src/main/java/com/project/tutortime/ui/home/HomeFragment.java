@@ -37,6 +37,7 @@ import com.project.tutortime.firebase.userObj;
 import com.project.tutortime.ui.search.TeacherCard;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
@@ -98,6 +99,8 @@ public class HomeFragment extends Fragment {
                     }
                     counter++;
                 }
+                /* Shuffle the chronological order (of the tutors' keys) */
+                Collections.shuffle(tutorsToShow);
                 /* init the adapter with the 'tutorsToShow' list */
                 adapter = new TutorAdapter(getContext(), tutorsToShow);
                 listview.setAdapter(adapter);
