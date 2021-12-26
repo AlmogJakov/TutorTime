@@ -53,7 +53,8 @@ public class  MySubList extends Fragment {
     private MySubListViewModel MySubListViewModel;
     private FragmentMySubListBinding binding;
 
-    TextView title, serviceCitiesSpinner;
+    //TextView title
+    TextView  serviceCitiesSpinner;
     ListView subjectList;
     Button home, addSub;
     String teacherID;
@@ -74,7 +75,7 @@ public class  MySubList extends Fragment {
         binding = FragmentMySubListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        title = binding.MyTitle;
+        //title = binding.MyTitle;
         subjectList = binding.ListViewSubList;
         addSub = binding.btnAddSubject;
         home = binding.btnHome;

@@ -11,7 +11,9 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -21,6 +23,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
@@ -65,8 +69,11 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+
+import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 
 public class SetTutorProfile extends AppCompatActivity {
     TextView citySpinner;
@@ -536,7 +543,32 @@ public class SetTutorProfile extends AppCompatActivity {
         });
         d.show();
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
+        final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
 
+        langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
+
+            @Override
+            public void onToggleSwitchChangeListener(int position, boolean isChecked) {
+                if(position==0){
+                    //English
+                    setLocale("en");
+                    recreate();
+                }
+                if(position==1){
+                    //Hebrew
+                    setLocale("iw");
+                    recreate();
+                }
+            }
+        });
+
+        return true;
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -669,5 +701,15 @@ public class SetTutorProfile extends AppCompatActivity {
         s = s.replace("]","");
         return s;
     }
-
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        /* save data to shared  preferences */
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+    }
 }

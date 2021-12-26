@@ -4,11 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -30,6 +34,9 @@ import com.project.tutortime.firebase.FireBaseUser;
 
 import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.Locale;
+
+import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 
 public class Register extends AppCompatActivity {
     EditText mFName, mLName, mEmail, mPassword; // mCity
@@ -217,6 +224,33 @@ public class Register extends AppCompatActivity {
         });
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
+        final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
+
+        langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
+
+            @Override
+            public void onToggleSwitchChangeListener(int position, boolean isChecked) {
+                if(position==0){
+                    //English
+                    setLocale("en");
+                    recreate();
+                }
+                if(position==1){
+                    //Hebrew
+                    setLocale("iw");
+                    recreate();
+                }
+            }
+        });
+
+        return true;
+    }
+
     private void addNotification(String userID,String email){
         HashMap<String,Object> map = new HashMap<>();
         String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
@@ -232,5 +266,16 @@ public class Register extends AppCompatActivity {
         map.put("sentFrom",fAuth.getCurrentUser().getUid());
         map.put("NotificationKey",key);
         if(key!=null)FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
+    }
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        /* save data to shared  preferences */
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
     }
 }

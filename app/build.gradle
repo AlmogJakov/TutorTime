@@ -92,4 +92,7 @@ dependencies {
 
     // for getting dominant color in image
     implementation "androidx.palette:palette:1.0.0"
+
+    implementation 'us.belka:androidtoggleswitch:1.2.2'
+
 }

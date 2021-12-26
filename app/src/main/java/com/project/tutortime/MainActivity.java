@@ -4,7 +4,9 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -14,6 +16,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +55,9 @@ import com.project.tutortime.databinding.ActivityMainBinding;
 import com.project.tutortime.ui.tutorprofile.TutorProfile;
 
 import java.util.ArrayList;
+import java.util.Locale;
+
+import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -145,6 +153,26 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
+        final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
+
+        langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
+
+            @Override
+            public void onToggleSwitchChangeListener(int position, boolean isChecked) {
+                if(position==0){
+                    //English
+                    setLocale("en");
+                    recreate();
+                }
+                if(position==1){
+                    //Hebrew
+                    setLocale("iw");
+                    recreate();
+                }
+            }
+        });
+
         return true;
     }
 
@@ -195,5 +223,16 @@ public class MainActivity extends AppCompatActivity {
         String hello = "";
         hello = hello.concat("").concat(user.getEmail());
         EmailHello.setText(hello);
+    }
+    private void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        /* save data to shared  preferences */
+        SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
     }
 }

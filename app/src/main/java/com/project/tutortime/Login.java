@@ -11,6 +11,8 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,9 +39,11 @@ import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
+
 public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
-    Button mLoginBtn, mChangeLang;
+    Button mLoginBtn;
     TextView mRegisterBtn, mResetPass;
     FirebaseAuth fAuth;
     private DatabaseReference mDatabase;
@@ -56,7 +60,6 @@ public class Login extends AppCompatActivity {
         mPassword = findViewById(R.id.mypass);
         mRegisterBtn = findViewById(R.id.registerPage);
         mLoginBtn = findViewById(R.id.btnlogin);
-        mChangeLang = findViewById(R.id.btnlanguage);
         fAuth = FirebaseAuth.getInstance();
         mResetPass = findViewById(R.id.resetpass);
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -69,16 +72,6 @@ public class Login extends AppCompatActivity {
             getInside(userID);
             //testMessage(userID);
         }
-
-        mChangeLang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /* show alertdialog to display list of languages, one can be selected */
-                showChangeLanguageDialog();
-            }
-
-        });
-
 
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
@@ -191,32 +184,33 @@ public class Login extends AppCompatActivity {
         /* END Reset Password Case */
 
     }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
+        final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
 
-    private void showChangeLanguageDialog() {
-        /* array of languages to display in alert dialog */
-        final String[] listItems = {"English", "עברית"};
-        AlertDialog.Builder mbuilder = new AlertDialog.Builder(Login.this);
-        mbuilder.setTitle("Choose language");
-        mbuilder.setSingleChoiceItems(listItems, -1, new DialogInterface.OnClickListener() {
+        langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
+
             @Override
-            public void onClick(DialogInterface dialog, int i) {
-                if(i==0){
-                    //Hebrew
+            public void onToggleSwitchChangeListener(int position, boolean isChecked) {
+                if(position==0){
+                    //English
                     setLocale("en");
                     recreate();
                 }
-                if(i==1){
-                    //English
+                if(position==1){
+                    //Hebrew
                     setLocale("iw");
                     recreate();
                 }
-                dialog.dismiss();
-
             }
         });
-        AlertDialog mDialog = mbuilder.create();
-        mDialog.show();
+
+        return true;
     }
+
 
     private void setLocale(String lang) {
         Locale locale = new Locale(lang);
@@ -228,13 +222,6 @@ public class Login extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("Settings", MODE_PRIVATE).edit();
         editor.putString("My_Lang", lang);
         editor.apply();
-    }
-
-    /* load language saved in shared preferences */
-    public void loadLocale(){
-        SharedPreferences prefs = getSharedPreferences("Setting", MainActivity.MODE_PRIVATE);
-        String language = prefs.getString("My_Lang", "");
-        setLocale(language);
     }
 
     /* after confirmed as connected this method redirects to the appropriate page depending on the user status */

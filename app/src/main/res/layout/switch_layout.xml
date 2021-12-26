@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:padding="1dp"
+    android:background="@drawable/white_border">
+
+
+    <belka.us.androidtoggleswitch.widgets.ToggleSwitch
+        android:id="@+id/lan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        custom:activeBgColor="@color/white"
+        custom:activeTextColor="@color/black"
+        custom:inactiveBgColor="@color/black"
+        custom:inactiveTextColor="@color/white"
+        custom:textToggleLeft="English"
+        custom:textToggleRight="עברית"
+        custom:toggleWidth="70dp" />
+
+</RelativeLayout>
+

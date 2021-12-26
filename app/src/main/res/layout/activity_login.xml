@@ -7,21 +7,21 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
+
         <EditText
             android:id="@+id/etemail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/Email"
-            android:inputType="textEmailAddress"
-            />
+            android:hint="@string/loginEmail"
+            android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/mypass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/Password"
+            android:hint="@string/loginPassword"
             android:inputType="textPassword"
             android:textDirection="locale"
             android:textAlignment="viewStart"
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="@string/LogIn"
+            android:text="@string/loginLogIn"
             android:textAllCaps="false" />
 
         <TextView
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="@string/CreatenewAccount"
+            android:text="@string/loginCreatenewAccount"
             android:textSize="16sp"
             android:textStyle="bold" />
 
@@ -51,16 +51,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:text="@string/ResetPassword"
+            android:text="@string/loginResetPassword"
             android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/btnlanguage"
-            android:layout_width="162dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="@string/ChangeLanguage"
-            android:textAllCaps="false" />
 
     </LinearLayout>
 

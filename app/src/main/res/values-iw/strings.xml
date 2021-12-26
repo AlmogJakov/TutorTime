@@ -1,12 +1,13 @@
 <resources>
     <string name="app_name">TutorTime</string>
-    <!-- Strings used for login -->
-    <string name="Email">אימייל</string>
-    <string name="Password">ססמא</string>
-    <string name="LogIn">התחברות</string>
-    <string name="CreatenewAccount">צור חשבון חדש!</string>
-    <string name="ResetPassword">איפוס ססמא</string>
-    <string name="ChangeLanguage">שנה שפה</string>
+
+    <!-- Strings login -->
+    <string name="loginEmail">אימייל</string>
+    <string name="loginPassword">ססמא</string>
+    <string name="loginLogIn">התחברות</string>
+    <string name="loginCreatenewAccount">צור חשבון חדש!</string>
+    <string name="loginResetPassword">איפוס ססמא</string>
+    <string name="loginChangeLanguage">שנה שפה</string>
 
     <!-- Strings register -->
     <string name="registerAcount">צור חשבון חדש</string>
@@ -17,6 +18,10 @@
     <string name="registerSignUp">הירשם</string>
     <string name="registerHaveAccountLogin">יש לך חשבון? תתחבר</string>
 
+    <!-- Strings choose status -->
+    <string name="chooseStatusTutor">מורה</string>
+    <string name="chooseStatusCustomer">לקוח</string>
+
     <!-- Strings set tutor profile -->
     <string name="setTutorProfileContactNo">מספר איש קשר</string>
     <string name="setTutorProfileSelectServiceCities">בחר ערי שירות</string>
@@ -26,7 +31,6 @@
     <string name="setTutorProfileSaveprofile">שמור פרופל</string>
 
     <!-- Strings my sub list -->
-    <string name="mySubListMySubjectList">רשימת המקצועות שלי</string>
     <string name="mySubListServiceCities">ערי שירות</string>
     <string name="mySubListSelectServiceCities">בחר ערי שירות</string>
     <string name="mySubListSubjectList">רשימת מקצועות</string>
@@ -57,6 +61,7 @@
     <string name="nav_header_subtitle">אימייל</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">הגדרות</string>
+    <string name="actionChangeLanguage">שנה שפה</string>
     <string name="cities_hint">ערים</string>
     <string name="menu_home">מסך הבית</string>
     <string name="menu_teacher_card">כרטיס המורה שלי</string>
