@@ -165,15 +165,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/name"
                 >
 
-                <TextView
-                    android:id="@+id/txtServiceCities"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Select service cities"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/layout_contact_no" />
+<!--                <TextView-->
+<!--                    android:id="@+id/txtServiceCities"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="20dp"-->
+<!--                    android:text="Select service cities"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/layout_contact_no" />-->
 
                 <EditText
                     android:id="@+id/myPhoneNumber"
@@ -198,6 +198,7 @@
                 app:layout_constraintWidth_percent="0.7"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textColorHint="#808080"
                 app:layout_constraintTop_toBottomOf="@+id/layout_contact_no">
@@ -289,47 +290,46 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/layout_sublist"
+                android:id="@+id/saveBtn"
                 android:layout_width="0dp"
-                app:helperText="Subject List"
+                android:gravity="center"
+                android:layout_marginTop="16dp"
                 app:layout_constraintWidth_percent="0.7"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:textColorHint="#808080"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:layout_constraintTop_toBottomOf="@+id/editDescription">
 
-                        <ListView
-                            android:id="@+id/subList"
-                            android:layout_width="match_parent"
-                            android:nestedScrollingEnabled="true"
-                            android:layout_height="138dp"
-                            android:layout_marginTop="12dp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.588"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/editDescription" />
+<!--                        <ListView-->
+<!--                            android:id="@+id/subList"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:nestedScrollingEnabled="true"-->
+<!--                            android:layout_height="138dp"-->
+<!--                            android:layout_marginTop="12dp"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintHorizontal_bias="0.588"-->
+<!--                            app:layout_constraintStart_toStartOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="@+id/editDescription" />-->
 
 
-                        <Button
-                            android:id="@+id/addSubject"
-                            android:layout_width="150dp"
-                            android:layout_height="44dp"
-                            android:layout_marginTop="12dp"
-                            android:layout_marginEnd="52dp"
-                            android:text="Add Subject"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/editDescription" />
+<!--                        <Button-->
+<!--                            android:id="@+id/addSubject"-->
+<!--                            android:layout_width="150dp"-->
+<!--                            android:layout_height="44dp"-->
+<!--                            android:layout_marginTop="12dp"-->
+<!--                            android:layout_marginEnd="52dp"-->
+<!--                            android:text="Add Subject"-->
+<!--                            app:layout_constraintEnd_toEndOf="parent"-->
+<!--                            app:layout_constraintTop_toBottomOf="@+id/editDescription" />-->
 
 
                 <Button
                     android:id="@+id/btnSaveProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="104dp"
                     android:text="Save profile "
                     android:textAllCaps="false"
+                    android:layout_marginBottom="32dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

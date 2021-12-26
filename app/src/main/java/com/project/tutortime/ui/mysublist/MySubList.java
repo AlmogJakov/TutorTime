@@ -53,10 +53,9 @@ public class  MySubList extends Fragment {
     private MySubListViewModel MySubListViewModel;
     private FragmentMySubListBinding binding;
 
-    //TextView title
-    TextView  serviceCitiesSpinner;
+    TextView serviceCitiesSpinner;
     ListView subjectList;
-    Button home, addSub;
+    Button addSub;
     String teacherID;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
@@ -75,10 +74,8 @@ public class  MySubList extends Fragment {
         binding = FragmentMySubListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        //title = binding.MyTitle;
         subjectList = binding.ListViewSubList;
         addSub = binding.btnAddSubject;
-        home = binding.btnHome;
         serviceCitiesSpinner = binding.txtServiceCities;
 
         ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
@@ -86,7 +83,6 @@ public class  MySubList extends Fragment {
         a.notifyDataSetChanged();
 
         /* Disable all Buttons & Text Edit Fields - until all data received from FireBase */
-        home.setEnabled(false);
         addSub.setEnabled(false);
         serviceCitiesSpinner.setEnabled(false);
         subjectList.setEnabled(false);
@@ -105,36 +101,6 @@ public class  MySubList extends Fragment {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
                 createEditDialog(a, s);
-            }
-        });
-
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (list.isEmpty()) {
-                    Toast.makeText(getActivity(), "You must choose at least one subject",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                int count = 0;
-                boolean flage = false;
-                for (subjectObj sub : list) {
-                    count++;
-                    if (sub.getType().equals("frontal") || sub.getType().equals("both"))
-                        flage = true;
-                    if (listCities.isEmpty() && flage) {
-                        Toast.makeText(getActivity(), "You must choose at least one service city",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if (listCities.size() != 0 && count == list.size() && flage == false) {
-                        Toast.makeText(getActivity(), "You have chosen to transfer private lessons" +
-                                        " only online, do not select service cities",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
-                goToTutorMain(requireActivity());
             }
         });
 
@@ -198,7 +164,6 @@ public class  MySubList extends Fragment {
                 a.notifyDataSetChanged();
 
                 /* Enable all Buttons & Text Edit Fields - data already received from FireBase */
-                home.setEnabled(true);
                 addSub.setEnabled(true);
                 subjectList.setEnabled(true);
                 serviceCitiesSpinner.setEnabled(true);
@@ -242,7 +207,6 @@ public class  MySubList extends Fragment {
         Button addBtn, closeBtn;
         Spinner nameSpinner, typeSpinner;
         d.setContentView(R.layout.subject_add_dialog);
-        d.setTitle("Add Subject");
         d.setCancelable(true);
         priceEdit = d.findViewById(R.id.editPrice);
         expEdit = d.findViewById(R.id.editExp);
