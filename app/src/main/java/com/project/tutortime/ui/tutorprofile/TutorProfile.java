@@ -107,7 +107,6 @@ public class TutorProfile extends Fragment {
 
         /* Disable all Buttons & Show loading dialog (until all fragment resources ready) */
         updateImage.setVisibility(View.GONE);
-        citySpinner.setEnabled(false);
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
         /* END Disable all Buttons & Show loading dialog */
