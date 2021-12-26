@@ -4,9 +4,12 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -21,6 +24,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,10 +36,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.tutortime.LoadingDialog;
 import com.project.tutortime.Login;
 import com.project.tutortime.R;
 import com.project.tutortime.adapter.TutorAdapter;
 import com.project.tutortime.adapter.TutorAdapterItem;
+import com.project.tutortime.databinding.FragmentSearchBinding;
+import com.project.tutortime.databinding.FragmentSearchResultsBinding;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
@@ -44,7 +53,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 
-public class SearchResults extends AppCompatActivity {
+public class SearchResults extends Fragment {
     private String typeResult, cityResult, subjectResult;
     private int maxResult;
     private int minResult;
@@ -52,35 +61,47 @@ public class SearchResults extends AppCompatActivity {
     private final String[] TypeResult = {"both", "frontal", "online"};
     private boolean[] chooseType = {true,true,true};
     ArrayList<Integer> prices = new ArrayList<>();
-
+    TutorAdapter adapter;
     HashSet<String> used = new HashSet<>();
     ListView listview;
     TextView sort;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     List<TutorAdapterItem> teachersToShow = new ArrayList<>();
+    LoadingDialog loadingDialog;
+    private @NonNull FragmentSearchResultsBinding binding;
+
+    public SearchResults(String typeResult, String cityResult, String subjectResult, int min, int max, int i) {
+        this.typeResult = typeResult;
+        this.cityResult = cityResult;
+        this.subjectResult = subjectResult;
+        this.minResult = min;
+        this.maxResult = max;
+        kindOfSort = i;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_search_results);
-        Button search = findViewById(R.id.buttonAcount);
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentSearchResultsBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        loadingDialog = new LoadingDialog(getContext());
+        loadingDialog.show();
+        Button search = binding.buttonAcount;
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                back();
+                Search fragment2 = new Search();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);
+                fragmentTransaction.commit();
             }//
         });
 
-        // get the variables
-        cityResult = getIntent().getStringExtra("cityResult");
-        maxResult = getIntent().getIntExtra("maxResult", 300);
-        minResult = getIntent().getIntExtra("minResult", 0);
-        typeResult = getIntent().getStringExtra("typeResult");
+
         if (typeResult.equals("Frontal")){ chooseType[2] = false;}
         else if (typeResult.equals("Online")) {chooseType[1] = false;}
-        subjectResult = getIntent().getStringExtra("subjectResult");
-        kindOfSort = getIntent().getIntExtra("sort", 0);
         String[] Cities = cityResult.split(", ");
 
         double t = minResult;
@@ -90,31 +111,19 @@ public class SearchResults extends AppCompatActivity {
             prices.add(i);
         }
 
-        sort = findViewById(R.id.sort);
+        sort = binding.sort;
         String[] type = {"price: low to high", "price: high to low", "Rating: high to low"};
         boolean[] selectType = new boolean[type.length];
         selectType[kindOfSort] = true;
         setSpinner(sort, selectType, type);
-        listview = findViewById(R.id.featuresList);
+        listview = binding.featuresList;
         switch (kindOfSort){
             case 0:sortByPriceLow();break;
             case 1:sortByPriceHigh();break;
             case 2:sortByRank();break;
         }
         setListview(Cities);
-
-        listview.setTextFilterEnabled(true);
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), TeacherCard.class);
-                intent.putExtra("user", teachersToShow.get(position).getUser());
-                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
-                intent.putExtra("sub", teachersToShow.get(position).getSubName());
-                intent.putExtra("type", typeResult);
-                startActivity(intent);
-            }
-        });
+        return root;
     }
 
     /** ///////// sort functions //////// */
@@ -140,10 +149,10 @@ public class SearchResults extends AppCompatActivity {
                 if (chooseType[1])setFrontal(dataSnapshot);
                 if (chooseType[2])setOnline(dataSnapshot);
 
-                final TutorAdapter adapter = new TutorAdapter(SearchResults.this, teachersToShow);
+                adapter = new TutorAdapter(getActivity(), teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-
+                closeLoadingDialog();
             }
 
             private void setOnline(DataSnapshot dataSnapshot) {
@@ -219,7 +228,7 @@ public class SearchResults extends AppCompatActivity {
         typeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(SearchResults.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Select Sort");
                 builder.setCancelable(false);
                 builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
@@ -248,19 +257,27 @@ public class SearchResults extends AppCompatActivity {
     }
 
     private void reload(int sortBy) {
-        Intent intent = new Intent(this, SearchResults.class);
-        intent.putExtra("typeResult", typeResult);
-        intent.putExtra("cityResult", cityResult);
-        intent.putExtra("subjectResult", subjectResult);
-        intent.putExtra("minResult", minResult);
-        intent.putExtra("maxResult", maxResult);
-        intent.putExtra("sort", sortBy);
-        finish();
-        startActivity(intent);
+        SearchResults fragment2 = new SearchResults(typeResult, cityResult, subjectResult, minResult, maxResult, sortBy);
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);
+        fragmentTransaction.commit();
     }
 
 
     private void back() {
-        finish();
+        getActivity().finish();
+    }
+
+    public void closeLoadingDialog() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                /* wait until the adapter loaded all images */
+                while(!adapter.isAllResourcesReady()) { }
+                /* hide loading dialog (fragment resources ready) */
+                loadingDialog.cancel();
+            }
+        });
     }
 }

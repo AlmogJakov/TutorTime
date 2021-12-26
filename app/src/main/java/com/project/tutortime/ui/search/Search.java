@@ -4,10 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +29,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.tutortime.LoadingDialog;
 import com.project.tutortime.R;
+import com.project.tutortime.databinding.FragmentHomeBinding;
+import com.project.tutortime.databinding.FragmentSearchBinding;
+import com.project.tutortime.databinding.FragmentSearchResultsBinding;
 import com.project.tutortime.firebase.subjectObj;
+import com.project.tutortime.ui.home.HomeViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,24 +51,30 @@ public class Search extends Fragment {
     TextView citySpinner;
     EditText minPrice, maxPrice;
     DialogInterface t;
+    LoadingDialog loadingDialog;
+    private FragmentSearchBinding binding;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
-        View v = inflater.inflate(R.layout.fragment_search, container, false);
-        addBtn = v.findViewById(R.id.buttonAcount);
+        binding = FragmentSearchBinding.inflate(inflater, container, false);
+        View root = binding.getRoot();
+        /* show loading dialog until all fragment resources ready */
+        loadingDialog = new LoadingDialog(getContext());
+        loadingDialog.show();
+        addBtn = binding.buttonAcount;
 
         String[] type = {"Online", "Frontal"};
-        typeSpinner = v.findViewById(R.id.learn);
+        typeSpinner = binding.learn;
         boolean[] selectType = new boolean[type.length];
         ArrayList<Integer> listType = new ArrayList<>();
         setSpinner(typeSpinner, selectType, listType, type, "Online/Frontal");
 
-        subjectSpin = v.findViewById(R.id.selectSub);
+        subjectSpin = binding.selectSub;
         subjectSpin.setAdapter(new ArrayAdapter<>
                 (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
 
-        citySpinner = v.findViewById(R.id.selectCity);
+        citySpinner = binding.selectCity;
         String[] cities = getResources().getStringArray(R.array.Cities);
         String[] Cities = new String[cities.length+1];
         Cities[0] =  getResources().getString(R.string.All); /////////////////////////
@@ -69,9 +84,9 @@ public class Search extends Fragment {
         ArrayList<Integer> listCity = new ArrayList<>();
         setSpinnerForCity(citySpinner,selectCity,listCity, Cities, "Select City");
 
-        maxPrice = v.findViewById(R.id.max);
-        minPrice = v.findViewById(R.id.min);
-
+        maxPrice = binding.max;
+        minPrice = binding.min;
+        closeLoadingDialog();
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,18 +137,15 @@ public class Search extends Fragment {
                 }
 
                 /////////  end check error in search ////////
+                SearchResults fragment2 = new SearchResults(typeResult, cityResult, subjectResult, min, max, 0);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);
+                fragmentTransaction.commit();
 
-                Intent intent = new Intent(getActivity(), SearchResults.class);
-                intent.putExtra("typeResult", typeResult);
-                intent.putExtra("cityResult", cityResult);
-                intent.putExtra("subjectResult", subjectResult);
-                intent.putExtra("minResult", min);
-                intent.putExtra("maxResult", max);
-                intent.putExtra("sortBy", 0);
-                startActivity(intent);
             }
         });
-        return v;
+        return root;
 
     }
 
@@ -283,5 +295,14 @@ public class Search extends Fragment {
         });
     }
 
+    public void closeLoadingDialog() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
 
+                /* hide loading dialog (fragment resources ready) */
+                loadingDialog.cancel();
+            }
+        });
+    }
 }

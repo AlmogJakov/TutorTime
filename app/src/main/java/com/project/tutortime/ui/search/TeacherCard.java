@@ -46,7 +46,7 @@ public class TeacherCard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.card_teacher);
+        setContentView(R.layout.fragment_teacher_card);
         image = findViewById(R.id.profile_image);
         price = findViewById(R.id.price);
         description = findViewById(R.id.description);
