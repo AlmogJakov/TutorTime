@@ -143,8 +143,7 @@ public class  MySubList extends Fragment {
                     serviceCitiesSpinner.setText(printList(listCities));
                 }
 
-                /* Variable for teacher tutor cities */
-
+                /*Updates the buttons in Dialog Cities for Selected Cities*/
                 for( int i = 0 ; i < arrCities.length ; i++){
                     if (listCities.contains(arrCities[i])){
                         selectCities[i] = true;
@@ -179,28 +178,6 @@ public class  MySubList extends Fragment {
             }
 
         });
-    }
-
-    /* get fragment activity (to do actions on the activity) */
-    private void goToTutorMain(Activity currentActivity) {
-        //Activity currentActivity = getContext();
-        /* were logging in as tutor (tutor status value = 1).
-         * therefore, pass 'Status' value (1) to MainActivity. */
-        final ArrayList<Integer> arr = new ArrayList<Integer>();
-        arr.add(1);
-        //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
-        Intent intent = new Intent(currentActivity, MainActivity.class);
-        /* disable returning to SetTutorProfile class after opening main
-         * activity, since we don't want the user to re-choose Profile
-         * -> because the tutor profile data still exists with no use!
-         * (unless we implementing method to remove the previous data) */
-        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.putExtra("status",arr);
-        /* finish last activities to prevent last MainActivity to run with Customer view */
-        currentActivity.finishAffinity();
-        currentActivity.startActivity(intent);
-        currentActivity.finish();
     }
 
     public void createDialog(ArrayAdapter a) {
@@ -349,9 +326,8 @@ public class  MySubList extends Fragment {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
 
-                if ((type.equals("frontal") || type.equals("both"))
-                        && listCities.isEmpty()) {
-//
+                if ((type.equals("frontal") || type.equals("both")) && listCities.isEmpty()) {
+
                     new AlertDialog.Builder(getContext())
                             .setTitle("Select Service City")
                             .setMessage("You must choose at least one service city!")

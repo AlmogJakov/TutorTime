@@ -28,7 +28,6 @@ public class FireBaseTeacher extends firebaseBaseModel{
         new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String City = dataSnapshot.child("city").getValue(String.class);
                 /* Make a list of all the RealTime DataBase commands to execute
                  * (for the purpose of executing all the commands at once) */
                 Map<String, Object> childUpdates = new HashMap<>();
@@ -37,12 +36,12 @@ public class FireBaseTeacher extends firebaseBaseModel{
                     for (String aCity : serviceCities) {
                         if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
                             childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                    + "/" + aCity + "/" + sList.getPrice() + "/teacherID", teacherId);
+                                    + "/" + aCity + "/" + sList.getPrice() + "/"+teacherId, teacherId);
                         }
-                        else{
-                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                    + "/" + sList.getPrice() + "/teacherID", teacherId);
-                        }
+                    }
+                    if(sList.getType().equals("online")){
+                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                + "/" + sList.getPrice() + "/"+teacherId, teacherId);
                     }
                     /* (add a command) add the subject to the current teacher object */
                     childUpdates.put("teachers/" + teacherId + "/sub/" + sList.getsName(), sList);

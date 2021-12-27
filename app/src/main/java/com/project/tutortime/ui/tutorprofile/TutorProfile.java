@@ -76,7 +76,7 @@ public class TutorProfile extends Fragment {
     private FragmentTutorProfileBinding binding;
     EditText fname, lname, pnumber, description;
     //Button addSub;
-    Button saveProfile, updateImage;
+    Button saveProfile, updateImage, deleteProfile;
     String teacherID;
     Spinner citySpinner;
     ImageView img;
@@ -87,6 +87,9 @@ public class TutorProfile extends Fragment {
     String imgURL;
     boolean del = false;
     LoadingDialog loadingDialog;
+    ArrayList<subjectObj> list = new ArrayList<>();
+    ArrayList<String> listSub = new ArrayList<>();
+    ArrayList<String> listCities = new ArrayList<>();
 
     private static final int GALLERY_REQUEST_COD = 1;
 
@@ -104,6 +107,7 @@ public class TutorProfile extends Fragment {
         updateImage = binding.btnUpdateImage;
         img = binding.imageView;
         citySpinner = binding.spinnerCity;
+        deleteProfile = binding.btnDelete;
 
         /* Disable all Buttons & Show loading dialog (until all fragment resources ready) */
         updateImage.setVisibility(View.GONE);
@@ -149,6 +153,7 @@ public class TutorProfile extends Fragment {
         citySpinner.setAdapter(adapter);
         citySpinner.setSelection(0); //display hint
         /* END Select City Spinner Code () */
+
 
         updateImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -264,6 +269,35 @@ public class TutorProfile extends Fragment {
                 } else { uploadImageAndGoToMain(teacherID); }
             }
         });
+
+        deleteProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Delete tutor profile")
+                        .setMessage("Are you sure you want to delete your tutor profile?")
+
+                        // Specifying a listener allows you to take an action before dismissing the dialog.
+                        // The dialog is automatically dismissed when a dialog button is clicked.
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                DeleteTutorProfile(listCities,list);
+                                goToTutorMain();
+                          }
+                        })
+
+                        // A null listener allows the button to dismiss the dialog and take no further action.
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+
+            }
+        });
+
         return root;
     }
 
@@ -293,6 +327,7 @@ public class TutorProfile extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -314,7 +349,7 @@ public class TutorProfile extends Fragment {
                 description.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("description").getValue(String.class));
 
-                imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
+                imgURL = dataSnapshot.child("teachers").child(userID).child(teacherID).child("imgUrl").getValue(String.class);
                 if (imgURL != null) { /* The image exists! */
                     StorageReference storageReference = storage.getReference().child(imgURL);
                     Glide.with(getContext()).load(storageReference).into(img);
@@ -323,6 +358,26 @@ public class TutorProfile extends Fragment {
                 updateImage.setVisibility(View.VISIBLE);
                 loadingDialog.cancel();
                 /* END Enable Buttons & Hide loading dialog */
+
+
+                /* Get my service cities from firebase */
+                for (DataSnapshot citySnapsot : dataSnapshot.child("teachers").child(teacherID).
+                        child("serviceCities").getChildren()) {
+                    String serviceCity = citySnapsot.getValue(String.class);
+                    listCities.add(serviceCity);
+                }
+                /* Get my subject list from firebase */
+                for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
+                        child("sub").getChildren()) {
+                    subjectObj sub = new subjectObj(subSnapsot.child("sName").getValue(String.class),
+                            subSnapsot.child("type").getValue(String.class),
+                            subSnapsot.child("price").getValue(Integer.class),
+                            subSnapsot.child("experience").getValue(String.class));
+                    sub.setKey(subSnapsot.getKey());
+                    list.add(sub);
+                    listSub.add(sub.getsName());
+                }
+
             }
 
             @Override
@@ -429,6 +484,59 @@ public class TutorProfile extends Fragment {
                     public void onFailure(@NonNull Exception exception) {
                         Toast.makeText(getContext(), "Upload image Failed", Toast.LENGTH_LONG).show(); }
                 });
+    }
+    /* Delete cities and subjects from firebase in the tree search */
+    public void DeleteTutorProfile(ArrayList <String> listCities, ArrayList <subjectObj> listSub) {
+        Map<String, Object> childUpdates = new HashMap<>();
 
+
+        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                /* Delete subjects from the search tree*/
+                for(subjectObj sList : listSub) {
+                    for (String rCity : listCities) {
+                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                    + "/" + rCity + "/" + sList.getPrice() + "/" + teacherID, null);
+                        }
+                    }
+                    if(sList.getType().equals("online")){
+                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                + "/" + sList.getPrice() + "/" + teacherID, null);
+                    }
+                }
+                childUpdates.put("teachers/" + teacherID , null);
+                childUpdates.put("users/" + userID + "/teacherID/", null);
+                childUpdates.put("users/" + userID + "/isTeacher/", 0);
+                //childUpdates.put("chats/" + userID + "/teacherID/", null);
+
+                myRef.updateChildren(childUpdates);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+    private void goToTutorMain() {
+        /* were logging in as tutor (tutor status value = 1).
+         * therefore, pass 'Status' value (1) to MainActivity. */
+        final ArrayList<Integer> arr = new ArrayList<Integer>();
+        arr.add(0);
+        //Intent intent = new Intent(SetTutorProfile.this, MainActivity.class);
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        /* disable returning to SetTutorProfile class after opening main
+         * activity, since we don't want the user to re-choose Profile
+         * because the tutor profile data still exists with no use!
+         * (unless we implementing method to remove the previous data) */
+        intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("status",arr);
+
+        /* finish last activities to prevent last MainActivity to run with Customer view */
+        getActivity().onBackPressed();
+        startActivity(intent);
     }
 }
