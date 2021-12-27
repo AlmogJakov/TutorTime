@@ -94,7 +94,7 @@
 
 <!--    Search class-->
     <string name="search">חפש</string>
-    <string name="result">תוצאות</string>
+    <string name="result">תוצאות:</string>
     <string name="learning_type">סוג לימוד</string>
     <string name="subject">נושא</string>
     <string name="area">אזור</string>

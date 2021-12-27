@@ -57,14 +57,13 @@ public class Search extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-
+        super.onCreate(savedInstanceState);
         binding = FragmentSearchBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         /* show loading dialog until all fragment resources ready */
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
         addBtn = binding.buttonAcount;
-
         String[] type = {getResources().getString(R.string.Online), getResources().getString(R.string.Frontal)};
         typeSpinner = binding.learn;
         boolean[] selectType = new boolean[type.length];
@@ -138,11 +137,20 @@ public class Search extends Fragment {
                 }
 
                 /////////  end check error in search ////////
-                SearchResults fragment2 = new SearchResults(typeResult, cityResult, subjectResult, min, max, 0);
+
+                Bundle bundle = new Bundle();
+                bundle.putString("typeResult", typeResult);
+                bundle.putString("cityResult", cityResult);
+                bundle.putString("subjectResult", subjectResult);
+                bundle.putInt("min", min);
+                bundle.putInt("max", max);
+                bundle.putInt("sort_by", 0);
+
+                SearchResults fragment2 = new SearchResults();
+                fragment2.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);
-                fragmentTransaction.commit();
+                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2).addToBackStack(null).commit();
 
             }
         });

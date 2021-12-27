@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
                 /* Shuffle the chronological order (of the tutors' keys) */
                 Collections.shuffle(tutorsToShow);
                 /* init the adapter with the 'tutorsToShow' list */
-                adapter = new TutorAdapter(getContext(), tutorsToShow, ((ViewGroup)getView().getParent()).getId());
+                adapter = new TutorAdapter(getContext(), tutorsToShow);
                 listview.setAdapter(adapter);
                 adapter.updateListViewHeight(listview);
                 closeLoadingDialog();

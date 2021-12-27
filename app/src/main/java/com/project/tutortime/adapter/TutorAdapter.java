@@ -34,7 +34,6 @@ import com.google.android.gms.common.util.ScopeUtil;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.R;
-import com.project.tutortime.databinding.FragmentTeacherCardBinding;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.ui.search.TeacherCard;
 
@@ -50,7 +49,7 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
     private List<Boolean> isResourceReady;
     int id;
 
-    public TutorAdapter(Context context, List<TutorAdapterItem> teachersToShow, int id) {
+    public TutorAdapter(Context context, List<TutorAdapterItem> teachersToShow) {
         super(context, R.layout.tutor_card_view, teachersToShow);
         this.context = context;
         this.teachersToShow = teachersToShow;
@@ -122,16 +121,11 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
         currentCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TeacherCard myFragment = new TeacherCard(teachersToShow.get(position).getUser(), teachersToShow.get(position).getTeacher(), teachersToShow.get(position).getSubName());
-                AppCompatActivity activity = (AppCompatActivity) v.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(id, myFragment).addToBackStack(null).commit();
-
-
-//                Intent intent = new Intent(getContext(), TeacherCard.class);
-//                intent.putExtra("user", teachersToShow.get(position).getUser());
-//                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
-//                intent.putExtra("sub", teachersToShow.get(position).getSubName());
-//                getContext().startActivity(intent);
+                Intent intent = new Intent(getContext(), TeacherCard.class);
+                intent.putExtra("user", teachersToShow.get(position).getUser());
+                intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
+                intent.putExtra("sub", teachersToShow.get(position).getSubName());
+                getContext().startActivity(intent);
             }
         });
         return rowView;

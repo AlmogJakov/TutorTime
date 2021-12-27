@@ -20,6 +20,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,37 +71,43 @@ public class SearchResults extends Fragment {
     LoadingDialog loadingDialog;
     private @NonNull FragmentSearchResultsBinding binding;
 
-    public SearchResults(String typeResult, String cityResult, String subjectResult, int min, int max, int i) {
-        this.typeResult = typeResult;
-        this.cityResult = cityResult;
-        this.subjectResult = subjectResult;
-        this.minResult = min;
-        this.maxResult = max;
-        kindOfSort = i;
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        System.out.println("itay the king");
+
+        // This callback will only be called when MyFragment is at least Started.
+        OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+            @Override
+            public void handleOnBackPressed() {
+                Search fragment2 = new Search();
+                FragmentManager fragmentManager = getFragmentManager();
+                List<Fragment> f = fragmentManager.getFragments();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2).addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        };
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+
         /* Prevents the fragment from destroying and hence recreating while changing language. */
         this.setRetainInstance(true);
         binding = FragmentSearchResultsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
-        Button search = binding.buttonAcount;
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Search fragment2 = new Search();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);
-                fragmentTransaction.commit();
-            }//
-        });
 
+
+
+        typeResult = getArguments().getString("typeResult");
+        cityResult = getArguments().getString("cityResult");
+        subjectResult = getArguments().getString("subjectResult");
+        minResult = getArguments().getInt("min");
+        maxResult = getArguments().getInt("max");
+        kindOfSort = getArguments().getInt("sort_by");
 
         if (typeResult.equals("Frontal")){ chooseType[2] = false;}
         else if (typeResult.equals("Online")) {chooseType[1] = false;}
@@ -153,8 +160,7 @@ public class SearchResults extends Fragment {
                 if (chooseType[0])setBoth(dataSnapshot);
                 if (chooseType[1])setFrontal(dataSnapshot);
                 if (chooseType[2])setOnline(dataSnapshot);
-
-                adapter = new TutorAdapter(getActivity(), teachersToShow, ((ViewGroup)getView().getParent()).getId());
+                adapter = new TutorAdapter(getActivity(), teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 closeLoadingDialog();
@@ -318,7 +324,16 @@ public class SearchResults extends Fragment {
     }
 
     private void reload(int sortBy) {
-        SearchResults fragment2 = new SearchResults(typeResult, cityResult, subjectResult, minResult, maxResult, sortBy);
+        Bundle bundle = new Bundle();
+        bundle.putString("typeResult", typeResult);
+        bundle.putString("cityResult", cityResult);
+        bundle.putString("subjectResult", subjectResult);
+        bundle.putInt("min", minResult);
+        bundle.putInt("max", maxResult);
+        bundle.putInt("sort_by", sortBy);
+
+        SearchResults fragment2 = new SearchResults();
+        fragment2.setArguments(bundle);
         FragmentManager fragmentManager = getFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);

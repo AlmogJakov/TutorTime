@@ -17,10 +17,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -28,6 +30,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -41,62 +45,62 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.LoadingDialog;
 import com.project.tutortime.R;
-import com.project.tutortime.databinding.FragmentSearchResultsBinding;
-import com.project.tutortime.databinding.FragmentTeacherCardBinding;
+//import com.project.tutortime.datafindViewById(R.id.FragmentTeacherCardBinding;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
+import com.project.tutortime.ui.home.HomeFragment;
+
+import java.util.List;
 
 
-public class TeacherCard extends Fragment {
+public class TeacherCard extends AppCompatActivity {
     ImageView image;
     TextView price, description, subjectAndType, opinion, name, place;
     Button send;
-    ImageButton back;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     String phoneNum;
     ImageView titleBackground;
     CardView profileImageBox, rate;
     RatingBar rating;
-    @NonNull FragmentTeacherCardBinding binding;
     LoadingDialog loadingDialog;
     userObj user;
     teacherObj teacher;
     String sub;
-    public TeacherCard(userObj user, teacherObj teacher, String subName) {
-        this.user = user;
-        this.teacher = teacher;
-        this.sub = subName;
-    }
+
 
     @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentTeacherCardBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-        loadingDialog = new LoadingDialog(getContext());
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
-        image = binding.profileImage;
-        price = binding.price;
-        description = binding.description;
-        send = binding.send;
-        back = binding.textView;
-        subjectAndType = binding.subjectPlusType;
-        name = binding.name;
-        place = binding.area;
-        titleBackground = (ImageView) binding.titleBackground;
-        profileImageBox = (CardView)binding.profileImageBox;
-        rating = (RatingBar)binding.rating;
-        opinion = binding.opinion;
-        rate = binding.rateTutor;
+        setContentView(R.layout.activity_teacher_card);
+
+//        findViewById(R.id.)
+        image = findViewById(R.id.profile_image);
+        price = findViewById(R.id.price);
+        description = findViewById(R.id.description);
+        send = findViewById(R.id.send);
+        subjectAndType = findViewById(R.id.subjectPlusType);
+        name = findViewById(R.id.name);
+        place = findViewById(R.id.area);
+        titleBackground = (ImageView) findViewById(R.id.title_background);
+        profileImageBox = (CardView)findViewById(R.id.profile_image_box);
+        rating = (RatingBar)findViewById(R.id.rating);
+        opinion = findViewById(R.id.opinion);
+        rate = findViewById(R.id.rateTutor);
+
 
         String[] typeRank = {"⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐","⭐⭐⭐⭐⭐"};
         setSpinner(rate, typeRank);
 
-//        userObj user = (userObj) getIntent().getSerializableExtra("user");
-//        teacherObj teacher = (teacherObj) getIntent().getSerializableExtra("teacher");
-//        String sub = getIntent().getStringExtra("sub");
+        Bundle bundle = getIntent().getExtras();
+        user = (userObj) bundle.getSerializable("user");
+        teacher = (teacherObj) bundle.getSerializable("teacher");
+        sub = bundle.getString("sub");
+
         phoneNum = teacher.getPhoneNum();
         opinion.setText("0 " + getResources().getString(R.string.opinion));
         name.setText(user.getfName() +" "+ user.getlName());
@@ -148,18 +152,8 @@ public class TeacherCard extends Fragment {
             }
         });
 
-
-
-
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                finish();
-            }
-        });
         closeLoadingDialog();
 
-        return root;
     }
 
     public void closeLoadingDialog() {
@@ -177,13 +171,13 @@ public class TeacherCard extends Fragment {
         typeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(TeacherCard.this);
                 builder.setTitle(getResources().getString(R.string.Select));
                 builder.setCancelable(false);
                 builder.setSingleChoiceItems(type, -1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(), "Rated with "+(which+1)+" stars", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TeacherCard.this, "Rated with "+(which+1)+" stars", Toast.LENGTH_SHORT).show();
                     }
 
                 });

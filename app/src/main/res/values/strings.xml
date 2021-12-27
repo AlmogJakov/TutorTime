@@ -98,32 +98,32 @@
         <item>female</item>
     </string-array>
 
-<!--    <string-array name="SpinnerSubName1">-->
-<!--        <item>Select subject</item>-->
-<!--        <item>Math</item>-->
-<!--        <item>English</item>-->
-<!--        <item>physics</item>-->
-<!--        <item>Biology</item>-->
-<!--        <item>Literature</item>-->
-<!--        <item>history</item>-->
-<!--        <item>chemistry</item>-->
-<!--        <item>music</item>-->
-<!--        <item>Computer Science</item>-->
-<!--        <item>citizenship</item>-->
-<!--        <item>Bible</item>-->
-<!--    </string-array>-->
+    <!--    <string-array name="SpinnerSubName1">-->
+    <!--        <item>Select subject</item>-->
+    <!--        <item>Math</item>-->
+    <!--        <item>English</item>-->
+    <!--        <item>physics</item>-->
+    <!--        <item>Biology</item>-->
+    <!--        <item>Literature</item>-->
+    <!--        <item>history</item>-->
+    <!--        <item>chemistry</item>-->
+    <!--        <item>music</item>-->
+    <!--        <item>Computer Science</item>-->
+    <!--        <item>citizenship</item>-->
+    <!--        <item>Bible</item>-->
+    <!--    </string-array>-->
 
     <style name="Dialog" parent="Theme.AppCompat.Dialog">
         <item name="android:windowNoTitle">false</item>
         <item name="android:windowIsFloating">true</item>
     </style>
 
-<!--    <string-array name="Options2">-->
-<!--        <item>Select learning form</item>-->
-<!--        <item>online</item>-->
-<!--        <item>frontal</item>-->
-<!--        <item>online/frontal</item>-->
-<!--    </string-array>-->
+    <!--    <string-array name="Options2">-->
+    <!--        <item>Select learning form</item>-->
+    <!--        <item>online</item>-->
+    <!--        <item>frontal</item>-->
+    <!--        <item>online/frontal</item>-->
+    <!--    </string-array>-->
 
     <string-array name="Cities">
         <item>Afula</item>
@@ -204,9 +204,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-<!--    Search class-->
+    <!--    Search class-->
     <string name="search">search</string>
-    <string name="result">Result</string>
+    <string name="result">Result:</string>
     <string name="learning_type">Learning Type</string>
     <string name="subject">Subject</string>
     <string name="area">Area</string>
