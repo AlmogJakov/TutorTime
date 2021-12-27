@@ -116,9 +116,10 @@
     <string name="Select">בחר מיון</string>
     <string name="priceLow">מחיר: מנמוך לגבוה</string>
     <string name="priceHigh">מחיר: מגבוה לנמוך</string>
-    <string name="filter_by">סנן לפי</string>
+    <string name="filter_by">סנן לפי דירוג</string>
     <string name="rate_the_tutor">דרג את המורה</string>
     <string name="opinion">חוות דעת</string>
+    <string name="Select_Rating">בחר דירוג</string>
 
     <!--    <string-array name="SpinnerSubName1">-->
 <!--        <item>בחר מקצוע</item>-->

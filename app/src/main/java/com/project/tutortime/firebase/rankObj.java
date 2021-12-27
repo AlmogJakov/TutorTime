@@ -26,7 +26,7 @@ public class rankObj implements Serializable {
         return avgRank;
     }
 
-    public void setAvgRank(int avgRank) {
+    public void setAvgRank(float avgRank) {
         this.avgRank = avgRank;
     }
 }

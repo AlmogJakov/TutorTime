@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -38,6 +39,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -48,10 +50,12 @@ import com.project.tutortime.LoadingDialog;
 import com.project.tutortime.R;
 //import com.project.tutortime.datafindViewById(R.id.FragmentTeacherCardBinding;
 import com.project.tutortime.firebase.FireBaseUser;
+import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
 import com.project.tutortime.ui.home.HomeFragment;
 
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -68,6 +72,7 @@ public class TeacherCard extends AppCompatActivity {
     userObj user;
     teacherObj teacher;
     String sub;
+    int kindOfRank = -1, editRank;
 
 
     @SuppressLint("SetTextI18n")
@@ -94,16 +99,23 @@ public class TeacherCard extends AppCompatActivity {
         rate = findViewById(R.id.rateTutor);
 
 
-        String[] typeRank = {"⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐","⭐⭐⭐⭐⭐"};
-        setSpinner(rate, typeRank);
-
         Bundle bundle = getIntent().getExtras();
         user = (userObj) bundle.getSerializable("user");
         teacher = (teacherObj) bundle.getSerializable("teacher");
         sub = bundle.getString("sub");
 
         phoneNum = teacher.getPhoneNum();
-        opinion.setText("0 " + getResources().getString(R.string.opinion));
+        if (teacher.getRank().getUserRating() == null){
+            opinion.setText("0 " + getResources().getString(R.string.opinion));
+        }
+        else {
+            String id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+            if (teacher.getRank().getUserRating().containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                HashMap<String, Integer> hashMap = teacher.getRank().getUserRating();
+                kindOfRank = ((int)hashMap.get(id))-1;
+            }
+            opinion.setText(teacher.getRank().getUserRating().size() + " " + getResources().getString(R.string.opinion));
+        }
         name.setText(user.getfName() +" "+ user.getlName());
         String s="";
         switch (teacher.getSub().get(sub).getType()) {
@@ -116,6 +128,9 @@ public class TeacherCard extends AppCompatActivity {
         description.setText(getResources().getString(R.string.Description)+teacher.getDescription());
         price.setText(teacher.getSub().get(sub).getPrice()+"₪");
         rating.setRating(teacher.getRank().getAvgRank());
+
+        String[] typeRank = {"\uD83D\uDE41 - ⭐", "\uD83D\uDE15 - ⭐⭐", "\uD83D\uDE10 - ⭐⭐⭐", "\uD83D\uDE42 - ⭐⭐⭐⭐","\uD83D\uDE03 - ⭐⭐⭐⭐⭐"};
+        setSpinner(rate, typeRank, kindOfRank);
 
         String imageLink = teacher.getImgUrl();
         if (imageLink!=null) {
@@ -168,23 +183,33 @@ public class TeacherCard extends AppCompatActivity {
         });
     }
 
-    private void setSpinner(CardView typeSpinner, String[] type) {
+    private void setSpinner(CardView typeSpinner, String[] type, int kindOfRank) {
         typeSpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
+                    Toast.makeText(TeacherCard.this, "You can not rate yourself!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 AlertDialog.Builder builder = new AlertDialog.Builder(TeacherCard.this);
-                builder.setTitle(getResources().getString(R.string.Select));
+                builder.setTitle(getResources().getString(R.string.Select_Rating));
                 builder.setCancelable(false);
-                builder.setSingleChoiceItems(type, -1, new DialogInterface.OnClickListener() {
+                builder.setSingleChoiceItems(type, kindOfRank, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(TeacherCard.this, "Rated with "+(which+1)+" stars", Toast.LENGTH_SHORT).show();
+                        editRank = which;
                     }
 
                 });
                 builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(TeacherCard.this, "Rated with "+(which+1)+" stars", Toast.LENGTH_SHORT).show();
+
+                        System.out.println(editRank + " - " + kindOfRank);
+                        if (editRank != kindOfRank) {
+                            setOpinion(editRank+1);
+                        }
                     }
                 });
                 builder.show();
@@ -192,48 +217,34 @@ public class TeacherCard extends AppCompatActivity {
         });
     }
 
-    private void setOpinion(){
-        FirebaseDatabase.getInstance().getReference().child("teachers").child("fAuth.getCurrentUser().getUid()").child("rank");
-
-        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                /* sort the list of service cities */
-                //Collections.sort(listCities);
-                /* get teacher ID */
-//                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-//                        /* Make a list of all the RealTime DataBase commands to execute
-//                            (for the purpose of executing all the commands at once) */
-//                Map<String, Object> childUpdates = new HashMap<>();
-//                if (imgURL != null)
-//                    childUpdates.put("teachers/" + teacherID + "/imgUrl", imgURL);
-//                childUpdates.put("teachers/" + teacherID + "/phoneNum", pNum);
-//                childUpdates.put("teachers/" + teacherID + "/description", descrip);
-//                //childUpdates.put("teachers/" + teacherID + "/serviceCities", listCities);
-//                childUpdates.put("users/" + userID + "/fName", firstName);
-//                childUpdates.put("users/" + userID + "/lName", lastName);
-//                childUpdates.put("users/" + userID + "/city", city);
-//                        /* If the user deleted the image - delete it from the storage and add
-//                            a delete command to childUpdates (to delete it URL from the RealTime DataBase) */
-//                if (del) {
-//                    if (imgURL != null)
-//                        childUpdates.put("teachers/" + teacherID + "/imgUrl", null);
-//                    FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
-//                    StorageReference storageReference = firebaseStorage.getReference(imgURL);
-//                    storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void aVoid) {
-//                            Log.e("Picture", "#deleted");
-//                            imgURL = null;
-//                        }
-//                    });
-//                }
-//                /* Finally, execute all RealTime DataBase commands in one command (safely). */
-//                myRef.updateChildren(childUpdates);
+    synchronized private void setOpinion(int numRank){
+        rankObj r = teacher.getRank();
+        if (r.getUserRating() == null){
+            HashMap<String, Integer> userRating = new HashMap<>();
+            userRating.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), numRank);
+            r.setUserRating(userRating);
+            r.setAvgRank(numRank);
+        }
+        else{
+            int n = r.getUserRating().size();
+            if (kindOfRank != -1){
+                float avg = (numRank - (kindOfRank+1) + n*r.getAvgRank())/n;
+                r.setAvgRank(avg);
+                r.getUserRating().put(FirebaseAuth.getInstance().getCurrentUser().getUid(), numRank);
             }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) { }
-        });
+            else{
+                r.getUserRating().put(FirebaseAuth.getInstance().getCurrentUser().getUid(), numRank);
+                float avg = (numRank + n*r.getAvgRank())/(n+1);
+                r.setAvgRank(avg);
+            }
+        }
+        teacher.setRank(r);
+        FirebaseDatabase.getInstance().getReference().child("teachers").child(user.getTeacherID()).setValue(teacher);
+        Intent intent = new Intent(this, TeacherCard.class);
+        intent.putExtra("user", user);
+        intent.putExtra("teacher", teacher);
+        intent.putExtra("sub", sub);
+        finish();
+        startActivity(intent);
     }
 }

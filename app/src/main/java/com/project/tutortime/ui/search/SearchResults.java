@@ -166,6 +166,7 @@ public class SearchResults extends Fragment {
             }
 
             private void setOnline(DataSnapshot dataSnapshot) {
+                System.out.println("on online");
                 for (int pr: prices){
                     Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[2]).child(subjectResult).child(Integer.toString(pr)).getChildren();
                     for (DataSnapshot s1 : idOfTeacher) {
@@ -175,6 +176,7 @@ public class SearchResults extends Fragment {
                             if (teacher != null){
                                 if (!used.contains(teacher.getUserID())){
                                     userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                    System.out.println(user.getfName());
                                     teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
                                     used.add(teacher.getUserID());
                                 }
@@ -185,6 +187,7 @@ public class SearchResults extends Fragment {
             }
 
             private void setFrontal(DataSnapshot dataSnapshot) {
+                System.out.println("on frontal");
                 for (int pr: prices){
                     for (String c:Cities) {
                         Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[1]).child(subjectResult).child(c).child(Integer.toString(pr)).getChildren();
@@ -195,6 +198,7 @@ public class SearchResults extends Fragment {
                                 if (teacher != null){
                                     if (!used.contains(teacher.getUserID())){
                                         userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                        System.out.println(user.getfName());
                                         teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
                                         used.add(teacher.getUserID());
                                     }
@@ -206,17 +210,20 @@ public class SearchResults extends Fragment {
             }
 
             private void setBoth(DataSnapshot dataSnapshot) {
+                System.out.println("on both");
                 for (int pr: prices){
-                    Iterable<DataSnapshot> idOfTeacher = dataSnapshot.child("search").child(TypeResult[0]).child(subjectResult).getChildren();
-                    for (DataSnapshot s2 : idOfTeacher) {
+                    Iterable<DataSnapshot> citiesCard = dataSnapshot.child("search").child(TypeResult[0]).child(subjectResult).getChildren();
+                    for (DataSnapshot s2 : citiesCard) {
                         Iterable<DataSnapshot> idOfCity = s2.child(Integer.toString(pr)).getChildren();
                         for (DataSnapshot s1 : idOfCity) {
-                            String s = s1.getKey();
+                            String s = (String) s1.getValue();
+                            System.out.println(s);
                             if (s != null){
                                 teacherObj teacher = dataSnapshot.child("teachers").child(s).getValue(teacherObj.class);
                                 if (teacher != null){
                                     if (!used.contains(teacher.getUserID())){
                                         userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
+                                        System.out.println(user.getfName());
                                         teachersToShow.add(new TutorAdapterItem(user,teacher,subjectResult));
                                         used.add(teacher.getUserID());
                                     }
