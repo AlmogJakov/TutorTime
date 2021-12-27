@@ -61,6 +61,9 @@ public class  MySubList extends Fragment {
     ArrayList<String> listSub = new ArrayList<>();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     ArrayList<String> listCities = new ArrayList<>();
+    String[] arrCities ;
+    boolean[] selectCities ;
+    ArrayList<Integer> listCitiesNum = new ArrayList<>();
 
     public static MySubList newInstance() {
         return new MySubList();
@@ -88,6 +91,8 @@ public class  MySubList extends Fragment {
         subjectList.setEnabled(false);
         /* END Disable all Buttons & Text Edit Fields */
 
+        arrCities = getResources().getStringArray(R.array.Cities);
+        selectCities = new boolean[arrCities.length];
 
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,9 +144,7 @@ public class  MySubList extends Fragment {
                 }
 
                 /* Variable for teacher tutor cities */
-                String[] arrCities = getResources().getStringArray(R.array.Cities);
-                boolean[] selectCities = new boolean[arrCities.length];
-                ArrayList<Integer> listCitiesNum = new ArrayList<>();
+
                 for( int i = 0 ; i < arrCities.length ; i++){
                     if (listCities.contains(arrCities[i])){
                         selectCities[i] = true;
@@ -230,22 +233,53 @@ public class  MySubList extends Fragment {
                 String exp = expEdit.getText().toString().trim();
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
-                if (price == "Select Price") {
+                if (price.equals("Select Price")) {
                     //priceEdit.setError("Price is required.");
                     Toast.makeText(getActivity(), "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }
                 if (listSub.contains(nameSub)) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
-                if (nameSub == "Select subject") {
+                if (nameSub.equals("Select subject")) {
                     Toast.makeText(getActivity(), "Subject is required.", Toast.LENGTH_SHORT).show();
                     return; }
-                if (type == "Select learning type") {
+                if (type.equals("Select learning type")) {
                     Toast.makeText(getActivity(), "Learning type is required.", Toast.LENGTH_SHORT).show();
                     return; }
+                if ((type.equals("frontal") || type.equals("both")) && listCities.isEmpty()) {
+
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Select Service City")
+                            .setMessage("You must choose at least one service city!")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    buildCityDialog(true);
+                                    subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
+                                    list.add(newSub);
+                                    updateList(null,newSub,listCities);
+                                    listSub.add(nameSub);
+                                    d.dismiss();
+                                    return;
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    d.dismiss();
+                    return;
+                }
                 subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 list.add(newSub);
-                updateList(null,newSub);
+                updateList(null,newSub,listCities);
                 listSub.add(nameSub);
                 d.dismiss();
             }
@@ -300,26 +334,115 @@ public class  MySubList extends Fragment {
                 String exp = expEdit.getText().toString().trim();
                 String nameSub = nameSpinner.getSelectedItem().toString().trim();
                 String type = typeSpinner.getSelectedItem().toString().trim();
-                if (price == "Select Price") {
+                if (price.equals("Select Price")) {
                     //priceEdit.setError("Price is required.");
                     Toast.makeText(getActivity(), "Please select a price.", Toast.LENGTH_SHORT).show();
                     return; }
-                if (nameSub.isEmpty() || nameSub.equals(subjectObj.SubName.HINT)) {
+                if (nameSub.equals(subjectObj.SubName.HINT)) {
                     Toast.makeText(getActivity(), "Subject is required.", Toast.LENGTH_SHORT).show();
                     return; }
-                if (type.isEmpty() || type.equals(subjectObj.Type.HINT)) {
+                if (type.equals(subjectObj.Type.HINT)) {
                     Toast.makeText(getActivity(), "Learning type is required.", Toast.LENGTH_SHORT).show();
                     return; }
                 /* if the subject already exists BUT IN THE ENTRY THAT CURRENTLY EDITING - IT'S OK!  */
                 if (listSub.contains(nameSub) && !nameSub.equals(currSub.getsName())) {
                     Toast.makeText(getActivity(), "You already have selected this subject.", Toast.LENGTH_SHORT).show();
                     return; }
+
+                if ((type.equals("frontal") || type.equals("both"))
+                        && listCities.isEmpty()) {
+//
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Select Service City")
+                            .setMessage("You must choose at least one service city!")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    buildCityDialog(true);
+                                    subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
+                                    /* remove the last entry (before the edit) */
+                                    list.remove(currSub);
+                                    /*  */
+                                    list.add(newSub);
+                                    updateList(currSub,newSub,listCities);
+                                    listSub.remove(currSub.getsName());
+                                    listSub.add(nameSub);
+                                    d.dismiss();
+                                    return;
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    d.dismiss();
+                    return;
+                }
+                if (type.equals("online") && !listCities.isEmpty()) {
+//                    Toast.makeText(getActivity(), "You have chosen to transfer private lessons" +
+//                                    " only online, do not select service cities",
+//                            Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Delete All Service City")
+                            .setMessage("You chose to teach only online. \n" +
+                                    "Are you sure you want to delete all service cities?")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ArrayList<String> removeTempCities = new ArrayList<>();
+                                    for (int i = 0; i < selectCities.length; i++)
+                                        selectCities[i] = false;
+                                    for (String rCity : listCities)
+                                        removeTempCities.add(rCity);
+                                    listCitiesNum.clear();
+                                    // Copy old service cities
+                                    ArrayList<String> oldCities = new ArrayList<>(listCities);
+                                    listCities.clear();
+                                    serviceCitiesSpinner.setTextColor(Color.GRAY);
+                                    serviceCitiesSpinner.setText("Select service cities");
+                                    removeServiceCities(removeTempCities, listCities);
+
+                                    subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
+                                    /* remove the last entry (before the edit) */
+                                    list.remove(currSub);
+                                    /*  */
+                                    list.add(newSub);
+                                    updateList(currSub,newSub,oldCities);
+                                    listSub.remove(currSub.getsName());
+                                    listSub.add(nameSub);
+                                    d.dismiss();
+                                }
+                  })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                   d.dismiss();
+                    return;
+                }
+
+
                 subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 /* remove the last entry (before the edit) */
                 list.remove(currSub);
                 /*  */
                 list.add(newSub);
-                updateList(currSub,newSub);
+                updateList(currSub,newSub,listCities);
+                listSub.remove(currSub.getsName());
                 listSub.add(nameSub);
                 d.dismiss();
             }
@@ -333,9 +456,58 @@ public class  MySubList extends Fragment {
                             Toast.LENGTH_LONG).show();
                     return;
                 }
+                boolean hasFrontal = false;
+                for (subjectObj sub : list) {
+                    if (!sub.equals(currSub) && (sub.getType().equals("frontal") || sub.getType().equals("both"))) {
+                        hasFrontal = true;
+                        break;
+                    }
+                }
+
+                if (!listCities.isEmpty() && !hasFrontal) {
+                    new AlertDialog.Builder(getContext())
+                            .setTitle("Delete All Service City")
+                            .setMessage("You chose to teach only online. \n" +
+                                    "Are you sure you want to delete all service cities?")
+
+                            // Specifying a listener allows you to take an action before dismissing the dialog.
+                            // The dialog is automatically dismissed when a dialog button is clicked.
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ArrayList<String> removeTempCities = new ArrayList<>();
+                                    for (int i = 0; i < selectCities.length; i++)
+                                        selectCities[i] = false;
+                                    for (String rCity : listCities)
+                                        removeTempCities.add(rCity);
+                                    listCitiesNum.clear();
+                                    ArrayList<String> oldServiceCities = new ArrayList<>(listCities);
+                                    listCities.clear();
+                                    serviceCitiesSpinner.setTextColor(Color.GRAY);
+                                    serviceCitiesSpinner.setText("Select service cities");
+                                    removeServiceCities(removeTempCities, listCities);
+                                    list.remove(currSub);
+                                    listSub.remove(currSub.getsName());
+                                    updateList(currSub,null,oldServiceCities);
+                                    a.notifyDataSetChanged();
+                                    d.dismiss();
+                                    return;
+                                }
+                            })
+
+                            // A null listener allows the button to dismiss the dialog and take no further action.
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    return;
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    d.dismiss();
+                    return;
+                }
                 list.remove(currSub);
                 listSub.remove(currSub.getsName());
-                updateList(currSub,null);
+                updateList(currSub,null,listCities);
                 a.notifyDataSetChanged();
                 d.dismiss();
             }
@@ -353,7 +525,7 @@ public class  MySubList extends Fragment {
     /* Subject Update - update a subject according to the previous subject and a new subject.
      * Subject Addition - addition of a new subject ('prevSub'=null when calling the method)
      * Subject Deletion - deletion of an old subject ('newSub'=null when calling the method) */
-    public void updateList(subjectObj prevSub,subjectObj newSub) {
+    public void updateList(subjectObj prevSub,subjectObj newSub, ArrayList<String> oldListCities) {
         /* Make a list of all the RealTime DataBase commands to execute
          * (for the purpose of executing all the commands at once) */
         Map<String, Object> childUpdates = new HashMap<>();
@@ -368,7 +540,7 @@ public class  MySubList extends Fragment {
                                 + "/" + prevSub.getPrice() + "/" + teacherID, null);
                     }
                     else{
-                        for (String sCity : listCities) {
+                        for (String sCity : oldListCities) {
                             childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
                                     + "/" + sCity + "/" + prevSub.getPrice() + "/" + teacherID, null);
                         }
@@ -409,74 +581,14 @@ public class  MySubList extends Fragment {
 
     private void setCitySpinner(TextView citySpinner, boolean[] selectCities, ArrayList<Integer> listCitiesNum,
                                 String[] arrCities) {
-        ArrayList<String> addTempCities = new ArrayList<>();
-        ArrayList<String> removeTempCities = new ArrayList<>();
+
 
         citySpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Select service cities");
-                builder.setCancelable(false);
+            buildCityDialog(false);
 
 
-                builder.setMultiChoiceItems(arrCities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            listCitiesNum.add(which);
-                            listCities.add(arrCities[which]);
-                            addTempCities.add(arrCities[which]);
-                            Collections.sort(listCitiesNum);
-                        } else {
-                            listCitiesNum.remove((Integer) which);
-                            listCities.remove(arrCities[which]);
-                            removeTempCities.add(arrCities[which]);
-                        }
-                    }
-                });
-
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(listCities.isEmpty()){
-                            serviceCitiesSpinner.setTextColor(Color.GRAY);
-                            citySpinner.setText("Select service cities");
-                            removeServiceCities(removeTempCities, listCities);
-                        }
-                        else{
-                            serviceCitiesSpinner.setTextColor(Color.BLACK);
-                            citySpinner.setText(printList(listCities));
-                            addServiceCities(addTempCities, listCities);
-                            removeServiceCities(removeTempCities, listCities);
-                        }
-
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
-                builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < selectCities.length; i++)
-                            selectCities[i] = false;
-                        for(String rCity : listCities)
-                            removeTempCities.add(rCity);
-                        listCitiesNum.clear();
-                        listCities.clear();
-                        serviceCitiesSpinner.setTextColor(Color.GRAY);
-                        citySpinner.setText("Select service cities");
-                        removeServiceCities(removeTempCities, listCities);
-                    }
-                });
-
-                builder.show();
             }
         });
     }
@@ -543,5 +655,109 @@ public class  MySubList extends Fragment {
         });
         return addList;
     }
+    public void buildCityDialog(boolean fromEditSub){
+        ArrayList<String> addTempCities = new ArrayList<>();
+        ArrayList<String> removeTempCities = new ArrayList<>();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Select service cities");
+        builder.setCancelable(false);
 
+
+        builder.setMultiChoiceItems(arrCities, selectCities, new DialogInterface.OnMultiChoiceClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                if (isChecked) {
+                    listCitiesNum.add(which);
+                    listCities.add(arrCities[which]);
+                    addTempCities.add(arrCities[which]);
+                    Collections.sort(listCitiesNum);
+                } else {
+                    listCitiesNum.remove((Integer) which);
+                    listCities.remove(arrCities[which]);
+                    removeTempCities.add(arrCities[which]);
+                }
+            }
+        });
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                boolean hasFrontal = false;
+                boolean error = false;
+                for (subjectObj sub : list) {
+                    if (sub.getType().equals("frontal") || sub.getType().equals("both"))
+                        hasFrontal = true;
+                    if (listCities.isEmpty() && hasFrontal) {
+                        Toast.makeText(getActivity(), "You must choose at least one service city",
+                                Toast.LENGTH_SHORT).show();
+                        error =true;
+                        removeServiceCities(removeTempCities, listCities);
+                    }
+                }
+
+                if (!listCities.isEmpty() && !hasFrontal && !fromEditSub) {
+                    Toast.makeText(getActivity(), "You have" +
+                                    " only online lessons, do not select service cities",
+                            Toast.LENGTH_SHORT).show();
+                    error = true ;
+                }
+                if (!error) {
+                    if (listCities.isEmpty()) {
+                        serviceCitiesSpinner.setTextColor(Color.GRAY);
+                        serviceCitiesSpinner.setText("Select service cities");
+                        removeServiceCities(removeTempCities, listCities);
+                    } else {
+                        serviceCitiesSpinner.setTextColor(Color.BLACK);
+                        serviceCitiesSpinner.setText(printList(listCities));
+                        addServiceCities(addTempCities, listCities);
+                        removeServiceCities(removeTempCities, listCities);
+                    }
+                }
+                else{
+                    builder.show();
+                }
+
+            }
+        });
+
+//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                });
+
+        builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                boolean hasFrontal = false;
+                for (subjectObj sub : list) {
+                    if (sub.getType().equals("frontal") || sub.getType().equals("both")){
+                        Toast.makeText(getActivity(), "You must choose at least one service city",
+                                Toast.LENGTH_SHORT).show();
+                        hasFrontal = true;
+                        break;
+                    }
+                }
+                if(!hasFrontal) {
+                    for (int i = 0; i < selectCities.length; i++)
+                        selectCities[i] = false;
+                    for (String rCity : listCities)
+                        removeTempCities.add(rCity);
+                    listCitiesNum.clear();
+                    listCities.clear();
+                    serviceCitiesSpinner.setTextColor(Color.GRAY);
+                    serviceCitiesSpinner.setText("Select service cities");
+                    removeServiceCities(removeTempCities, listCities);
+                }
+                else{
+                    builder.show();
+                }
+            }
+        });
+
+        builder.show();
+    }
 }
