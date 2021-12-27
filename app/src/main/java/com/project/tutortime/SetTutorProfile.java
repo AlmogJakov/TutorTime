@@ -53,6 +53,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
+import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.ui.notifications.Notifications;
 
@@ -293,12 +294,15 @@ public class SetTutorProfile extends AppCompatActivity {
                     }
                 }
 
+                /* add rank */
+                rankObj rank = new rankObj(new HashMap<>(), 0);
+
                 FireBaseTeacher t = new FireBaseTeacher();
                 /* set isTeacher to teacher status (1=teacher,0=customer) */
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
                 /* add the teacher to database */
                 /* img=null because there is no need to store url before the image was successfully uploaded */
-                String teacherID = t.addTeacherToDB(pNum, descrip, userID, listCities, list, null); // imgURL
+                String teacherID = t.addTeacherToDB(pNum, descrip, userID, listCities, list, null, rank); // imgURL
                 /* upload the image and ON SUCCESS store url on the teacher database */
                 /* if no image to upload */
                 if (imageData==null) {

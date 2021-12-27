@@ -40,6 +40,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -114,7 +115,7 @@ public class TeacherCard extends AppCompatActivity {
         place.setText("\uD83D\uDCCD " + user.getCity());
         description.setText(getResources().getString(R.string.Description)+teacher.getDescription());
         price.setText(teacher.getSub().get(sub).getPrice()+"₪");
-        rating.setRating((float) 4.5);
+        rating.setRating(teacher.getRank().getAvgRank());
 
         String imageLink = teacher.getImgUrl();
         if (imageLink!=null) {
@@ -192,6 +193,8 @@ public class TeacherCard extends AppCompatActivity {
     }
 
     private void setOpinion(){
+        FirebaseDatabase.getInstance().getReference().child("teachers").child("fAuth.getCurrentUser().getUid()").child("rank");
+
         new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

@@ -16,9 +16,9 @@ public class FireBaseTeacher extends firebaseBaseModel{
     FireBaseUser u = new FireBaseUser();
 
     public String addTeacherToDB(String phoneNum, String description, String userid, List<String> serviceCities,
-                                 List<subjectObj> sub, String imgUrl){
+                                 List<subjectObj> sub, String imgUrl, rankObj rank){
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
-        teacherObj teacher = new teacherObj(phoneNum, description, userid, serviceCities, imgUrl);
+        teacherObj teacher = new teacherObj(phoneNum, description, userid, serviceCities, imgUrl, rank);
         String teacherId = myRef.push().getKey();
         /* set user 'teacherID' variable */
         u.getUserRef().child("teacherID").setValue(teacherId);

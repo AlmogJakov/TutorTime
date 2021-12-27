@@ -31,15 +31,19 @@ import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.common.util.ScopeUtil;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.R;
+import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.subjectObj;
+import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.ui.search.TeacherCard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
@@ -139,7 +143,17 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
         subject.setText(subjectName);
         subjectObj sub = teachersToShow.get(position).teacher.getSub().get(subjectName);
         price.setText(sub.getPrice()+"₪");
-        rating.setRating((float) 4.5);
+        if (teachersToShow.get(position).teacher.getRank()==null){
+            setRank(position);
+        }
+        rating.setRating(teachersToShow.get(position).teacher.getRank().getAvgRank());
+    }
+
+    private void setRank(int position) {
+        rankObj rank = new rankObj(new HashMap<>(), 0);
+        teacherObj t = teachersToShow.get(position).teacher;
+        t.setRank(rank);
+        FirebaseDatabase.getInstance().getReference().child("teachers").child(teachersToShow.get(position).user.getTeacherID()).setValue(t);
     }
 
     /* Source: https://stackoverflow.com/questions/35115788/how-to-set-listview-height-depending-on-the-items-inside-scrollview/48027821 */

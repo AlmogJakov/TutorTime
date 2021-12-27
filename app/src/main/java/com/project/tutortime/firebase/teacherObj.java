@@ -10,6 +10,7 @@ import java.util.Set;
 public class teacherObj implements Serializable {
     private String phoneNum;
     private HashMap<String,subjectObj> sub;
+    private rankObj rank;
     private String description;
     private String userID;
     private List<String> serviceCities;
@@ -18,14 +19,25 @@ public class teacherObj implements Serializable {
     public teacherObj(){ }
 
     public teacherObj(String phoneNum, String description, String userid, List<String> service_cities,
-             String imgUrl) {
+             String imgUrl, rankObj rank) {
         this.phoneNum=phoneNum;
         this.description=description;
         this.serviceCities = new ArrayList<String>(service_cities);
         //this.sub = new HashMap<>();
         this.userID = userid;
         this.imgUrl=imgUrl;
+        this.rank = rank;
     }
+
+
+    public rankObj getRank() {
+        return rank;
+    }
+
+    public void setRank(rankObj rank) {
+        this.rank = rank;
+    }
+
 
     public String getPhoneNum() {
         return phoneNum;

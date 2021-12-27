@@ -117,7 +117,6 @@ public class Search extends Fragment {
                     return;
                 }
                 try{
-                    System.out.println("max result is: "+maxResult);
                     if (!maxResult.equals(""))max = Integer.parseInt(maxResult);
                 }
                 catch (NumberFormatException ignored){
