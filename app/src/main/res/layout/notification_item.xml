@@ -5,11 +5,20 @@
     android:layout_height="wrap_content"
     android:padding="10dp">
 
+
+
     <ImageView
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@drawable/bell"
-        android:id="@+id/bell"/>
+
+        android:id="@+id/delete_notification"/>
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="12dp"
+        android:id="@+id/new_alert"
+        android:src="@drawable/ic_alert"
+        />
 
 
     <LinearLayout
@@ -17,21 +26,22 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
         android:orientation="vertical"
-        android:layout_toEndOf="@id/bell"
-        android:layout_toStartOf="@id/open">
+        android:layout_toEndOf="@id/delete_notification"
+        android:layout_toStartOf="@id/read_notification">
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/UserName"
+            android:id="@+id/notification_title"
             android:textColor="@color/common_google_signin_btn_text_light_pressed"
             android:textStyle="bold" />
 
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/Remarks"
+            android:id="@+id/notification_text"
             android:maxLines="2"
             android:textColor="@color/common_google_signin_btn_text_light" />
 
@@ -39,11 +49,11 @@
     </LinearLayout>
 
     <ImageView
+        android:id="@+id/read_notification"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/open_icon"
-        android:id="@+id/open"/>
+        android:src="@drawable/ic_read_notification" />
 
 
 

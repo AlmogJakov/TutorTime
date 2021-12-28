@@ -37,17 +37,11 @@ import java.util.List;
  */
 
 public class Notifications extends Fragment {
-    private String TeacherEmail;
-    private String TeacherName;
-    private String UserEmail;
-    private String Subject;
-    private String FormOfLearning;
-    private String Remarks;
-    private String RequestStatus;
-    private String PhoneNumber;
-    private String sendTo;
+    private String notificationID;
+    private String text;
+    private String title;
     private String sentFrom;
-    private String NotificationKey;
+    private int read;
 
 
     private NotificationsViewModel NotificationsViewModel;
@@ -55,82 +49,42 @@ public class Notifications extends Fragment {
     private RecyclerView recyclerView;
     private NotificationsAdapter notificationsAdapter;
     private List<Notifications> notifications;
+    private int unReadNotifications;
 
     public Notifications(){
 
     }
 
-
-    public String getTeacherEmail() {
-        return TeacherEmail;
+    public int getRead() {
+        return read;
     }
 
-    public void setTeacherEmail(String teacherEmail) {
-        TeacherEmail = teacherEmail;
+    public void setRead(int read) {
+        this.read = read;
     }
 
-    public String getTeacherName() {
-        return TeacherName;
+    public String getNotificationID() {
+        return notificationID;
     }
 
-    public void setTeacherName(String teacherName) {
-        TeacherName = teacherName;
+    public void setNotificationID(String notificationID) {
+        this.notificationID = notificationID;
     }
 
-    public String getUserEmail() {
-        return UserEmail;
+    public String getText() {
+        return text;
     }
 
-    public void setUserEmail(String userEmail) {
-        UserEmail = userEmail;
+    public void setText(String text) {
+        this.text = text;
     }
 
-    public String getSubject() {
-        return Subject;
+    public String getTitle() {
+        return title;
     }
 
-    public void setSubject(String subject) {
-        Subject = subject;
-    }
-
-    public String getFormOfLearning() {
-        return FormOfLearning;
-    }
-
-    public void setFormOfLearning(String formOfLearning) {
-        FormOfLearning = formOfLearning;
-    }
-
-    public String getRemarks() {
-        return Remarks;
-    }
-
-    public void setRemarks(String remarks) {
-        Remarks = remarks;
-    }
-
-    public String getRequestStatus() {
-        return RequestStatus;
-    }
-
-    public void setRequestStatus(String requestStatus) {
-        RequestStatus = requestStatus;
-    }
-
-    public String getPhoneNumber() {
-        return PhoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
-    }
-
-    public String getSendTo() {
-        return sendTo;
-    }
-
-    public void setSendTo(String sendTo) {
-        this.sendTo = sendTo;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getSentFrom() {
@@ -141,26 +95,20 @@ public class Notifications extends Fragment {
         this.sentFrom = sentFrom;
     }
 
-    public String getNotificationKey() {
-        return NotificationKey;
-    }
 
-    public void setNotificationKey(String notificationKey) {
-        NotificationKey = notificationKey;
-    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         //set the notification fragment and the recycler view
-       View view = inflater.inflate(R.layout.fragment_notifications,container,false);
-       recyclerView = view.findViewById(R.id.recycler_view);
-       recyclerView.setHasFixedSize(true);
-       recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-       notifications = new ArrayList<>();
-       notificationsAdapter = new NotificationsAdapter(getContext(),notifications);
-       recyclerView.setAdapter(notificationsAdapter);
-       readNotifications(); //read each notification from the database
-       return view;
+        View view = inflater.inflate(R.layout.fragment_notifications,container,false);
+        recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        notifications = new ArrayList<>();
+        notificationsAdapter = new NotificationsAdapter(getContext(),notifications,unReadNotifications);
+        recyclerView.setAdapter(notificationsAdapter);
+        readNotifications(); //read each notification from the database
+        return view;
     }
 
     /**
@@ -170,13 +118,18 @@ public class Notifications extends Fragment {
         //get the value of the notification
         FirebaseDatabase.getInstance().getReference().child("notifications")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         //if some of the notification data has changed then it will updated
                         for (DataSnapshot dss : snapshot.getChildren()) {
-                            notifications.add(dss.getValue(Notifications.class));
+                            Notifications notification = dss.getValue(Notifications.class);
+                            if(notification.getRead()==1){
+                                unReadNotifications++;
+                            }
+                            notifications.add(notification);
                         }
+                        unReadNotifications = notifications.size()-unReadNotifications;
                         Collections.reverse(notifications);
                         notificationsAdapter.notifyDataSetChanged();
                     }

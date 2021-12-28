@@ -1,30 +1,19 @@
 package com.project.tutortime.ui.chats;
-
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
-import com.project.tutortime.databinding.FragmentNotificationsBinding;
-import com.project.tutortime.ui.notifications.Notifications;
-import com.project.tutortime.ui.notifications.NotificationsAdapter;
-import com.project.tutortime.ui.notifications.NotificationsViewModel;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,18 +22,20 @@ import java.util.List;
  * This class represent chat and allows to read the chat information from the database
  */
 public class Chat extends Fragment {
-
+    //chat data
     private String lastMessage;
     private String studentID;
     private String teacherID;
     private String chatID;
     private String studentName;
     private String teacherName;
+    private String imageUrl;
 
-
+    //tools
     private RecyclerView recyclerView;
     private ChatsAdapter chatsAdapter;
     private List<Chat> chats;
+
 
     public Chat(String lastMessage, String studentID, String teacherID, String chatID, String studentName, String teacherName) {
         this.lastMessage = lastMessage;
@@ -56,6 +47,15 @@ public class Chat extends Fragment {
     }
     public Chat(){
 
+    }
+
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getLastMessage() {
@@ -107,9 +107,10 @@ public class Chat extends Fragment {
     }
 
 
-
-
-
+    /**
+     * set the view , init the chat adapter and the chat list
+     *
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -118,22 +119,24 @@ public class Chat extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_chats);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        //init the chat list and chat adapter
         chats = new ArrayList<>();
         chatsAdapter = new ChatsAdapter(getContext(),chats); //init the adapter
         recyclerView.setAdapter(chatsAdapter);
-        readChats();
+        readChats(); // read chats with listener to get the new chats
         return view;
     }
 
     /**
-     * This method allows to read the relevant chat data from the firebase
+     * This method allows to read the  chat data from the database
      */
     private void readChats() {
         FirebaseDatabase.getInstance().getReference().child("chats")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addValueEventListener(new ValueEventListener() {
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        //add the chats to the list and notify the adapter on the changes
                         for (DataSnapshot dss : snapshot.getChildren()) {
                             chats.add(dss.getValue(Chat.class));
                         }
@@ -152,5 +155,6 @@ public class Chat extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
     }
+
 
 }

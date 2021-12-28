@@ -526,7 +526,20 @@ public class SetTutorProfile extends AppCompatActivity {
                 list.add(s);
                 listSub.add(nameSub);
                 a.notifyDataSetChanged();
-                addNotification(fAuth.getCurrentUser().getUid());
+                //sent notification to user
+                String userID= fAuth.getCurrentUser().getUid();
+                myRef.child("users").child(userID).child("fName").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        String userName = snapshot.getValue(String.class);
+                        sendNotification(userID,userName);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
                 d.dismiss();
             }
         });
@@ -680,22 +693,16 @@ public class SetTutorProfile extends AppCompatActivity {
                     }
                 });
     }
-    private void addNotification(String userID) {
+    private void sendNotification(String userID, String userName) {
         HashMap<String, Object> map = new HashMap<>();
-        String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
-        map.put("TeacherEmail","");
-        map.put("TeacherName","");
-        map.put("UserEmail","");
-        map.put("Subject","");
-        map.put("FormOfLearning","");
-        map.put("Remarks","Congratulations! You are a teacher!");
-        map.put("RequestStatus","");
-        map.put("PhoneNumber","");
-        map.put("sendTo","");
-        map.put("sentFrom",fAuth.getCurrentUser().getUid());
-        map.put("NotificationKey",key);
-        if (key != null)
-            FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
+        String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
+        map.put("notificationID",notificationID);
+        map.put("text","You are a teacher!");
+        map.put("title","Congratulations!");
+        map.put("sentFrom",userName);
+        map.put("read",0);
+        if (notificationID != null)
+            FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(notificationID).setValue(map);
     }
 
     // Print the List of cities that the teacher tutor

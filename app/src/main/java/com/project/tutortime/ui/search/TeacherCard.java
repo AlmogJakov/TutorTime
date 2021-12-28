@@ -165,6 +165,33 @@ public class TeacherCard extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //chat with teacher name is active
+                AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+                dialog.setTitle("New chat created!")
+                        .setIcon(R.drawable.bell)
+                        .setMessage("Chat with "+user.getfName()+" is active")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialoginterface, int i) {
+                            }
+                        }).show();
+                //at this point the user go to chats and can talk with the teacher
+                //send notification to the teacher that new message received
+                FirebaseDatabase.getInstance().getReference().child("users").child(teacher.getUserID()).child("fName").
+                        addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                String teacherName = snapshot.getValue(String.class);
+                                sendNotification(user.getfName(),teacherName,teacher.getUserID());
+                                //add the chat to the database
+                                addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID(),
+                                        user.getfName(),teacherName,teacher.getImgUrl());
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
             }
         });
 
@@ -246,5 +273,33 @@ public class TeacherCard extends AppCompatActivity {
         intent.putExtra("sub", sub);
         finish();
         startActivity(intent);
+    }
+    private void addChat(String studentID,String teacherID,String studentName,String teacherName,String imageUrl) {
+        //add chat to student and teacher
+        HashMap<String, Object> chatMap = new HashMap<>();
+        String chatID = FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).push().getKey();
+        chatMap.put("lastMessage", "Chat with " + studentName + " is active now");
+        chatMap.put("teacherID", teacherID);
+        chatMap.put("studentID", studentID);
+        chatMap.put("teacherName", teacherName);
+        chatMap.put("studentName", studentName);
+        chatMap.put("chatID", chatID);
+        chatMap.put("imageUrl", imageUrl);
+        if (chatID != null) {
+            FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).child(chatID).setValue(chatMap);
+            FirebaseDatabase.getInstance().getReference().child("chats").child(studentID).child(chatID).setValue(chatMap);
+
+        }
+    }
+    private void sendNotification(String teacherName,String userName,String teacherID) {
+        HashMap<String, Object> map = new HashMap<>();
+        String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).push().getKey();
+        map.put("notificationID",notificationID);
+        map.put("text","Chat with "+teacherName+" is active");
+        map.put("title","Chat received!");
+        map.put("sentFrom",userName);
+        map.put("read",0);
+        if (notificationID != null)
+            FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).child(notificationID).setValue(map);
     }
 }

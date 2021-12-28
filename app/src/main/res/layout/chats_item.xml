@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp">
 
-    <ImageView
-        android:id="@+id/profilePicture"
+
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/chats_profile_circle_offline" />
+        android:id="@+id/image_cv"
+        app:cardCornerRadius="45dp"
+        app:strokeWidth="4dp">
+
+        <ImageView
+            android:id="@+id/profile_image_chat"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitCenter" />
+    </com.google.android.material.card.MaterialCardView>
 
 
     <LinearLayout
-        android:layout_width="274dp"
-        android:layout_height="62dp"
+        android:id="@+id/chat_linear_layout"
+        android:layout_width="287dp"
+        android:layout_height="60dp"
         android:layout_marginStart="6dp"
-        android:layout_marginEnd="6dp"
-        android:layout_toStartOf="@id/open"
-        android:layout_toEndOf="@id/profilePicture"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@id/chat_ic_layout"
+        android:layout_toEndOf="@id/image_cv"
         android:orientation="vertical">
+
+
 
 
         <TextView
@@ -38,18 +51,28 @@
             android:textColor="@color/common_google_signin_btn_text_light" />
 
 
-
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/open"
-        android:layout_width="49dp"
-        android:layout_height="59dp"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="0dp"
-        android:src="@drawable/open_icon" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chat_ic_layout"
+        android:layout_alignParentEnd="true">
 
+        <ImageView
+            android:id="@+id/open"
+            android:layout_width="30dp"
+            android:layout_height="59dp"
+            android:layout_marginEnd="0dp"
+            android:src="@drawable/open_icon" />
+        <ImageButton
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:id="@+id/delete_chat"
+            android:layout_marginStart="3dp"
+            android:src="@drawable/ic_delete_chat"
+            android:layout_marginTop="39dp"/>
 
-
+    </LinearLayout>
 
 </RelativeLayout>

@@ -249,4 +249,19 @@ public class MainActivity extends AppCompatActivity {
 //        String language = prefs.getString("My_Lang", "");
 //        setLocale(language);
 //    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FirebaseDatabase.getInstance().getReference().child("users").child(fAuth.getCurrentUser().getUid()).child("isOnline")
+                .setValue(1);//user is online
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        FirebaseDatabase.getInstance().getReference().child("users").child(fAuth.getCurrentUser().getUid()).child("isOnline")
+                .setValue(0);//user is offline
+    }
 }
