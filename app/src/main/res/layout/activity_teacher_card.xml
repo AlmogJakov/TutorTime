@@ -81,8 +81,8 @@
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/profile_image_box"
-                        android:layout_width="178dp"
-                        android:layout_height="172dp"
+                        android:layout_width="158dp"
+                        android:layout_height="152dp"
                         android:layout_gravity="center_vertical|center_horizontal"
 
                         android:layout_marginTop="20dp"

@@ -283,6 +283,7 @@ public class TeacherCard extends AppCompatActivity {
                 r.setAvgRank(avg);
             }
         }
+        sendNotification();
         teacher.setRank(r);
         FirebaseDatabase.getInstance().getReference().child("teachers").child(user.getTeacherID()).setValue(teacher);
         Intent intent = new Intent(this, TeacherCard.class);
@@ -291,6 +292,18 @@ public class TeacherCard extends AppCompatActivity {
         intent.putExtra("sub", sub);
         finish();
         startActivity(intent);
+    }
+
+    private void sendNotification() {
+        HashMap<String, Object> map = new HashMap<>();
+        String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).push().getKey();
+        map.put("notificationID",notificationID);
+        map.put("text","You are rated! Your rating now is: "+teacher.getRank().getAvgRank()+ " Stars.");
+        map.put("title","rating received!");
+//        map.put("sentFrom",userName);
+        map.put("read",1);
+        if (notificationID != null)
+            FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).child(notificationID).setValue(map);
     }
     private void addChat(String studentID,String teacherID,String studentName,String teacherName,String imageUrl) {
         //add chat to student and teacher
