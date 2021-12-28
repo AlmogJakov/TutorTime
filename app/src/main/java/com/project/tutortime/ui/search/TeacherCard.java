@@ -72,7 +72,7 @@ public class TeacherCard extends AppCompatActivity {
     userObj user;
     teacherObj teacher;
     String sub;
-    int kindOfRank = -1, editRank;
+    int kindOfRank = -1, editRank = -1;
 
 
     @SuppressLint("SetTextI18n")
@@ -113,6 +113,7 @@ public class TeacherCard extends AppCompatActivity {
             if (teacher.getRank().getUserRating().containsKey(FirebaseAuth.getInstance().getCurrentUser().getUid())){
                 HashMap<String, Integer> hashMap = teacher.getRank().getUserRating();
                 kindOfRank = ((int)hashMap.get(id))-1;
+                editRank = kindOfRank;
             }
             opinion.setText(teacher.getRank().getUserRating().size() + " " + getResources().getString(R.string.opinion));
         }
@@ -239,14 +240,31 @@ public class TeacherCard extends AppCompatActivity {
                         }
                     }
                 });
+                builder.setNeutralButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (kindOfRank != -1) {
+                            setOpinion(-1);
+                        }
+                    }
+                });
                 builder.show();
             }
         });
     }
 
+
     synchronized private void setOpinion(int numRank){
         rankObj r = teacher.getRank();
-        if (r.getUserRating() == null){
+        if (numRank == -1){
+            if (r.getUserRating() != null){
+                int n = r.getUserRating().size();
+                int i = r.getUserRating().remove(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                if (n != 1) r.setAvgRank((n*r.getAvgRank()-i)/(n-1));
+                else r.setAvgRank(0);
+            }
+        }
+        else if (r.getUserRating() == null){
             HashMap<String, Integer> userRating = new HashMap<>();
             userRating.put(FirebaseAuth.getInstance().getCurrentUser().getUid(), numRank);
             r.setUserRating(userRating);

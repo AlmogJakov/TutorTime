@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,14 +63,18 @@ public class SearchResults extends Fragment {
     private final String[] TypeResult = {"both", "frontal", "online"};
     private boolean[] chooseType = {true,true,true};
     ArrayList<Integer> prices = new ArrayList<>();
+    ArrayList<Integer> listRating = new ArrayList<>();
     TutorAdapter adapter;
     HashSet<String> used = new HashSet<>();
     ListView listview;
     TextView sort, rank;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     List<TutorAdapterItem> teachersToShow = new ArrayList<>();
+    boolean getTeachers = false;
+    List<TutorAdapterItem> resultOfTeachers = new ArrayList<>();
     LoadingDialog loadingDialog;
     private @NonNull FragmentSearchResultsBinding binding;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -99,14 +104,18 @@ public class SearchResults extends Fragment {
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
 
-
-
+        if (getArguments().containsKey("resultOfTeachers")) {
+            resultOfTeachers = getArguments().getParcelableArrayList("resultOfTeachers");
+            listRating = getArguments().getIntegerArrayList("listRating");
+            getTeachers = true;
+        }
         typeResult = getArguments().getString("typeResult");
         cityResult = getArguments().getString("cityResult");
         subjectResult = getArguments().getString("subjectResult");
         minResult = getArguments().getInt("min");
         maxResult = getArguments().getInt("max");
         kindOfSort = getArguments().getInt("sort_by");
+
 
         if (typeResult.equals("Frontal")){ chooseType[2] = false;}
         else if (typeResult.equals("Online")) {chooseType[1] = false;}
@@ -128,16 +137,50 @@ public class SearchResults extends Fragment {
         rank = binding.rank;
         String[] typeRank = {"⭐", "⭐⭐", "⭐⭐⭐", "⭐⭐⭐⭐","⭐⭐⭐⭐⭐"};
         boolean[] selectTypeRenk = new boolean[typeRank.length];
-        ArrayList<Integer> rankList = new ArrayList<>();
-        setSpinner(rank, selectTypeRenk,rankList,  typeRank);
+        if (listRating.size()>0){
+            for (int i = 0; i < listRating.size(); i++) {
+                selectTypeRenk[listRating.get(i)] = true;
+            }
+        }
+        setSpinner(rank, selectTypeRenk,listRating,  typeRank);
 
         listview = binding.featuresList;
         switch (kindOfSort){
             case 0:sortByPriceLow();break;
             case 1:sortByPriceHigh();break;
         }
-        setListview(Cities);
+        if (getTeachers){
+            setRating();
+
+            if (kindOfSort == 0)Collections.sort(teachersToShow);
+            else teachersToShow.sort(Collections.reverseOrder());
+
+            adapter = new TutorAdapter(getActivity(), teachersToShow);
+            listview.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            closeLoadingDialog();
+        }
+        else {
+            setListview(Cities);
+        }
         return root;
+    }
+
+    private void setRating() {
+        if (listRating.size() != 0){
+            HashSet<String> used = new HashSet<>();
+            for (int i = 0; i < listRating.size(); i++) {
+                for (TutorAdapterItem t: resultOfTeachers) {
+                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
+                        if (!used.contains(t.getTeacher().getUserID())){
+                            used.add(t.getTeacher().getUserID());
+                            teachersToShow.add(t);
+                        }
+                    }
+                }
+            }
+        }
+        else teachersToShow = resultOfTeachers;
     }
 
     /** ///////// sort functions //////// */
@@ -159,6 +202,7 @@ public class SearchResults extends Fragment {
                 if (chooseType[0])setBoth(dataSnapshot);
                 if (chooseType[1])setFrontal(dataSnapshot);
                 if (chooseType[2])setOnline(dataSnapshot);
+                resultOfTeachers = teachersToShow;
                 adapter = new TutorAdapter(getActivity(), teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -300,13 +344,8 @@ public class SearchResults extends Fragment {
                 builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int i = 0; i < list.size(); i++) {
-                            stringBuilder.append(type[list.get(i)]);
-                            if (i != list.size() - 1) {
-                                stringBuilder.append(", ");
-                            }
-                        }
+                        listRating = list;
+                        reload(kindOfSort);
                     }
                 });
                 builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
@@ -318,9 +357,9 @@ public class SearchResults extends Fragment {
                 builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        for (int i = 0; i < selectType.length; i++) {
-                            selectType[i] = false;
-                            list.clear();
+                        if (listRating.size() > 0){
+                            listRating = new ArrayList<>();
+                            reload(kindOfSort);
                         }
                     }
                 });
@@ -337,6 +376,8 @@ public class SearchResults extends Fragment {
         bundle.putInt("min", minResult);
         bundle.putInt("max", maxResult);
         bundle.putInt("sort_by", sortBy);
+        bundle.putParcelableArrayList("resultOfTeachers", (ArrayList<? extends Parcelable>) resultOfTeachers);
+        bundle.putIntegerArrayList("listRating", listRating);
 
         SearchResults fragment2 = new SearchResults();
         fragment2.setArguments(bundle);
