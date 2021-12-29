@@ -49,19 +49,6 @@ public class MessageActivity extends AppCompatActivity {
         String teacherID = intent.getStringExtra("teacher");
         String chatID = intent.getStringExtra("chat");
         String studentName = intent.getStringExtra("studentName");
-//        messageList = new ArrayList<>();
-//        mMessageRecycler = (RecyclerView) findViewById(R.id.recycler_gchat);
-//        mMessageAdapter = new MessageListAdapter(getApplicationContext(), messageList);
-//        mMessageRecycler.setHasFixedSize(true);
-//        mMessageRecycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        // readMessages(chatID);
-//        send.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                sendMessage(teacherID,studentID,chatID,input.getText().toString(),studentName);
-//                input.setText("");
-//            }
-//        });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(MessageActivity.this);
         linearLayoutManager.setStackFromEnd(true);
         mMessageRecycler.setHasFixedSize(true);
@@ -69,25 +56,6 @@ public class MessageActivity extends AppCompatActivity {
         messageList = new ArrayList<>();
         mMessageAdapter = new MessageListAdapter(getApplicationContext(),messageList);
         mMessageRecycler.setAdapter(mMessageAdapter);
-//        FirebaseDatabase.getInstance().getReference().child("messages").child(chatID)
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for(DataSnapshot dataSnapshot:snapshot.getChildren())
-//                        {
-//                            MessageModel messageModel = dataSnapshot.getValue(MessageModel.class);
-//                            messageList.add(messageModel);
-//                        }
-//                        mMessageAdapter = new MessageListAdapter(getApplicationContext(),messageList);
-//                        mMessageRecycler.setAdapter(mMessageAdapter);
-//                        mMessageAdapter.updateList(messageList);
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError error) {
-//
-//                    }
-//                });
         FirebaseDatabase.getInstance().getReference().child("messages").child(chatID)
                 .addChildEventListener(new ChildEventListener() {
                     @Override
@@ -117,9 +85,6 @@ public class MessageActivity extends AppCompatActivity {
 
                     }
                 });
-//        mMessageAdapter = new MessageListAdapter(getApplicationContext(),messageList);
-//        mMessageRecycler.setAdapter(mMessageAdapter);
-//        mMessageAdapter.updateList(messageList);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,11 +97,7 @@ public class MessageActivity extends AppCompatActivity {
                 }
             }
         });
-//        mMessageAdapter = new MessageListAdapter(getApplicationContext(),messageList);
-//        mMessageRecycler.setAdapter(mMessageAdapter);
         mMessageAdapter.updateList(messageList);
-        // mMessageAdapter = new MessageListAdapter(getApplicationContext(),messageList);
-        //mMessageAdapter.refreshData(messageList);
     }
 
 

@@ -169,25 +169,26 @@ public class TeacherCard extends AppCompatActivity {
             public void onClick(View v) {//verify that the user dont sending message to himself
                 if(!teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     //get the teacher name
-                    FirebaseDatabase.getInstance().getReference().child("users").child(teacher.getUserID()).child("fName").
+                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("fName").
                             addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String teacherName = snapshot.getValue(String.class);
+                                    String studentName = snapshot.getValue(String.class);
                                     //note the user the the chat is active
-                                    Toast.makeText(getApplicationContext(),"Chat with "+teacherName+" is active",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"Chat with "+user.getfName()+" is active",Toast.LENGTH_LONG).show();
                                     //send notification to the teacher that new message received
-                                    sendNotification(user.getfName(), teacherName, teacher.getUserID());
+                                    sendNotification(user.getfName(), studentName, teacher.getUserID());
                                     //add the chat to the database and get the chatID
-                                     String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
-                                            user.getfName(), teacherName, teacher.getImgUrl());
-                                     //open the chat
+                                    String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
+                                            studentName, user.getfName(), teacher.getImgUrl());
+                                    //open the chat
                                     if(chatID!=null) {
                                         Intent intent = new Intent(TeacherCard.this, MessageActivity.class);
-                                        intent.putExtra("studentName", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                        intent.putExtra("student", user.getfName());
-                                        intent.putExtra("teacher", teacherName);
-                                        intent.putExtra("chat", chatID);
+                                        intent.putExtra("studentName",studentName);
+                                        intent.putExtra("student",FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        intent.putExtra("teacher",teacher.getUserID());
+                                        intent.putExtra("chat",chatID);
                                         startActivity(intent);
                                     }
 
