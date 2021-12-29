@@ -219,8 +219,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            long time = snapshot.getValue(long.class);
-                            String status = "last seen at:"+DateFormat.format("dd-MM-yyyy(HH:mm:ss)", time);
+                            String status = "Offline"; // in case that the user didnt visit the chats at all
+                            try{
+                                long time = snapshot.getValue(long.class); //get the value from database
+                                status = "last seen at:"+DateFormat.format("dd-MM-yyyy(HH:mm:ss)", time);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                            /* set the status to the last seen value*/
                             lastSeen.setText(status);
                         }
 

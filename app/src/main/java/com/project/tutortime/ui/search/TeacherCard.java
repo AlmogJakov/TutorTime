@@ -166,29 +166,30 @@ public class TeacherCard extends AppCompatActivity {
         }
         send.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {//verify that the user dont sending message to himself
                 if(!teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    //chat with teacher name is active
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
-                    dialog.setTitle("New chat created!")
-                            .setIcon(R.drawable.bell)
-                            .setMessage("Chat with " + user.getfName() + " is active")
-                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialoginterface, int i) {
-                                }
-                            }).show();
-
-                    //at this point the user go to chats and can talk with the teacher
-                    //send notification to the teacher that new message received
+                    //get the teacher name
                     FirebaseDatabase.getInstance().getReference().child("users").child(teacher.getUserID()).child("fName").
                             addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                                     String teacherName = snapshot.getValue(String.class);
+                                    //note the user the the chat is active
+                                    Toast.makeText(getApplicationContext(),"Chat with "+teacherName+" is active",Toast.LENGTH_LONG).show();
+                                    //send notification to the teacher that new message received
                                     sendNotification(user.getfName(), teacherName, teacher.getUserID());
-                                    //add the chat to the database
-                                     addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
+                                    //add the chat to the database and get the chatID
+                                     String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
                                             user.getfName(), teacherName, teacher.getImgUrl());
+                                     //open the chat
+                                    if(chatID!=null) {
+                                        Intent intent = new Intent(TeacherCard.this, MessageActivity.class);
+                                        intent.putExtra("studentName", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                        intent.putExtra("student", user.getfName());
+                                        intent.putExtra("teacher", teacherName);
+                                        intent.putExtra("chat", chatID);
+                                        startActivity(intent);
+                                    }
 
                                 }
 
@@ -313,7 +314,7 @@ public class TeacherCard extends AppCompatActivity {
         if (notificationID != null)
             FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).child(notificationID).setValue(map);
     }
-    private void addChat(String studentID,String teacherID,String studentName,String teacherName,String imageUrl) {
+    private String addChat(String studentID,String teacherID,String studentName,String teacherName,String imageUrl) {
         //add chat to student and teacher
         HashMap<String, Object> chatMap = new HashMap<>();
         String chatID = FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).push().getKey();
@@ -327,7 +328,9 @@ public class TeacherCard extends AppCompatActivity {
         if (chatID != null) {
             FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).child(chatID).setValue(chatMap);
             FirebaseDatabase.getInstance().getReference().child("chats").child(studentID).child(chatID).setValue(chatMap);
+            return chatID;
         }
+        return null;
     }
     private void sendNotification(String teacherName,String userName,String teacherID) {
         HashMap<String, Object> map = new HashMap<>();
