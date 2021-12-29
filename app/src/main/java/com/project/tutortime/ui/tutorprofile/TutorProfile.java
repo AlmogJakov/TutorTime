@@ -158,7 +158,7 @@ public class TutorProfile extends Fragment {
         updateImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (imgURL != null && del == false) {
+                if (imgURL != null && !del) {
                     final Dialog d = new Dialog(getActivity());
                     Button editImage, deleteImage;
                     d.setContentView(R.layout.image_dialog);
@@ -349,10 +349,13 @@ public class TutorProfile extends Fragment {
                 description.setText(dataSnapshot.child("teachers").child(teacherID).
                         child("description").getValue(String.class));
 
-                imgURL = dataSnapshot.child("teachers").child(userID).child(teacherID).child("imgUrl").getValue(String.class);
+                imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
+                System.out.println(imgURL);
+
                 if (imgURL != null) { /* The image exists! */
                     StorageReference storageReference = storage.getReference().child(imgURL);
                     Glide.with(getContext()).load(storageReference).into(img);
+
                 }
                 /* Enable Buttons & Hide loading dialog - data already received from FireBase */
                 updateImage.setVisibility(View.VISIBLE);

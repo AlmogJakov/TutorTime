@@ -113,6 +113,9 @@ public class MyProfile extends Fragment {
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
                     return; }
+                if (gender.equals("Choose Gender")) {
+                    Toast.makeText(getActivity(), "Gender is required.", Toast.LENGTH_SHORT).show();
+                    return; }
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

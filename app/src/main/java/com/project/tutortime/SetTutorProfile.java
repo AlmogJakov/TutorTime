@@ -197,7 +197,7 @@ public class SetTutorProfile extends AppCompatActivity {
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (del == true) {
+                if (imgURL != null && del) {
                     final Dialog d = new Dialog(SetTutorProfile.this);
                     Button editImage, deleteImage;
                     d.setContentView(R.layout.image_dialog);
