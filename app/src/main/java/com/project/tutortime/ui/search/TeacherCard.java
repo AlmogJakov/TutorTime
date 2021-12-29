@@ -47,6 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.LoadingDialog;
+import com.project.tutortime.MessageActivity;
 import com.project.tutortime.R;
 //import com.project.tutortime.datafindViewById(R.id.FragmentTeacherCardBinding;
 import com.project.tutortime.firebase.FireBaseUser;
@@ -166,33 +167,40 @@ public class TeacherCard extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //chat with teacher name is active
-                AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
-                dialog.setTitle("New chat created!")
-                        .setIcon(R.drawable.bell)
-                        .setMessage("Chat with "+user.getfName()+" is active")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialoginterface, int i) {
-                            }
-                        }).show();
-                //at this point the user go to chats and can talk with the teacher
-                //send notification to the teacher that new message received
-                FirebaseDatabase.getInstance().getReference().child("users").child(teacher.getUserID()).child("fName").
-                        addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                String teacherName = snapshot.getValue(String.class);
-                                sendNotification(user.getfName(),teacherName,teacher.getUserID());
-                                //add the chat to the database
-                                addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID(),
-                                        user.getfName(),teacherName,teacher.getImgUrl());
-                            }
+                if(!teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    //chat with teacher name is active
+                    AlertDialog.Builder dialog = new AlertDialog.Builder(v.getContext());
+                    dialog.setTitle("New chat created!")
+                            .setIcon(R.drawable.bell)
+                            .setMessage("Chat with " + user.getfName() + " is active")
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialoginterface, int i) {
+                                }
+                            }).show();
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
+                    //at this point the user go to chats and can talk with the teacher
+                    //send notification to the teacher that new message received
+                    FirebaseDatabase.getInstance().getReference().child("users").child(teacher.getUserID()).child("fName").
+                            addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                    String teacherName = snapshot.getValue(String.class);
+                                    sendNotification(user.getfName(), teacherName, teacher.getUserID());
+                                    //add the chat to the database
+                                     addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
+                                            user.getfName(), teacherName, teacher.getImgUrl());
 
-                            }
-                        });
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError error) {
+
+                                }
+                            });
+                }
+                else{ //this is the teacher
+                    Toast.makeText(getApplicationContext(),"You cant send message to yourself!",Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -319,7 +327,6 @@ public class TeacherCard extends AppCompatActivity {
         if (chatID != null) {
             FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).child(chatID).setValue(chatMap);
             FirebaseDatabase.getInstance().getReference().child("chats").child(studentID).child(chatID).setValue(chatMap);
-
         }
     }
     private void sendNotification(String teacherName,String userName,String teacherID) {

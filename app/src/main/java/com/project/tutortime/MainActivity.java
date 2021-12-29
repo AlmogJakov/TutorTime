@@ -55,6 +55,7 @@ import com.project.tutortime.databinding.ActivityMainBinding;
 import com.project.tutortime.ui.tutorprofile.TutorProfile;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 import belka.us.androidtoggleswitch.widgets.ToggleSwitch;
@@ -251,17 +252,4 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        FirebaseDatabase.getInstance().getReference().child("users").child(fAuth.getCurrentUser().getUid()).child("isOnline")
-                .setValue(1);//user is online
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        FirebaseDatabase.getInstance().getReference().child("users").child(fAuth.getCurrentUser().getUid()).child("isOnline")
-                .setValue(0);//user is offline
-    }
 }

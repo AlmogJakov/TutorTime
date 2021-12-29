@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -119,10 +120,12 @@ public class Chat extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_chats);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        setLastSeenStatus();
         //init the chat list and chat adapter
         chats = new ArrayList<>();
         chatsAdapter = new ChatsAdapter(getContext(),chats); //init the adapter
         recyclerView.setAdapter(chatsAdapter);
+
         readChats(); // read chats with listener to get the new chats
         return view;
     }
@@ -154,6 +157,11 @@ public class Chat extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    private void setLastSeenStatus(){
+        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+                child("lSeen").setValue(new Date().getTime());
     }
 
 

@@ -1,6 +1,7 @@
 package com.project.tutortime.firebase;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class userObj implements Serializable {
     private String fName;
@@ -10,6 +11,7 @@ public class userObj implements Serializable {
     private String teacherID;
     private String gender;
     private int IsTeacher;
+    private long lSeen;
 
 
     public userObj(){
@@ -22,6 +24,14 @@ public class userObj implements Serializable {
         this.city=city;
         this.gender=gender;
         this.IsTeacher=-1;
+    }
+
+    public long getlSeen() {
+        return lSeen;
+    }
+
+    public void setlSeen(long lSeen) {
+        this.lSeen = lSeen;
     }
 
     public String getfName() {

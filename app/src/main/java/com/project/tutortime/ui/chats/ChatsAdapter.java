@@ -1,17 +1,14 @@
 package com.project.tutortime.ui.chats;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +16,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.palette.graphics.Palette;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -34,35 +27,22 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.database.collection.LLRBNode;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.MessageActivity;
 import com.project.tutortime.R;
-import com.project.tutortime.firebase.teacherObj;
-import com.project.tutortime.firebase.userObj;
-import com.project.tutortime.ui.notifications.Notifications;
-import com.project.tutortime.ui.search.Search;
-import com.project.tutortime.ui.search.SearchResults;
-import com.project.tutortime.ui.search.TeacherCard;
 
 
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * This class adapter the chat with  the view
  */
 public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder> {
-
     private final Context mContext;
-    private final List<Chat> mChats; //list of all the active chats
+    private final List<Chat> mChats;//list of all the active chats
 
     public ChatsAdapter(Context mContext, List<Chat> mChats) {
         this.mContext = mContext;
@@ -87,6 +67,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         // set the chat to the other user data
         if(userID.equals(chat.getStudentID())){
+            //set lastSeen
+
             holder.UserName.setText(chat.getTeacherName());//set name
             if(chat.getImageUrl()!=null) { //this user already set profile image
                 loadUserImage(chat.getImageUrl(),holder.ProfilePicture); //load the image
@@ -100,8 +82,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             holder.ProfilePicture.setImageResource(R.drawable.profile);
         }
         holder.lastMessage.setText(chat.getLastMessage());//set the last message that sent
-        //set the online status Green for online Gray for offline
-        setOnlineStatus(holder.userStatus,chat.getStudentID(),chat.getTeacherID());
+        //set the profile image circle to black
+        holder.userStatus.setStrokeColor(Color.BLACK);
+        setLastSeen(holder.lastSeen,chat.getStudentID(),chat.getTeacherID());
         //allow the user to remove chat
         holder.deleteChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +131,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
         public TextView UserName;
         public TextView lastMessage;
+        public TextView lastSeen;
         public ImageView Open;
         public ImageView ProfilePicture;
         public MaterialCardView userStatus;
@@ -157,6 +141,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             super(itemView);
             UserName = (TextView)itemView.findViewById(R.id.UserNameChat);
             lastMessage = (TextView)itemView.findViewById(R.id.last_message);
+            lastSeen = (TextView)itemView.findViewById(R.id.last_seen);
             Open = (ImageView)itemView.findViewById(R.id.open);
             ProfilePicture = (ImageView)itemView.findViewById(R.id.profile_image_chat);
             userStatus = (MaterialCardView) itemView.findViewById(R.id.image_cv);
@@ -206,19 +191,21 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
      * This method check if the user is online and set the
      * background to green or black depend on the user status
      */
-    private void setOnlineStatus(MaterialCardView userStatus,String userID,String teacherID){
-        if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(userID)) { //get the other user online status
-            FirebaseDatabase.getInstance().getReference().child("users").child(teacherID).child("isOnline")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
+    private void setLastSeen(TextView lastSeen, String userID, String teacherID){
+        if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(userID)) { //get the other user last seen time
+            FirebaseDatabase.getInstance().getReference().child("users").child(teacherID).child("lSeen").
+                    addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int status = snapshot.getValue(int.class);
-                            if(status==1){//other user is online - Green
-                                userStatus.setStrokeColor(Color.parseColor("#418e2d"));
+                            String status = "Offline"; // in case that the user didnt visit the chats at all
+                            try{
+                                long time = snapshot.getValue(long.class); //get the value from database
+                                 status = "last seen at:"+DateFormat.format("dd-MM-yyyy(HH:mm:ss)", time);
+                            }catch (Exception e){
+                                e.printStackTrace();
                             }
-                            else{ //offline -Gray
-                                userStatus.setStrokeColor(Color.parseColor("#b4c9d6"));
-                            }
+                            /* set the status to the last seen value*/
+                            lastSeen.setText(status);
                         }
 
                         @Override
@@ -227,18 +214,14 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                         }
                     });
         }
-        else{
-            FirebaseDatabase.getInstance().getReference().child("users").child(userID).child("isOnline")
+        else{ //
+            FirebaseDatabase.getInstance().getReference().child("users").child(userID).child("lSeen")
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            int status = snapshot.getValue(int.class);
-                            if(status==1){//other user is online
-                                userStatus.setStrokeColor(Color.parseColor("#418e2d"));
-                            }
-                            else{
-                                userStatus.setStrokeColor(Color.parseColor("#b4c9d6"));
-                            }
+                            long time = snapshot.getValue(long.class);
+                            String status = "last seen at:"+DateFormat.format("dd-MM-yyyy(HH:mm:ss)", time);
+                            lastSeen.setText(status);
                         }
 
                         @Override
@@ -270,24 +253,5 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     public void onLoadCleared(@Nullable Drawable placeholder) { }
                 });
     }
-    private void updateLastMessage(String chatID,TextView lastMessage){
-        FirebaseDatabase.getInstance().getReference().child("chats").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .child(chatID).child("lastMessage").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String msg = snapshot.getValue(String.class);
-                lastMessage.setText(msg);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
 
 }
-
-
-
-

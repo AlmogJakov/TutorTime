@@ -31,23 +31,37 @@
         android:layout_toStartOf="@id/chat_ic_layout"
         android:layout_toEndOf="@id/image_cv"
         android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/UserNameChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="UserName"
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/last_seen"
+                android:textSize="13sp"
+                android:textColor="@color/gray"
+                android:layout_marginLeft="20dp"
+                />
 
 
 
-
-        <TextView
-            android:id="@+id/UserNameChat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-
+        </LinearLayout>
         <TextView
             android:id="@+id/last_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:maxLines="1"
+            android:text="Hey how are you ? "
             android:textColor="@color/common_google_signin_btn_text_light" />
 
 
