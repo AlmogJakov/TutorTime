@@ -122,6 +122,12 @@
     <string name="rate_the_tutor">דרג את המורה</string>
     <string name="opinion">חוות דעת</string>
     <string name="Select_Rating">בחר דירוג</string>
+    <string name="phone">טלפון</string>
+    <string name="Phone_of">הטלפון של </string>
+    <string name="cityCard">עיר:</string>
+    <string name="priceCard">מחיר:</string>
+    <string name="learning_typeCard">סוג לימוד:</string>
+    <string name="subjectCard">נושא:</string>
 
     <!--    <string-array name="SpinnerSubName1">-->
 <!--        <item>בחר מקצוע</item>-->

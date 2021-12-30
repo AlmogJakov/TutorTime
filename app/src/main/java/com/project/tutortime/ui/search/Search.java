@@ -139,21 +139,21 @@ public class Search extends Fragment {
                     return;
                 }
 
-                if (minPrice.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Type a minimum price number.",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (maxPrice.getText().toString().equals("")) {
-                    Toast.makeText(getActivity(), "Type a maximum price number.",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if (Integer.parseInt(minResult)>Integer.parseInt(maxResult)) {
-                    Toast.makeText(getActivity(), "Price range is illegal.",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (minPrice.getText().toString().equals("")) {
+//                    Toast.makeText(getActivity(), "Type a minimum price number.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (maxPrice.getText().toString().equals("")) {
+//                    Toast.makeText(getActivity(), "Type a maximum price number.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (Integer.parseInt(minResult)>Integer.parseInt(maxResult)) {
+//                    Toast.makeText(getActivity(), "Price range is illegal.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 /////////  end check error in search ////////
 

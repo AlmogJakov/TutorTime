@@ -234,4 +234,10 @@
     <string name="rate_the_tutor">Rate the tutor</string>
     <string name="opinion">Ratings</string>
     <string name="Select_Rating">Select Rating</string>
+    <string name="phone">phone</string>
+    <string name="Phone_of">Phone of </string>
+    <string name="cityCard">City:</string>
+    <string name="priceCard">Price:</string>
+    <string name="learning_typeCard">Learning Type:</string>
+    <string name="subjectCard">Subject:</string>
 </resources>

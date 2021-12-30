@@ -45,8 +45,8 @@ import java.util.HashMap;
 
 public class FullTutorCard extends AppCompatActivity {
     ImageView image;
-    TextView price, description, subjectAndType, opinion, name, place;
-    Button send;
+    TextView price, description, subject, type, opinion, name, place;
+    Button send, phone;
     FirebaseStorage storage = FirebaseStorage.getInstance();
     String phoneNum;
     ImageView titleBackground;
@@ -73,7 +73,9 @@ public class FullTutorCard extends AppCompatActivity {
         price = findViewById(R.id.price);
         description = findViewById(R.id.description);
         send = findViewById(R.id.send);
-        subjectAndType = findViewById(R.id.subjectPlusType);
+        phone = findViewById(R.id.phone);
+        subject = findViewById(R.id.subject);
+        type = findViewById(R.id.type);
         name = findViewById(R.id.name);
         place = findViewById(R.id.area);
         titleBackground = (ImageView) findViewById(R.id.title_background);
@@ -108,7 +110,8 @@ public class FullTutorCard extends AppCompatActivity {
             case "online": s = getResources().getString(R.string.Online);break;
             case "frontal": s = getResources().getString(R.string.Frontal);break;
         }
-        subjectAndType.setText(sub +" | "+s);
+        subject.setText(sub);
+        type.setText(s);
         place.setText("\uD83D\uDCCD " + user.getCity());
         description.setText(getResources().getString(R.string.Description)+teacher.getDescription());
         price.setText(teacher.getSub().get(sub).getPrice()+"₪");
@@ -147,6 +150,19 @@ public class FullTutorCard extends AppCompatActivity {
                         public void onLoadCleared(@Nullable Drawable placeholder) { }
                     });
         }
+
+        phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());                //Uncomment the below code to Set the message and title from the strings.xml file
+                builder.setMessage("\uD83D\uDCDE "+teacher.getPhoneNum()) .setTitle(getResources().getString(R.string.Phone_of)+" "+user.getfName());
+
+                //Setting message manually and performing action on button click
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) { }
+                }).show();
+            }
+        });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {//verify that the user dont sending message to himself
