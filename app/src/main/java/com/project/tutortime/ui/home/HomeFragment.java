@@ -75,7 +75,11 @@ public class HomeFragment extends Fragment {
                         data.remove(counter);
                         teacherObj teacher = ds.getValue(teacherObj.class);
                         userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
-                        int subsNum = teacher.getSub().size();
+                        int subsNum = 0;
+                        if (teacher.getSub() != null){
+                            subsNum =teacher.getSub().size();
+                        }
+
                         Object[] subs = teacher.getSub().keySet().toArray();
                         String sub = (String) subs[random.nextInt(subsNum)];
                         if (user==null) {
@@ -116,7 +120,10 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        loadingDialog.dismiss();
         super.onDestroyView();
+        closeLoadingDialog();
+
 //        myRef.removeEventListener(listViewListener);
 //        listViewListener=null;
 //        myRef=null;

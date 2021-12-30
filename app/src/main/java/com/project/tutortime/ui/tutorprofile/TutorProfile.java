@@ -265,6 +265,7 @@ public class TutorProfile extends Fragment {
                     public void onCancelled(DatabaseError databaseError) { }
                 });
 
+
                 if (imageData == null) { goToTutorMain(requireActivity());
                 } else { uploadImageAndGoToMain(teacherID); }
             }
@@ -282,6 +283,7 @@ public class TutorProfile extends Fragment {
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
+                                dialog.cancel();
                                 DeleteTutorProfile(listCities,list);
                                 //goToTutorMain();
                           }
@@ -290,12 +292,14 @@ public class TutorProfile extends Fragment {
                         // A null listener allows the button to dismiss the dialog and take no further action.
                         .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                             }
                         })
                         .setIcon(android.R.drawable.ic_dialog_alert)
                         .show();
 
             }
+
         });
 
         return root;
@@ -392,10 +396,13 @@ public class TutorProfile extends Fragment {
 
     @Override
     public void onDestroyView() {
+        loadingDialog.dismiss();
         super.onDestroyView();
-        //super.onDestroy();
+
+        super.onDestroy();
         binding = null;
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -538,8 +545,8 @@ public class TutorProfile extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) { }
         });
-        LoadingDialog ld = new LoadingDialog(getContext());
-        ld.show();
+//        LoadingDialog ld = new LoadingDialog(getContext());
+//        ld.show();
     }
     private void goToTutorMain() {
         /* were logging in as tutor (tutor status value = 1).
