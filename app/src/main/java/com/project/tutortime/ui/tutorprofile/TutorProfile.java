@@ -281,6 +281,7 @@ public class TutorProfile extends Fragment {
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
                                 DeleteTutorProfile(listCities,list);
                                 //goToTutorMain();
                           }

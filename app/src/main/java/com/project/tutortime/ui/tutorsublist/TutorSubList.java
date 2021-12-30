@@ -2,8 +2,10 @@ package com.project.tutortime.ui.tutorsublist;
 
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,11 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -31,6 +35,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.R;
+
+
 import com.project.tutortime.databinding.FragmentMySubListBinding;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.subjectObj;
@@ -57,6 +63,8 @@ public class TutorSubList extends Fragment {
     String[] arrCities ;
     boolean[] selectCities ;
     ArrayList<Integer> listCitiesNum = new ArrayList<>();
+    SubListAdapter sLstAd;
+
 
     public static TutorSubList newInstance() {
         return new TutorSubList();
@@ -74,9 +82,9 @@ public class TutorSubList extends Fragment {
         addSub = binding.btnAddSubject;
         serviceCitiesSpinner = binding.txtServiceCities;
 
-        ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-        subjectList.setAdapter(a);
-        a.notifyDataSetChanged();
+//        ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+//        subjectList.setAdapter(a);
+//        a.notifyDataSetChanged();
 
         /* Disable all Buttons & Text Edit Fields - until all data received from FireBase */
         addSub.setEnabled(false);
@@ -90,7 +98,7 @@ public class TutorSubList extends Fragment {
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createDialog(a);
+                createDialog();
             }
         });
 
@@ -98,7 +106,7 @@ public class TutorSubList extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
-                createEditDialog(a, s);
+                createEditDialog(s);
             }
         });
 
@@ -154,9 +162,12 @@ public class TutorSubList extends Fragment {
                     list.add(sub);
                     listSub.add(sub.getsName());
                 }
-                ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-                subjectList.setAdapter(a);
-                a.notifyDataSetChanged();
+//                ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+//                subjectList.setAdapter(a);
+//                a.notifyDataSetChanged();
+                sLstAd = new SubListAdapter(TutorSubList.this.getActivity(), R.layout.single_sub_row, list, teacherID);
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
 
                 /* Enable all Buttons & Text Edit Fields - data already received from FireBase */
                 addSub.setEnabled(true);
@@ -173,7 +184,7 @@ public class TutorSubList extends Fragment {
         });
     }
 
-    public void createDialog(ArrayAdapter a) {
+    public void createDialog() {
         final Dialog d = new Dialog(getActivity());
         Spinner priceEdit;
         EditText expEdit;
@@ -261,7 +272,7 @@ public class TutorSubList extends Fragment {
         d.show();
     }
 
-    public void createEditDialog(ArrayAdapter a, subjectObj currSub) {
+    public void createEditDialog(subjectObj currSub) {
         final Dialog d = new Dialog(getActivity());
         Spinner priceEdit;
         EditText expEdit;
@@ -276,7 +287,9 @@ public class TutorSubList extends Fragment {
         closeBtn = d.findViewById(R.id.btnClose);
         deleteBtn = d.findViewById(R.id.btnDelete);
         nameSpinner = d.findViewById(R.id.spinSubName);
-
+        sLstAd = new SubListAdapter(TutorSubList.this.getActivity(), R.layout.single_sub_row, list, teacherID);
+        subjectList.setAdapter(sLstAd);
+        sLstAd.notifyDataSetChanged();
         priceEdit.setAdapter(new ArrayAdapter<>
                 (getActivity(), android.R.layout.simple_spinner_item, subjectObj.Prices.values()));
 
@@ -457,7 +470,7 @@ public class TutorSubList extends Fragment {
                                     list.remove(currSub);
                                     listSub.remove(currSub.getsName());
                                     updateList(currSub,null,oldServiceCities);
-                                    a.notifyDataSetChanged();
+                                    sLstAd.notifyDataSetChanged();
                                     d.dismiss();
                                     return;
                                 }
@@ -477,14 +490,14 @@ public class TutorSubList extends Fragment {
                 list.remove(currSub);
                 listSub.remove(currSub.getsName());
                 updateList(currSub,null,listCities);
-                a.notifyDataSetChanged();
+                sLstAd.notifyDataSetChanged();
                 d.dismiss();
             }
         });
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                a.notifyDataSetChanged();
+                sLstAd.notifyDataSetChanged();
                 d.dismiss();
             }
         });
@@ -537,9 +550,13 @@ public class TutorSubList extends Fragment {
                 myRef.updateChildren(childUpdates);
                 //new FireBaseTeacher().setSubList(teacherID, list);
                 //myRef.child("teachers").child(teacherID).child("sub").setValue(listSub);
-                ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-                subjectList.setAdapter(a);
-                a.notifyDataSetChanged();
+//                ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
+//                subjectList.setAdapter(a);
+//                a.notifyDataSetChanged();
+                sLstAd = new SubListAdapter(TutorSubList.this.getActivity(), R.layout.single_sub_row, list, teacherID);
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
+
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -728,5 +745,88 @@ public class TutorSubList extends Fragment {
         });
 
         builder.show();
+    }
+    public class SubListAdapter extends BaseAdapter {
+        Context context;
+        int layoutResourceId;
+        ArrayList<subjectObj> subs;
+        String teacherID;
+
+
+        public SubListAdapter(Context context, int layoutResourceId, ArrayList<subjectObj> subs,
+                              String teacherID) {
+            super();
+            this.layoutResourceId = layoutResourceId;
+            this.context = context;
+            this.subs = subs;
+            this.teacherID = teacherID;
+
+        }
+
+        @Override
+        public int getCount() {
+            return subs.size();
+        }
+
+        @Override
+        public subjectObj getItem(int position) {
+            int c = 0;
+            for (subjectObj sub : subs) {
+                if (c == position) return sub;
+                c++;
+            }
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            TutorSubList.AppInfoHolder holder = null;
+
+            if (row == null) {
+
+                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                row = inflater.inflate(layoutResourceId, parent, false);
+
+                holder = new TutorSubList.AppInfoHolder();
+
+                holder.nameText = (TextView) row.findViewById(R.id.singleSubName);
+                holder.typeText = (TextView) row.findViewById(R.id.singleSubType);
+                holder.priceText = (TextView) row.findViewById(R.id.singleSubPrice);
+                holder.expText = (TextView) row.findViewById(R.id.singleSubEx);
+                row.setTag(holder);
+
+            } else {
+                holder = (TutorSubList.AppInfoHolder) row.getTag();
+            }
+            TutorSubList.AppInfoHolder finalHolder = holder;
+            subjectObj s = getItem(position);
+            System.out.println(s);
+            finalHolder.nameText.setText(s.getsName());
+            finalHolder.typeText.setText("Type: "+s.getType());
+            finalHolder.priceText.setText("Price: " +String.valueOf(s.getPrice()));
+            finalHolder.expText.setText("Experience: " +s.getExperience());
+
+
+            row.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    createEditDialog(s);
+                }
+            });
+            return row;
+        }
+
+
+
+    }
+    static class AppInfoHolder {
+        TextView nameText, typeText, priceText, expText;
     }
 }

@@ -698,6 +698,7 @@ public class SetTutorProfile extends AppCompatActivity {
                         finishAffinity();
                         startActivity(intent);
                         /* END loading screen section */
+                        /* END loading screen section */
                         finish();
                     }
                 })
