@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/nav_tutor_profile"
         android:name="com.project.tutortime.ui.tutorprofile.TutorProfile"
-        android:label="@string/menu_teacher_card"
+        android:label="@string/menu_tutor_profile"
         tools:layout="@layout/fragment_tutor_profile" />
 
     <fragment

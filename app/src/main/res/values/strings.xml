@@ -65,7 +65,9 @@
     <string name="actionChangeLanguage">Change language</string>
     <string name="cities_hint">Settings</string>
     <string name="menu_home">Home</string>
-    <string name="menu_teacher_card">My Tutor Profile</string>
+    <string name="menu_chats">Chats</string>
+    <string name="menu_my_profile">My Profile</string>
+    <string name="menu_tutor_profile">My Tutor Profile</string>
     <string name="menu_my_subject_list">My Subject List</string>
     <string name="menu_new_tutor_profile">Create Tutor Profile</string>
     <string name="menu_search">Search</string>
@@ -212,7 +214,7 @@
     <string name="area">Area</string>
     <string name="type">Type</string>
     <string name="city">City</string>
-    <string name="which_tutor_would_you_like_to_look_for">Which tutor would you like to look for?</string>
+    <string name="search_header">Search For Tutors</string>
     <string name="max">Max</string>
     <string name="min">Min</string>
     <string name="price">Price</string>

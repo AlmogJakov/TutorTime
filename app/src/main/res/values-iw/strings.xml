@@ -64,7 +64,9 @@
     <string name="actionChangeLanguage">שנה שפה</string>
     <string name="cities_hint">ערים</string>
     <string name="menu_home">מסך הבית</string>
-    <string name="menu_teacher_card">כרטיס המורה שלי</string>
+    <string name="menu_chats">צ\'אטים</string>
+    <string name="menu_my_profile">הפרופיל שלי</string>
+    <string name="menu_tutor_profile">פרופיל המורה שלי</string>
     <string name="menu_my_subject_list">רשימת המקצועות שלי</string>
     <string name="menu_new_tutor_profile">צור כרטיס מורה</string>
     <string name="menu_search">חיפוש</string>
@@ -100,7 +102,7 @@
     <string name="area">אזור</string>
     <string name="type">סוג</string>
     <string name="city">עיר</string>
-    <string name="which_tutor_would_you_like_to_look_for">איזה מורה היית רוצה לחפש?</string>
+    <string name="search_header">חיפוש מורים</string>
     <string name="max">מקסימום</string>
     <string name="min">מינימום</string>
     <string name="price">מחיר</string>

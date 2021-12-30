@@ -6,42 +6,42 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/symbol_home"
             android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_tutor_profile"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_teacher_card" />
+            android:icon="@drawable/symbol_tutor_profile"
+            android:title="@string/menu_tutor_profile" />
         <item
             android:id="@+id/nav_my_sub_list"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="My Subject List" />
+            android:icon="@drawable/symbol_briefcase"
+            android:title="@string/menu_my_subject_list" />
         <item
             android:id="@+id/nav_my_profile"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/symbol_profile"
             android:noHistory="true"
-            android:title="My Profile" />
+            android:title="@string/menu_my_profile" />
         <item
             android:id="@+id/nav_new_tutor_profile"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/symbol_create_tutor_profile"
             android:noHistory="true"
             android:title="@string/menu_new_tutor_profile" />
         <item
             android:id="@+id/nav_search"
-            android:icon="@android:drawable/ic_menu_search"
+            android:icon="@drawable/symbol_search"
             android:title="@string/menu_search" />
         <item
             android:id="@+id/nav_notifications"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/symbol_message"
             android:title="@string/menu_notifications" />
         <item
             android:id="@+id/nav_chats"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Chats" />
+            android:icon="@drawable/symbol_chat"
+            android:title="@string/menu_chats" />
 
         <item
             android:id="@+id/logout"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/symbol_logout"
             android:title="@string/logout" />
     </group>
 </menu>
