@@ -16,6 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/app_launcher_big"
-        android:layout_height="150dp"
-        android:layout_width="150dp"/>
+        android:layout_height="175dp"
+        android:layout_width="175dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,7 +30,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@drawable/gradient_toolbar"
-            app:popupTheme="@style/Theme.TutorTime.PopupOverlay"/>
+            app:popupTheme="@style/Theme.TutorTime.PopupOverlay"
+            app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
 <!--        android:background="?attr/colorPrimary"-->
 

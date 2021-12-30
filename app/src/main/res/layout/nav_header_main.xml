@@ -52,7 +52,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal|fill_vertical"
                     android:contentDescription="@string/nav_header_desc"
-                    app:srcCompat="@mipmap/ic_android_round" />
+                    app:srcCompat="@drawable/profile" />
 
             </androidx.cardview.widget.CardView>
 
