@@ -63,14 +63,14 @@ public class Search extends Fragment {
         /* show loading dialog until all fragment resources ready */
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
-        addBtn = binding.buttonAcount;
+        addBtn = binding.buttonSearch;
         String[] type = {getResources().getString(R.string.Online), getResources().getString(R.string.Frontal)};
         typeSpinner = binding.learn;
         boolean[] selectType = new boolean[type.length];
         ArrayList<Integer> listType = new ArrayList<>();
         setSpinner(typeSpinner, selectType, listType, type, getResources().getString(R.string.Online_Frontal));
 
-        subjectSpin = binding.selectSub;
+        subjectSpin = binding.selectSubSpinner;
         subjectSpin.setAdapter(new ArrayAdapter<>
                 (this.getActivity(), android.R.layout.simple_spinner_item, subjectObj.SubName.values()));
 
@@ -111,26 +111,46 @@ public class Search extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+                if (citySpinner.getText().toString().equals("")){
+                    Toast.makeText(getActivity(), "City is required.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if (typeResult.equals("Frontal") && cityResult.equals("")){
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                try{
+                try {
                     if (!maxResult.equals(""))max = Integer.parseInt(maxResult);
-                }
-                catch (NumberFormatException ignored){
+                } catch (NumberFormatException ignored) {
                     maxPrice.setError("Type a number.");
                     Toast.makeText(getActivity(), "Type a number.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                try{
+
+                try {
                     if (!minResult.equals(""))min = Integer.parseInt(minResult);
-                }
-                catch (NumberFormatException ignored){
+                } catch (NumberFormatException ignored) {
                     minPrice.setError("Type a number.");
                     Toast.makeText(getActivity(), "Type a number.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (minPrice.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Type a minimum price number.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (maxPrice.getText().toString().equals("")) {
+                    Toast.makeText(getActivity(), "Type a maximum price number.",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (Integer.parseInt(minResult)>Integer.parseInt(maxResult)) {
+                    Toast.makeText(getActivity(), "Price range is illegal.",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }

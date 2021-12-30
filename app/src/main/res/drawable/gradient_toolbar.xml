@@ -5,6 +5,5 @@
         android:endColor="#161616"
         android:centerColor="#202020"
         android:startColor="#202020"
-        android:background="@drawable/books"
         android:type="linear" />
 </shape>

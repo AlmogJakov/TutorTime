@@ -188,7 +188,7 @@ public class Login extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
         final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
-
+        // TODO: https://stackoverflow.com/questions/32813934/save-language-chosen-by-user-android
         langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
 
             @Override

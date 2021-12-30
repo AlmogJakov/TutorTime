@@ -40,6 +40,5 @@
         android:centerColor="#009688"
         android:endColor="#00695C"
         android:startColor="#4DB6AC"
-        android:background="@drawable/books"
         android:type="linear" />
 </shape>

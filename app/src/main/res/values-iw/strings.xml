@@ -16,7 +16,7 @@
     <string name="registerEmail">אימייל</string>
     <string name="registerPassword">ססמה</string>
     <string name="registerSignUp">הירשם</string>
-    <string name="registerHaveAccountLogin">יש לך חשבון? תתחבר</string>
+    <string name="registerHaveAccountLogin">יש לך חשבון? התחבר</string>
 
     <!-- Strings choose status -->
     <string name="chooseStatusTutor">מורה</string>

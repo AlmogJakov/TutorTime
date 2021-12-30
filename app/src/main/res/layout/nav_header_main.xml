@@ -118,7 +118,7 @@
             <ImageView
                 android:id="@+id/colorLine"
                 android:layout_width="match_parent"
-                android:layout_height="4dp"
+                android:layout_height="3dp"
                 android:background="#71fff1" />
 
         </LinearLayout>

@@ -162,10 +162,9 @@ public class MainActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
+        // TODO: https://stackoverflow.com/questions/32813934/save-language-chosen-by-user-android
         final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
-
         langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
-
             @Override
             public void onToggleSwitchChangeListener(int position, boolean isChecked) {
                 if(position==0){
