@@ -3,12 +3,14 @@ package com.project.tutortime;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,6 +25,8 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Pair;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +34,7 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -55,6 +60,7 @@ import com.project.tutortime.firebase.FireBaseTeacher;
 import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.subjectObj;
+
 import com.project.tutortime.ui.notifications.Notifications;
 
 import org.w3c.dom.Text;
@@ -95,6 +101,8 @@ public class SetTutorProfile extends AppCompatActivity {
     ArrayList<String> listCities = new ArrayList<>();
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     String teacherID;
+    SubListAdapter sLstAd;
+
 
 
     @Override
@@ -117,9 +125,12 @@ public class SetTutorProfile extends AppCompatActivity {
         img = findViewById(R.id.imageView);
         citySpinner = findViewById(R.id.txtCities);
         subjectList = (ListView) findViewById(R.id.subList);
-        ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-        subjectList.setAdapter(a);
-        a.notifyDataSetChanged();
+//        ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
+//        subjectList.setAdapter(a);
+//        a.notifyDataSetChanged();
+        sLstAd = new SubListAdapter(this, R.layout.single_sub_row, list, teacherID);
+        subjectList.setAdapter(sLstAd);
+        sLstAd.notifyDataSetChanged();
 
 
         String[] cities = getResources().getStringArray(R.array.Cities);
@@ -242,14 +253,14 @@ public class SetTutorProfile extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 subjectObj s = (subjectObj) subjectList.getItemAtPosition(i);
-                createEditDialog(a,s);
+                createEditDialog(s);
             }
         });
 
         addSub.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createDialog(a);
+                createDialog();
             }
         });
 
@@ -402,7 +413,7 @@ public class SetTutorProfile extends AppCompatActivity {
         finish();
     }
 
-    public void createDialog(ArrayAdapter a) {
+    public void createDialog() {
         final Dialog d = new Dialog(this);
         Spinner priceEdit;
         EditText expEdit;
@@ -445,7 +456,9 @@ public class SetTutorProfile extends AppCompatActivity {
                     return; }
                 subjectObj s = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 list.add(s);
-                a.notifyDataSetChanged();
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
+
                 listSub.add(nameSub);
                 d.dismiss();
             }
@@ -453,14 +466,17 @@ public class SetTutorProfile extends AppCompatActivity {
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                a.notifyDataSetChanged();
+                sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
+
                 d.dismiss();
             }
         });
         d.show();
     }
 
-    public void createEditDialog(ArrayAdapter a, subjectObj currSub){
+    public void createEditDialog(subjectObj currSub){
         final Dialog d = new Dialog(SetTutorProfile.this);
         Spinner priceEdit;
         EditText expEdit;
@@ -525,7 +541,10 @@ public class SetTutorProfile extends AppCompatActivity {
                 /*  */
                 list.add(s);
                 listSub.add(nameSub);
-                a.notifyDataSetChanged();
+                sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
+
                 //sent notification to user
                 String userID= fAuth.getCurrentUser().getUid();
                 myRef.child("users").child(userID).child("fName").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -547,14 +566,20 @@ public class SetTutorProfile extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 list.remove(currSub);
-                a.notifyDataSetChanged();
+                sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
+
                 d.dismiss();
             }
         });
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                a.notifyDataSetChanged();
+                sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
+                subjectList.setAdapter(sLstAd);
+                sLstAd.notifyDataSetChanged();
+
                 d.dismiss();
             }
         });
@@ -723,5 +748,90 @@ public class SetTutorProfile extends AppCompatActivity {
         editor.putString("My_Lang", lang);
         editor.apply();
     }
+    public class SubListAdapter extends BaseAdapter {
+        Context context;
+        Fragment fragment;
+        int layoutResourceId;
+        ArrayList<subjectObj> subs;
+        ArrayList<Pair<String, String>> filteredData;
+        String teacherID;
+//    private ItemFilter mFilter = new ItemFilter();
 
+
+        public SubListAdapter(Context context, int layoutResourceId, ArrayList<subjectObj> subs,
+                              String teacherID) {
+            super();
+            this.layoutResourceId = layoutResourceId;
+            this.context = context;
+            this.subs = subs;
+            this.teacherID = teacherID;
+
+        }
+
+        @Override
+        public int getCount() {
+            return subs.size();
+        }
+
+        @Override
+        public subjectObj getItem(int position) {
+            int c = 0;
+            for (subjectObj sub : subs) {
+                if (c == position) return sub;
+                c++;
+            }
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View row = convertView;
+            SetTutorProfile.AppInfoHolder holder = null;
+
+            if (row == null) {
+
+                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                row = inflater.inflate(layoutResourceId, parent, false);
+
+                holder = new SetTutorProfile.AppInfoHolder();
+
+                holder.nameText = (TextView) row.findViewById(R.id.singleSubName);
+                holder.typeText = (TextView) row.findViewById(R.id.singleSubType);
+                holder.priceText = (TextView) row.findViewById(R.id.singleSubPrice);
+                holder.expText = (TextView) row.findViewById(R.id.singleSubEx);
+                row.setTag(holder);
+
+            } else {
+                holder = (SetTutorProfile.AppInfoHolder) row.getTag();
+            }
+            SetTutorProfile.AppInfoHolder finalHolder = holder;
+            subjectObj s = getItem(position);
+            System.out.println(s);
+            finalHolder.nameText.setText(s.getsName());
+            finalHolder.typeText.setText("Type: "+s.getType());
+            finalHolder.priceText.setText("Price: " +String.valueOf(s.getPrice()));
+            finalHolder.expText.setText("Experience: " +s.getExperience());
+
+
+            row.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    createEditDialog(s);
+                }
+            });
+            return row;
+        }
+
+
+
+    }
+    static class AppInfoHolder {
+        TextView nameText, typeText, priceText, expText;
+    }
 }

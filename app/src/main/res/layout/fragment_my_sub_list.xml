@@ -11,14 +11,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:orientation="vertical"
         android:textColorHint="#808080"
         app:helperText="@string/mySubListServiceCities"
+        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:hintTextAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_goneMarginTop="32dp"
-        android:orientation="vertical"
-        app:layout_constraintWidth_percent="0.7">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.7"
+        app:layout_goneMarginTop="32dp">
 
         <TextView
             android:id="@+id/txtServiceCities"
@@ -26,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/mySubListSelectServiceCities"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/MyTitle"></TextView>
@@ -34,58 +37,60 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/layout_sublist"
-        android:layout_width="0dp"
-        android:layout_marginTop="30dp"
-        app:helperText="@string/mySubListSubjectList"
-        app:layout_constraintWidth_percent="0.7"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:textColorHint="#808080"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        app:layout_constraintTop_toBottomOf="@+id/layout_service_cities">
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:textColorHint="#808080"
+        app:helperText="@string/mySubListSubjectList"
+        app:helperTextEnabled="true"
+        app:helperTextTextAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_service_cities"
+        app:layout_constraintWidth_percent="0.7">
 
         <ListView
             android:id="@+id/ListViewSubList"
             android:layout_width="match_parent"
-            android:nestedScrollingEnabled="true"
-            android:layout_height="250dp"
+            android:layout_height="350dp"
             android:layout_marginTop="10dp"
+            android:nestedScrollingEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.588"
             app:layout_constraintStart_toStartOf="parent" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/addSubject"
-        android:layout_width="match_parent"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        app:layout_constraintWidth_percent="0.7"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ListViewSubList">
-
-        <Button
-            android:id="@+id/btnAddSubject"
-            android:layout_width="150dp"
-            android:layout_height="44dp"
-            android:layout_marginTop="15dp"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/addSubject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:gravity="center"
-            android:text="@string/mySubListAddSubject"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </com.google.android.material.textfield.TextInputLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ListViewSubList"
+            app:layout_constraintWidth_percent="0.7">
 
-<!--        <Button-->
-<!--            android:id="@+id/btnHome"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="104dp"-->
-<!--            android:text="@string/mySubListHome"-->
-<!--            android:textAllCaps="false"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent" />-->
+            <Button
+                android:id="@+id/btnAddSubject"
+                android:layout_width="150dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center"
+                android:text="@string/mySubListAddSubject"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--        <Button-->
+        <!--            android:id="@+id/btnHome"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginBottom="104dp"-->
+        <!--            android:text="@string/mySubListHome"-->
+        <!--            android:textAllCaps="false"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent" />-->
     </com.google.android.material.textfield.TextInputLayout>
 
 
