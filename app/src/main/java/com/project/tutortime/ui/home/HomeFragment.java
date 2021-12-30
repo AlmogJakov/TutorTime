@@ -1,21 +1,14 @@
 package com.project.tutortime.ui.home;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -24,17 +17,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.project.tutortime.LoadingDialog;
-import com.project.tutortime.MainActivity;
-import com.project.tutortime.R;
 import com.project.tutortime.adapter.TutorAdapter;
 
 import com.project.tutortime.adapter.TutorAdapterItem;
 import com.project.tutortime.databinding.FragmentHomeBinding;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
-import com.project.tutortime.ui.search.TeacherCard;
 
 import java.util.ArrayList;
 import java.util.Collections;

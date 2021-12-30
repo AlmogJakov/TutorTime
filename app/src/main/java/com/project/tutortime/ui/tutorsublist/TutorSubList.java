@@ -1,12 +1,10 @@
-package com.project.tutortime.ui.mysublist;
+package com.project.tutortime.ui.tutorsublist;
 
 import androidx.lifecycle.ViewModelProvider;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -14,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,16 +24,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
 import com.project.tutortime.databinding.FragmentMySubListBinding;
 import com.project.tutortime.firebase.FireBaseUser;
@@ -47,10 +40,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class  MySubList extends Fragment {
+public class TutorSubList extends Fragment {
 
     //private MySubListViewModel mViewModel;
-    private MySubListViewModel MySubListViewModel;
+    private TutorSubListViewModel TutorSubListViewModel;
     private FragmentMySubListBinding binding;
 
     TextView serviceCitiesSpinner;
@@ -65,15 +58,15 @@ public class  MySubList extends Fragment {
     boolean[] selectCities ;
     ArrayList<Integer> listCitiesNum = new ArrayList<>();
 
-    public static MySubList newInstance() {
-        return new MySubList();
+    public static TutorSubList newInstance() {
+        return new TutorSubList();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        MySubListViewModel = new ViewModelProvider(this).get(MySubListViewModel.class);
+        TutorSubListViewModel = new ViewModelProvider(this).get(TutorSubListViewModel.class);
         binding = FragmentMySubListBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 

@@ -17,20 +17,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.android.gms.common.util.ScopeUtil;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -38,9 +30,8 @@ import com.project.tutortime.R;
 import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.subjectObj;
 import com.project.tutortime.firebase.teacherObj;
-import com.project.tutortime.ui.search.TeacherCard;
+import com.project.tutortime.ui.search.FullTutorCard;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -54,7 +45,7 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
     int id;
 
     public TutorAdapter(Context context, List<TutorAdapterItem> teachersToShow) {
-        super(context, R.layout.tutor_card_view, teachersToShow);
+        super(context, R.layout.mini_tutor_card, teachersToShow);
         this.context = context;
         this.teachersToShow = teachersToShow;
         this.isResourceReady = Arrays.asList(new Boolean[teachersToShow.size()]);
@@ -66,7 +57,7 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
     public View getView(int position, View convertView, ViewGroup parent) {
         //isResourceReady.set(position,Boolean.FALSE);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.tutor_card_view, parent, false);
+        View rowView = inflater.inflate(R.layout.mini_tutor_card, parent, false);
         TextView titleText = (TextView) rowView.findViewById(R.id.title_text);
         TextView price = (TextView) rowView.findViewById(R.id.price);
         TextView subject = (TextView) rowView.findViewById(R.id.subject);
@@ -125,7 +116,7 @@ public class TutorAdapter extends ArrayAdapter<TutorAdapterItem> {
         currentCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getContext(), TeacherCard.class);
+                Intent intent = new Intent(getContext(), FullTutorCard.class);
                 intent.putExtra("user", teachersToShow.get(position).getUser());
                 intent.putExtra("teacher", teachersToShow.get(position).getTeacher());
                 intent.putExtra("sub", teachersToShow.get(position).getSubName());

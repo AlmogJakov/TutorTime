@@ -253,8 +253,6 @@ public class Login extends AppCompatActivity {
         startActivity(intent);
         /* END loading screen section */
         finish();
-
-
     }
 
 }

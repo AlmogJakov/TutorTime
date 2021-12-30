@@ -85,7 +85,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.search.TeacherCard"
+            android:name=".ui.search.FullTutorCard"
             tools:ignore="Instantiatable" />
         <activity
             android:name=".MessageActivity"

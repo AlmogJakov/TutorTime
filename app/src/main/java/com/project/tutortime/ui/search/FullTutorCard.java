@@ -2,43 +2,29 @@ package com.project.tutortime.ui.search;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,17 +36,14 @@ import com.project.tutortime.LoadingDialog;
 import com.project.tutortime.MessageActivity;
 import com.project.tutortime.R;
 //import com.project.tutortime.datafindViewById(R.id.FragmentTeacherCardBinding;
-import com.project.tutortime.firebase.FireBaseUser;
 import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
-import com.project.tutortime.ui.home.HomeFragment;
 
 import java.util.HashMap;
-import java.util.List;
 
 
-public class TeacherCard extends AppCompatActivity {
+public class FullTutorCard extends AppCompatActivity {
     ImageView image;
     TextView price, description, subjectAndType, opinion, name, place;
     Button send;
@@ -83,7 +66,7 @@ public class TeacherCard extends AppCompatActivity {
 
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
-        setContentView(R.layout.activity_teacher_card);
+        setContentView(R.layout.activity_full_tutor_card);
 
 //        findViewById(R.id.)
         image = findViewById(R.id.profile_image);
@@ -184,7 +167,7 @@ public class TeacherCard extends AppCompatActivity {
                                             studentName, user.getfName(), teacher.getImgUrl());
                                     //open the chat
                                     if(chatID!=null) {
-                                        Intent intent = new Intent(TeacherCard.this, MessageActivity.class);
+                                        Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
                                         intent.putExtra("studentName",studentName);
                                         intent.putExtra("student",FirebaseAuth.getInstance().getCurrentUser().getUid());
                                         intent.putExtra("teacher",teacher.getUserID());
@@ -226,10 +209,10 @@ public class TeacherCard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                    Toast.makeText(TeacherCard.this, "You can not rate yourself!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FullTutorCard.this, "You can not rate yourself!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                AlertDialog.Builder builder = new AlertDialog.Builder(TeacherCard.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(FullTutorCard.this);
                 builder.setTitle(getResources().getString(R.string.Select_Rating));
                 builder.setCancelable(false);
                 builder.setSingleChoiceItems(type, kindOfRank, new DialogInterface.OnClickListener() {
@@ -296,7 +279,7 @@ public class TeacherCard extends AppCompatActivity {
         sendNotification();
         teacher.setRank(r);
         FirebaseDatabase.getInstance().getReference().child("teachers").child(user.getTeacherID()).setValue(teacher);
-        Intent intent = new Intent(this, TeacherCard.class);
+        Intent intent = new Intent(this, FullTutorCard.class);
         intent.putExtra("user", user);
         intent.putExtra("teacher", teacher);
         intent.putExtra("sub", sub);

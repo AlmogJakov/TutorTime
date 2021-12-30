@@ -1,10 +1,9 @@
-package com.project.tutortime.ui.userprofile;
+package com.project.tutortime.ui.customerprofile;
 
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,32 +21,25 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
-import com.project.tutortime.databinding.FragmentMyProfileBinding;
-import com.project.tutortime.databinding.FragmentMySubListBinding;
+import com.project.tutortime.databinding.FragmentCustomerProfileBinding;
 import com.project.tutortime.firebase.FireBaseUser;
-import com.project.tutortime.firebase.subjectObj;
-import com.project.tutortime.ui.mysublist.MySubListViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MyProfile extends Fragment {
+public class CustomerProfile extends Fragment {
 
-    private MyProfileViewModel MyProfileViewModel;
-    private FragmentMyProfileBinding binding;
+    private CustomerProfileViewModel CustomerProfileViewModel;
+    private FragmentCustomerProfileBinding binding;
 
     EditText fname, lname;
     Spinner citySpinner, genderSpinner;
@@ -56,16 +47,16 @@ public class MyProfile extends Fragment {
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     String teacherID;
 
-    public static MyProfile newInstance() {
-        return new MyProfile();
+    public static CustomerProfile newInstance() {
+        return new CustomerProfile();
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        MyProfileViewModel = new ViewModelProvider(this).get(MyProfileViewModel.class);
-        binding = FragmentMyProfileBinding.inflate(inflater, container, false);
+        CustomerProfileViewModel = new ViewModelProvider(this).get(CustomerProfileViewModel.class);
+        binding = FragmentCustomerProfileBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         fname = binding.myFName;

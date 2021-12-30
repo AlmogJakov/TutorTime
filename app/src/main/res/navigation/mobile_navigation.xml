@@ -19,15 +19,15 @@
 
     <fragment
         android:id="@+id/nav_my_sub_list"
-        android:name="com.project.tutortime.ui.mysublist.MySubList"
+        android:name="com.project.tutortime.ui.tutorsublist.TutorSubList"
         android:label="My Subject List"
         tools:layout="@layout/fragment_my_sub_list" />
 
     <fragment
         android:id="@+id/nav_my_profile"
-        android:name="com.project.tutortime.ui.userprofile.MyProfile"
+        android:name="com.project.tutortime.ui.customerprofile.CustomerProfile"
         android:label="My Profile"
-        tools:layout="@layout/fragment_my_profile" />
+        tools:layout="@layout/fragment_customer_profile" />
 
     <activity
         android:id="@+id/nav_new_tutor_profile"

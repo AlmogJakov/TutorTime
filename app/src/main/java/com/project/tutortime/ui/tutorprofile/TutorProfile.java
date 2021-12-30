@@ -281,9 +281,8 @@ public class TutorProfile extends Fragment {
                         // The dialog is automatically dismissed when a dialog button is clicked.
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-
                                 DeleteTutorProfile(listCities,list);
-                                goToTutorMain();
+                                //goToTutorMain();
                           }
                         })
 
@@ -491,8 +490,6 @@ public class TutorProfile extends Fragment {
     /* Delete cities and subjects from firebase in the tree search */
     public void DeleteTutorProfile(ArrayList <String> listCities, ArrayList <subjectObj> listSub) {
         Map<String, Object> childUpdates = new HashMap<>();
-
-
         new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -515,13 +512,16 @@ public class TutorProfile extends Fragment {
                 childUpdates.put("users/" + userID + "/teacherID/", null);
                 childUpdates.put("users/" + userID + "/isTeacher/", 0);
                 //childUpdates.put("chats/" + userID + "/teacherID/", null);
-
                 myRef.updateChildren(childUpdates);
+                /* finishAffinity to force reload the app with default user interface */
+                getActivity().finishAffinity();
+                goToTutorMain();
             }
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
+            public void onCancelled(DatabaseError databaseError) { }
         });
+        LoadingDialog ld = new LoadingDialog(getContext());
+        ld.show();
     }
     private void goToTutorMain() {
         /* were logging in as tutor (tutor status value = 1).
