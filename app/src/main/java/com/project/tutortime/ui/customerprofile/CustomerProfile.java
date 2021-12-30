@@ -158,8 +158,9 @@ public class CustomerProfile extends Fragment {
                         child("city").getValue(String.class);
                 String[] cities = getResources().getStringArray(R.array.Cities);
                 for (int i = 0; i < cities.length; i++) {
-                    if (citySpinner.getItemAtPosition(i).equals(currCity)) {
-                        citySpinner.setSelection(i);
+                    /* adding +1 to citySpinner position since the first item is the Hint */
+                    if (citySpinner.getItemAtPosition(i+1).equals(currCity)) {
+                        citySpinner.setSelection(i+1);
                         break;
                     }
                 }
@@ -167,12 +168,12 @@ public class CustomerProfile extends Fragment {
                         child("gender").getValue(String.class);
                 String[] arrGender = getResources().getStringArray(R.array.Gender);
                 for (int i = 0; i < arrGender.length; i++) {
-                    if (genderSpinner.getItemAtPosition(i).equals(currGender)) {
-                        genderSpinner.setSelection(i);
+                    /* adding +1 to genderSpinner position since the first item is the Hint */
+                    if (genderSpinner.getItemAtPosition(i+1).equals(currGender)) {
+                        genderSpinner.setSelection(i+1);
                         break;
                     }
                 }
-
             }
 
             @Override
