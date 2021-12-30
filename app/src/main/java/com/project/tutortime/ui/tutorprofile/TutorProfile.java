@@ -511,7 +511,24 @@ public class TutorProfile extends Fragment {
                 childUpdates.put("teachers/" + teacherID , null);
                 childUpdates.put("users/" + userID + "/teacherID/", null);
                 childUpdates.put("users/" + userID + "/isTeacher/", 0);
-                //childUpdates.put("chats/" + userID + "/teacherID/", null);
+                /* Delete all chats where the teacher is appeared */
+                for (DataSnapshot userChat : dataSnapshot.child("chats").child(userID).getChildren()) {
+                    if (userChat.child("teacherID").getValue(String.class).equals(userID)) {
+                        childUpdates.put("chats/" + userID + "/" + userChat.getKey(), null);
+                        childUpdates.put("chats/" + userChat.child("studentID").getValue(String.class)
+                                + "/" + userChat.getKey(), null);
+                        childUpdates.put("messages/" + userChat.getKey(), null);
+                    }
+                }
+
+                /* Delete all notifications related to the teacher */
+                for (DataSnapshot userNotifications : dataSnapshot.child("notifications").
+                        child(userID).getChildren()) {
+                    String title = userNotifications.child("title").getValue(String.class);
+                    if (title.equals("rating received!") || title.equals("Congratulations!")) {
+                        childUpdates.put("notifications/" + userID + "/" + userNotifications.getKey(), null);
+                    }
+                }
                 myRef.updateChildren(childUpdates);
                 /* finishAffinity to force reload the app with default user interface */
                 getActivity().finishAffinity();
