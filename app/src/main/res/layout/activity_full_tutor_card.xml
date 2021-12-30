@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#D2E1E3"
-    tools:context=".ui.search.TeacherCard">
+    tools:context=".ui.search.FullTutorCard">
 
     <ScrollView
         android:id="@+id/scrollView3"
@@ -400,7 +399,6 @@
         android:id="@+id/RelativeLayout02"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#85CECFCF"
         android:orientation="horizontal"
         android:paddingStart="20dp"
         android:paddingTop="3dp"
