@@ -182,7 +182,7 @@ public class TutorProfile extends Fragment {
                         @Override
                         public void onClick(View view) {
                             img.setImageDrawable(null);
-                            img.setBackgroundResource(R.mipmap.ic_launcher_round);
+                            img.setBackgroundResource(R.mipmap.ic_android_round);
                             del = true;
                             d.dismiss();
                         }

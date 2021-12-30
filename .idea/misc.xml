@@ -68,6 +68,7 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/chats_profile_circle_offline.xml" value="0.20989583333333334" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/chats_profile_circle_online.xml" value="0.20989583333333334" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/gradient_splash_screen_background.xml" value="0.2109375" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/gradient_toolbar.xml" value="0.2109375" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_delete_chat.xml" value="0.2109375" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/drawable/ic_grey_search.xml" value="0.2109375" />
@@ -87,6 +88,7 @@
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_login.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_main.xml" value="0.22282608695652173" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_set_tutor_profile.xml" value="0.19375" />
+        <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_splash_screen.xml" value="0.19479166666666667" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_teacher_card.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/activity_welcome.xml" value="0.2546875" />
         <entry key="..\:/Users/Almog/AndroidStudioProjects/TutorTime/app/src/main/res/layout/add_sub_dialog.xml" value="0.2546875" />

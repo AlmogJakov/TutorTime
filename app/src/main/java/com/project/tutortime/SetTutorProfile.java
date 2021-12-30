@@ -221,7 +221,7 @@ public class SetTutorProfile extends AppCompatActivity {
                         @Override
                         public void onClick(View view) {
                             img.setImageDrawable(null);
-                            img.setBackgroundResource(R.mipmap.ic_launcher_round);
+                            img.setBackgroundResource(R.mipmap.ic_android_round);
                             del = false;
                             d.dismiss();
                         }

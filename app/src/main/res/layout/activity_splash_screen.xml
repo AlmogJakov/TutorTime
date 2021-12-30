@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient_splash_screen_background"
     tools:context=".SplashScreen">
 
     <ImageView
         android:id="@+id/imageView5"
         android:scaleType="centerCrop"
-        android:src="@drawable/logo2"
+        android:src="@drawable/app_launcher_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo2"
-        android:layout_height="206dp"
-        android:layout_width="178dp"/>
+        app:srcCompat="@drawable/app_launcher_big"
+        android:layout_height="150dp"
+        android:layout_width="150dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
