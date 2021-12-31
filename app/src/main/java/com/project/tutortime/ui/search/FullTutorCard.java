@@ -39,6 +39,7 @@ import com.project.tutortime.R;
 import com.project.tutortime.firebase.rankObj;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
+import com.project.tutortime.ui.chats.Chat;
 
 import java.util.HashMap;
 
@@ -57,6 +58,11 @@ public class FullTutorCard extends AppCompatActivity {
     teacherObj teacher;
     String sub;
     int kindOfRank = -1, editRank = -1;
+    //chat data
+    boolean thereIsChat = true;
+    boolean firstTimeSending = true;
+    String studentName;
+    String chatID;
 
 
     @SuppressLint("SetTextI18n")
@@ -67,6 +73,7 @@ public class FullTutorCard extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
         setContentView(R.layout.activity_full_tutor_card);
+        initThereIsChat();
 
 //        findViewById(R.id.)
         image = findViewById(R.id.profile_image);
@@ -165,46 +172,77 @@ public class FullTutorCard extends AppCompatActivity {
         });
         send.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//verify that the user dont sending message to himself
+            public void onClick(View v) {
+                /* verify that the user dont sending message to himself */
                 if(!teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    //get the teacher name
-                    FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                            .child("fName").
-                            addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String studentName = snapshot.getValue(String.class);
-                                    //note the user the the chat is active
-                                    Toast.makeText(getApplicationContext(),"Chat with "+user.getfName()+" is active",Toast.LENGTH_LONG).show();
-                                    //send notification to the teacher that new message received
-                                    sendNotification(user.getfName(), studentName, teacher.getUserID());
-                                    //add the chat to the database and get the chatID
-                                    String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
-                                            studentName, user.getfName(), teacher.getImgUrl());
-                                    //open the chat
-                                    if(chatID!=null) {
-                                        Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
-                                        intent.putExtra("studentName",studentName);
-                                        intent.putExtra("student",FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                        intent.putExtra("teacher",teacher.getUserID());
-                                        intent.putExtra("chat",chatID);
-                                        startActivity(intent);
+                    /* if the user already has chat with this teacher then open this chat  */
+                    if(thereIsChat) {
+                        FirebaseDatabase.getInstance().getReference().child("chats")
+                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot dss : snapshot.getChildren()) {
+                                            Chat chat = (Chat) dss.getValue(Chat.class);
+                                            if (chat != null) {
+                                                /* check if this is the active chat  */
+                                                if (chat.getTeacherID().equals(teacher.getUserID())) {
+                                                    /* this is correct chat - open this chat  */
+                                                    Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
+                                                    intent.putExtra("studentName", chat.getStudentName());
+                                                    intent.putExtra("student", chat.getStudentID().toString());
+                                                    intent.putExtra("teacher", chat.getTeacherID().toString());
+                                                    intent.putExtra("chat", chat.getChatID().toString());
+                                                    startActivity(intent);
+                                                    thereIsChat = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                    }
+                    else{ /* there is no active chat */
+                        /* get this user name */
+                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                .child("fName").
+                                addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String studentName = snapshot.getValue(String.class);
+                                        /* send the teacher thats new chat is received */
+                                        sendNotification(user.getfName(), studentName, teacher.getUserID());
+                                        /* add the chat to the database and get the chatID */
+                                        String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
+                                                studentName, user.getfName(), teacher.getImgUrl());
+                                        /* open the new chat */
+                                        if (chatID != null) {
+                                            thereIsChat = true;
+                                            Toast.makeText(getApplicationContext(), "chat is open", Toast.LENGTH_LONG).show();
+                                            Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
+                                            intent.putExtra("studentName", studentName);
+                                            intent.putExtra("student", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                                            intent.putExtra("teacher", teacher.getUserID());
+                                            intent.putExtra("chat", chatID);
+                                            startActivity(intent);
+                                        }
                                     }
 
-                                }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
 
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-
-                                }
-                            });
+                                    }
+                                });
+                    }
                 }
-                else{ //this is the teacher
+                else{ /* The teacher is trying to send message to himself */
                     Toast.makeText(getApplicationContext(),"You cant send message to yourself!",Toast.LENGTH_LONG).show();
                 }
             }
         });
-
         closeLoadingDialog();
 
     }
@@ -342,5 +380,34 @@ public class FullTutorCard extends AppCompatActivity {
         map.put("read",0);
         if (notificationID != null)
             FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).child(notificationID).setValue(map);
+    }
+
+    /**
+     * This method check if this user has an active chat with this teacher
+     * if yes then set thereIsChat to true else set to false
+     */
+    private void initThereIsChat(){
+        thereIsChat = false;
+        FirebaseDatabase.getInstance().getReference().child("chats")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dss : snapshot.getChildren()) {
+                            Chat chat = (Chat) dss.getValue(Chat.class);
+                            if (chat != null) {
+                                /* check if there is an active chat */
+                                if (chat.getTeacherID().equals(teacher.getUserID())) {
+                                    thereIsChat = true;
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 }
