@@ -52,7 +52,7 @@ public class HomeFragment extends Fragment {
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
         /* END show loading dialog until all fragment resources ready */
-        notificationsText = binding.notificationsText;
+        //notificationsText = binding.notificationsText;
         listview = binding.featuresList;
         listViewListener = new ValueEventListener() {
             @Override
