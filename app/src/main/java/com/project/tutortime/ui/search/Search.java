@@ -111,11 +111,11 @@ public class Search extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
-                if (citySpinner.getText().toString().equals("")){
-                    Toast.makeText(getActivity(), "City is required.",
-                            Toast.LENGTH_SHORT).show();
-                    return;
-                }
+//                if (citySpinner.getText().toString().equals("")){
+//                    Toast.makeText(getActivity(), "City is required.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 if (typeResult.equals("Frontal") && cityResult.equals("")){
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
