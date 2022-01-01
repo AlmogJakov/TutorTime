@@ -95,7 +95,7 @@ public class SearchResults extends Fragment {
                 fragmentTransaction.commit();
             }
         };
-        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
+        //requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), callback);
 
         /* Prevents the fragment from destroying and hence recreating while changing language. */
         this.setRetainInstance(true);

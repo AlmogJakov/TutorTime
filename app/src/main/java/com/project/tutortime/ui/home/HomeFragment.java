@@ -77,10 +77,9 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = new Search();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                if (savedInstanceState == null) {
-                    transaction.addToBackStack(null);
-                    transaction.replace(container.getId(), fragment).commit();;
-                }
+                transaction.replace(R.id.fragment_container, fragment).commit();
+                // add to back stack
+                transaction.addToBackStack(null);
             }
         });
         chatsButton.setOnClickListener(new View.OnClickListener() {
@@ -88,10 +87,9 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Fragment fragment = new Chat();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                if (savedInstanceState == null) {
-                    transaction.addToBackStack(null);
-                    transaction.replace(container.getId(), fragment).commit();;
-                }
+                transaction.replace(R.id.fragment_container, fragment).commit();
+                // add to back stack
+                transaction.addToBackStack(null);
             }
         });
         myProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -106,16 +104,14 @@ public class HomeFragment extends Fragment {
                 int status = arr.get(0);
                 if (status==0) {
                     Fragment fragment = new CustomerProfile();
-                    if (savedInstanceState == null) {
-                        transaction.addToBackStack(null);
-                        transaction.replace(container.getId(), fragment).commit();;
-                    }
+                    transaction.replace(R.id.fragment_container, fragment).commit();
+                    // add to back stack
+                    transaction.addToBackStack(null);
                 } else if (status==1) {
                     Fragment fragment = new TutorProfile();
-                    if (savedInstanceState == null) {
-                        transaction.addToBackStack(null);
-                        transaction.replace(container.getId(), fragment).commit();;
-                    }
+                    transaction.replace(R.id.fragment_container, fragment).commit();
+                    // add to back stack
+                    transaction.addToBackStack(null);
                 }
             }
         });
@@ -181,6 +177,63 @@ public class HomeFragment extends Fragment {
 //            }
 //        });
         return root;
+    }
+
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        myProfileButton = binding.buttonProfile;
+//        searchButton = binding.buttonSearch;
+//        chatsButton = binding.buttonChats;
+//        SpannableString ss = new SpannableString("(0)");
+//        chatsButton.setText(ss);
+//        searchButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Fragment fragment = new Search();
+//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//                if (savedInstanceState == null) {
+//
+//                    transaction.replace(R.id.fragment_container, fragment).commit();;
+//                    transaction.addToBackStack(null);
+//                }
+//            }
+//        });
+//        chatsButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Fragment fragment = new Chat();
+//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//                if (savedInstanceState == null) {
+//                    transaction.addToBackStack(null);
+//                    transaction.replace(R.id.fragment_container, fragment).commit();;
+//                }
+//            }
+//        });
+//        myProfileButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//                ArrayList<Integer> arr = getActivity().getIntent().getExtras().getIntegerArrayList("status");
+//                if (arr.isEmpty() || (arr.get(0) != 0 && arr.get(0) != 1)) {
+//                    Toast.makeText(getContext(), "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                int status = arr.get(0);
+//                if (status==0) {
+//                    Fragment fragment = new CustomerProfile();
+//                    if (savedInstanceState == null) {
+//                        transaction.addToBackStack(null);
+//                        transaction.replace(R.id.fragment_container, fragment).commit();;
+//                    }
+//                } else if (status==1) {
+//                    Fragment fragment = new TutorProfile();
+//                    if (savedInstanceState == null) {
+//                        transaction.addToBackStack(null);
+//                        transaction.replace(R.id.fragment_container, fragment).commit();;
+//                    }
+//                }
+//            }
+//        });
     }
 
     @Override
