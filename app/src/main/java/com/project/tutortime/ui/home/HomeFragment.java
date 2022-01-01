@@ -78,7 +78,8 @@ public class HomeFragment extends Fragment {
                 Fragment fragment = new Search();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 // add to back stack
-                //transaction.addToBackStack(null);
+                getActivity().getSupportFragmentManager().popBackStack();
+                transaction.addToBackStack(null);
                 transaction.replace(R.id.fragment_container, fragment).commit();
 
             }
@@ -89,7 +90,8 @@ public class HomeFragment extends Fragment {
                 Fragment fragment = new Chat();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 // add to back stack
-                //transaction.addToBackStack("HomeFragment");
+                getActivity().getSupportFragmentManager().popBackStack();
+                transaction.addToBackStack("null");
                 transaction.replace(R.id.fragment_container, fragment).commit();
             }
         });
@@ -104,14 +106,16 @@ public class HomeFragment extends Fragment {
                 }
                 int status = arr.get(0);
                 if (status==0) {
-                    // add to back stack
-                    //transaction.addToBackStack("HomeFragment");
                     Fragment fragment = new CustomerProfile();
+                    // add to back stack
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    transaction.addToBackStack("null");
                     transaction.replace(R.id.fragment_container, fragment).commit();
                 } else if (status==1) {
                     Fragment fragment = new TutorProfile();
                     // add to back stack
-                    //transaction.addToBackStack("HomeFragment");
+                    getActivity().getSupportFragmentManager().popBackStack();
+                    transaction.addToBackStack("null");
                     transaction.replace(R.id.fragment_container, fragment).commit();
                 }
             }
