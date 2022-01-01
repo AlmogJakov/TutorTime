@@ -7,10 +7,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.material.button.MaterialButton;
+import com.project.tutortime.MainActivity;
 import com.project.tutortime.R;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.database.DataSnapshot;
@@ -25,6 +31,10 @@ import com.project.tutortime.adapter.TutorAdapterItem;
 import com.project.tutortime.databinding.FragmentHomeBinding;
 import com.project.tutortime.firebase.teacherObj;
 import com.project.tutortime.firebase.userObj;
+import com.project.tutortime.ui.chats.Chat;
+import com.project.tutortime.ui.customerprofile.CustomerProfile;
+import com.project.tutortime.ui.search.Search;
+import com.project.tutortime.ui.tutorprofile.TutorProfile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,11 +48,11 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     final int TUTORS_TO_SHOW = 5;
     DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
-    TextView notificationsText;
     ListView listview;
     ValueEventListener listViewListener;
     TutorAdapter adapter;
     LoadingDialog loadingDialog;
+    MaterialButton myProfileButton, searchButton, chatsButton;
     List<TutorAdapterItem> tutorsToShow = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,8 +63,53 @@ public class HomeFragment extends Fragment {
         loadingDialog = new LoadingDialog(getContext());
         loadingDialog.show();
         /* END show loading dialog until all fragment resources ready */
-        //notificationsText = binding.notificationsText;
         listview = binding.featuresList;
+        myProfileButton = binding.buttonProfile;
+        searchButton = binding.buttonSearch;
+        chatsButton = binding.buttonChats;
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new Search();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                if (savedInstanceState == null) {
+                    transaction.replace(container.getId(), fragment).commit();;
+                }
+            }
+        });
+        chatsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment fragment = new Chat();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                if (savedInstanceState == null) {
+                    transaction.replace(container.getId(), fragment).commit();;
+                }
+            }
+        });
+        myProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                ArrayList<Integer> arr = getActivity().getIntent().getExtras().getIntegerArrayList("status");
+                if (arr.isEmpty() || (arr.get(0) != 0 && arr.get(0) != 1)) {
+                    Toast.makeText(getContext(), "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                int status = arr.get(0);
+                if (status==0) {
+                    Fragment fragment = new CustomerProfile();
+                    if (savedInstanceState == null) {
+                        transaction.replace(container.getId(), fragment).commit();;
+                    }
+                } else if (status==1) {
+                    Fragment fragment = new TutorProfile();
+                    if (savedInstanceState == null) {
+                        transaction.replace(container.getId(), fragment).commit();;
+                    }
+                }
+            }
+        });
         listViewListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -134,6 +189,13 @@ public class HomeFragment extends Fragment {
 //        adapter.killTargets();
 //        adapter = null;
     }
+
+//    public void replaceFragment(Fragment someFragment) {
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        transaction.replace(R.id.frame_container, someFragment);
+//        transaction.addToBackStack(null);
+//        transaction.commit();
+//    }
 
     /* close Loading Dialog when all fragment resources ready */
     public void closeLoadingDialog() {

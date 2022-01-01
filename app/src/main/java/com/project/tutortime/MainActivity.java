@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     private final DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     FirebaseStorage storage = FirebaseStorage.getInstance();
     StorageReference storageRef = storage.getReference();
+    protected int isTutor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

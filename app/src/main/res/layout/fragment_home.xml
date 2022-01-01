@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/fragment_container"
+    android:background="?android:windowBackground"
     tools:context=".ui.home.HomeFragment">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -64,6 +70,7 @@
                     app:layout_constraintRight_toRightOf="parent">
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_profile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:insetLeft="4dp"
@@ -86,6 +93,7 @@
                     </com.google.android.material.divider.MaterialDivider>
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_chats"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:insetLeft="4dp"
@@ -111,6 +119,7 @@
 
 
                     <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_search"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:insetLeft="4dp"
@@ -206,4 +215,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
+
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
+
