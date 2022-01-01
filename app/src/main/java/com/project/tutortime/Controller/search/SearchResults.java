@@ -1,6 +1,6 @@
 package com.project.tutortime.Controller.search;
 
-import static com.project.tutortime.Model.firebase.FireBaseSearch.setRating;
+//import static com.project.tutortime.Model.firebase.FireBaseSearch.setRating;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -130,54 +130,47 @@ public class SearchResults extends Fragment {
         setSpinner(rank, selectTypeRenk,listRating,  typeRank);
 
         listview = binding.featuresList;
-        switch (kindOfSort){
+        switch (kindOfSort) {
             case 0:sortByPriceLow();break;
             case 1:sortByPriceHigh();break;
         }
-        if (getTeachers){
-            teachersToShow = setRating(listRating, teachersToShow, resultOfTeachers);
 
-            if (kindOfSort == 0)Collections.sort(teachersToShow);
-            else teachersToShow.sort(Collections.reverseOrder());
-
-            adapter = new TutorAdapter(getActivity(), teachersToShow);
-            listview.setAdapter(adapter);
-            adapter.notifyDataSetChanged();
-            closeLoadingDialog();
-        }
-        else {
             setListview(Cities);
-        }
         return root;
     }
 
 
 
 
-//    private void setRating() {
-//        if (listRating.size() != 0){
-//            HashSet<String> used = new HashSet<>();
-//            for (int i = 0; i < listRating.size(); i++) {
-//                for (TutorAdapterItem t: resultOfTeachers) {
-//                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
-//                        if (!used.contains(t.getTeacher().getUserID())){
-//                            used.add(t.getTeacher().getUserID());
-//                            teachersToShow.add(t);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        else teachersToShow = resultOfTeachers;
-//    }
+    private void setRating() {
+        teachersToShow = new ArrayList<>();
+        if (listRating.size() != 0){
+            HashSet<String> used = new HashSet<>();
+            for (int i = 0; i < listRating.size(); i++) {
+                for (TutorAdapterItem t: resultOfTeachers) {
+                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
+                        if (!used.contains(t.getTeacher().getUserID())){
+                            used.add(t.getTeacher().getUserID());
+                            teachersToShow.add(t);
+                        }
+                    }
+                }
+            }
+        }
+        else teachersToShow = resultOfTeachers;
+    }
 
     /** ///////// sort functions //////// */
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void sortByPriceHigh() { prices.sort(Collections.reverseOrder()); }
+    private void sortByPriceHigh() {
+        prices.sort(Collections.reverseOrder());
+        teachersToShow.sort(Collections.reverseOrder());
+    }
 
     private void sortByPriceLow() {
         Collections.sort(prices);
+        Collections.sort(teachersToShow);
     }
 
 
@@ -280,6 +273,7 @@ public class SearchResults extends Fragment {
                 builder.setTitle(getResources().getString(R.string.Select));
                 builder.setCancelable(false);
                 builder.setSingleChoiceItems(type, kindOfSort, new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         for (int i = 0; i < selectType.length; i++) {
@@ -294,8 +288,14 @@ public class SearchResults extends Fragment {
                         //                0 - sort teacher cards by price from low to high
                         //                1 - sort teacher cards by price from high to low
                         //                2 - sort teacher cards by rank from high to low
-                        reload(which);
-
+                        kindOfSort = which;
+                        switch (kindOfSort){
+                            case 0:sortByPriceLow();break;
+                            case 1:sortByPriceHigh();break;
+                        }
+                        adapter = new TutorAdapter(getActivity(), teachersToShow);
+                        listview.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
                         dialog.cancel();
                     }
 
@@ -329,10 +329,11 @@ public class SearchResults extends Fragment {
                     }
                 });
                 builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         listRating = list;
-                        reload(kindOfSort);
+                        reload();
                     }
                 });
                 builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
@@ -342,11 +343,12 @@ public class SearchResults extends Fragment {
                     }
                 });
                 builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (listRating.size() > 0){
                             listRating = new ArrayList<>();
-                            reload(kindOfSort);
+                            reload();
                         }
                     }
                 });
@@ -355,23 +357,17 @@ public class SearchResults extends Fragment {
         });
     }
 
-    private void reload(int sortBy) {
-        Bundle bundle = new Bundle();
-        bundle.putString("typeResult", typeResult);
-        bundle.putString("cityResult", cityResult);
-        bundle.putString("subjectResult", subjectResult);
-        bundle.putInt("min", minResult);
-        bundle.putInt("max", maxResult);
-        bundle.putInt("sort_by", sortBy);
-        bundle.putParcelableArrayList("resultOfTeachers", (ArrayList<? extends Parcelable>) resultOfTeachers);
-        bundle.putIntegerArrayList("listRating", listRating);
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void reload() {
+//        teachersToShow = setRating(listRating, teachersToShow, resultOfTeachers);
 
-        SearchResults fragment2 = new SearchResults();
-        fragment2.setArguments(bundle);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(((ViewGroup)getView().getParent()).getId(), fragment2);
-        fragmentTransaction.commit();
+        setRating();
+        if (kindOfSort == 0)Collections.sort(teachersToShow);
+        else teachersToShow.sort(Collections.reverseOrder());
+
+        adapter = new TutorAdapter(getActivity(), teachersToShow);
+        listview.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
     }
 
 

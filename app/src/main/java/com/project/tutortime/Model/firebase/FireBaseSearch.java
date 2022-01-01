@@ -20,23 +20,23 @@ import java.util.HashSet;
 import java.util.List;
 
 public class FireBaseSearch {
-    public static List<TutorAdapterItem> setRating(ArrayList<Integer> listRating, List<TutorAdapterItem> teachersToShow, List<TutorAdapterItem> resultOfTeachers) {
-        if (listRating.size() != 0){
-            HashSet<String> used = new HashSet<>();
-            for (int i = 0; i < listRating.size(); i++) {
-                for (TutorAdapterItem t: resultOfTeachers) {
-                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
-                        if (!used.contains(t.getTeacher().getUserID())){
-                            used.add(t.getTeacher().getUserID());
-                            teachersToShow.add(t);
-                        }
-                    }
-                }
-            }
-            return teachersToShow;
-        }
-        else return resultOfTeachers;
-    }
+//    public static List<TutorAdapterItem> setRating(ArrayList<Integer> listRating, List<TutorAdapterItem> teachersToShow, List<TutorAdapterItem> resultOfTeachers) {
+//        if (listRating.size() != 0){
+//            HashSet<String> used = new HashSet<>();
+//            for (int i = 0; i < listRating.size(); i++) {
+//                for (TutorAdapterItem t: resultOfTeachers) {
+//                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
+//                        if (!used.contains(t.getTeacher().getUserID())){
+//                            used.add(t.getTeacher().getUserID());
+//                            teachersToShow.add(t);
+//                        }
+//                    }
+//                }
+//            }
+//            return teachersToShow;
+//        }
+//        else return resultOfTeachers;
+//    }
 
     public static void setSpinnerForSearch(Context c, TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type, String title) {
         typeSpinner.setOnClickListener(new View.OnClickListener() {
