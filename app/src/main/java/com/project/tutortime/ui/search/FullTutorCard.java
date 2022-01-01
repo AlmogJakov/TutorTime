@@ -362,6 +362,7 @@ public class FullTutorCard extends AppCompatActivity {
         chatMap.put("studentName", studentName);
         chatMap.put("chatID", chatID);
         chatMap.put("imageUrl", imageUrl);
+        chatMap.put("read",0);
         if (chatID != null) {
             FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).child(chatID).setValue(chatMap);
             FirebaseDatabase.getInstance().getReference().child("chats").child(studentID).child(chatID).setValue(chatMap);

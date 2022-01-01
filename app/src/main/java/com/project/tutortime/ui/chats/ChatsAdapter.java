@@ -93,11 +93,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             public void onClick(View v) {/* delete the chat from the view and database */
                 deleteChatDialog(chat,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
             }
-        });/* when click on profile picture show the user the teacher card if he is teacher */
+        });
+        /* when click on profile picture show the user the teacher card if he is teacher */
         holder.profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //itay add here the teacherCard fragment - only if the user is teacher !
+
 
 
             }
@@ -105,6 +107,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         holder.chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                markAsRead(chat.getChatID());
                 //start the activity and pass the chat data to the message activity
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.putExtra("studentName",chat.getStudentName());
@@ -118,7 +121,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
 
     /**
-     * return the chats active amount
+     * return the chats amount
      * @return chat amounts
      */
     @Override
@@ -258,6 +261,9 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     @Override
                     public void onLoadCleared(@Nullable Drawable placeholder) { }
                 });
-    }
-
+        }
+        private void markAsRead(String chatID){
+            FirebaseDatabase.getInstance().getReference().child("chats").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                    .child(chatID).child("read").setValue(1);
+        }
 }
