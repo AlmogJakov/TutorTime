@@ -1,10 +1,8 @@
 package com.project.tutortime.Controller.search;
 
-import static com.project.tutortime.Model.firebase.FireBaseSearch.closeLoadingDialogForSearch;
-import static com.project.tutortime.Model.firebase.FireBaseSearch.setSpinnerForCityForSearch;
-import static com.project.tutortime.Model.firebase.FireBaseSearch.setSpinnerForSearch;
-
+import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -23,13 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.View.LoadingDialog;
 import com.project.tutortime.R;
 import com.project.tutortime.databinding.FragmentSearchBinding;
 import com.project.tutortime.Model.firebase.subjectObj;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 
 public class Search extends Fragment {
@@ -58,7 +62,7 @@ public class Search extends Fragment {
         typeSpinner = binding.learn;
         boolean[] selectType = new boolean[type.length];
         ArrayList<Integer> listType = new ArrayList<>();
-        setSpinnerForSearch(getContext(), typeSpinner, selectType, listType, type, getResources().getString(R.string.Online_Frontal));
+        setSpinner(typeSpinner, selectType, listType, type, getResources().getString(R.string.Online_Frontal));
 
         subjectSpin = binding.selectSubSpinner;
         subjectSpin.setAdapter(new ArrayAdapter<>
@@ -72,11 +76,11 @@ public class Search extends Fragment {
 
         boolean[] selectCity = new boolean[Cities.length];
         ArrayList<Integer> listCity = new ArrayList<>();
-        setSpinnerForCityForSearch(getContext(),citySpinner,selectCity,listCity, Cities, getResources().getString(R.string.choose_city));
+        setSpinnerForCity(citySpinner,selectCity,listCity, Cities, getResources().getString(R.string.choose_city));
 
         maxPrice = binding.max;
         minPrice = binding.min;
-        closeLoadingDialogForSearch(loadingDialog);
+        closeLoadingDialog();
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,6 +105,11 @@ public class Search extends Fragment {
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
+//                if (citySpinner.getText().toString().equals("")){
+//                    Toast.makeText(getActivity(), "City is required.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
                 if (typeResult.equals("Frontal") && cityResult.equals("")){
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
@@ -124,6 +133,21 @@ public class Search extends Fragment {
                     return;
                 }
 
+//                if (minPrice.getText().toString().equals("")) {
+//                    Toast.makeText(getActivity(), "Type a minimum price number.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (maxPrice.getText().toString().equals("")) {
+//                    Toast.makeText(getActivity(), "Type a maximum price number.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
+//                if (Integer.parseInt(minResult)>Integer.parseInt(maxResult)) {
+//                    Toast.makeText(getActivity(), "Price range is illegal.",
+//                            Toast.LENGTH_SHORT).show();
+//                    return;
+//                }
 
                 /////////  end check error in search ////////
 
@@ -145,5 +169,162 @@ public class Search extends Fragment {
         });
         return root;
 
+    }
+
+    private void setSpinner(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type, String title) {
+        typeSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(title);
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (isChecked) {
+                            list.add(which);
+                            Collections.sort(list);
+                        } else {
+                            list.remove((Integer) which);
+                        }
+                    }
+                });
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < list.size(); i++) {
+                            stringBuilder.append(type[list.get(i)]);
+                            if (i != list.size() - 1) {
+                                stringBuilder.append(", ");
+                            }
+                        }
+                        typeSpinner.setText(stringBuilder.toString());
+                    }
+                });
+                builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectType.length; i++) {
+                            selectType[i] = false;
+                            list.clear();
+                            typeSpinner.setText("");
+                        }
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
+
+
+    private void setSpinnerForCity(TextView typeSpinner, boolean[] selectType, ArrayList<Integer> list, String[] type, String title) {
+        typeSpinner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(title);
+                builder.setCancelable(false);
+                builder.setMultiChoiceItems(type, selectType, new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        if (which == 0){
+                            if (isChecked){
+                                list.clear();
+                                for (int i = 0; i < type.length; i++) {
+                                    list.add(i);
+                                    selectType[i] = true;
+                                }
+                            }
+                            else {
+                                list.clear();
+                                Arrays.fill(selectType, false);
+                            }
+                        }
+                        else if (isChecked) {
+                            list.remove((Integer) 0);
+                            selectType[0] = false;
+                            list.add(which);
+                            Collections.sort(list);
+                        } else {
+                            selectType[0] = false;
+                            list.remove((Integer) 0);
+                            list.remove((Integer) which);
+                        }
+                    }
+                });
+                builder.setPositiveButton(getResources().getString(R.string.OK), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i) != 0){
+                                stringBuilder.append(type[list.get(i)]);
+                                if (i != list.size() - 1) {
+                                    stringBuilder.append(", ");
+                                }
+                            }
+                        }
+                        typeSpinner.setText(stringBuilder.toString());
+                    }
+                });
+                builder.setNegativeButton(getResources().getString(R.string.Cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNeutralButton(getResources().getString(R.string.Clear), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        for (int i = 0; i < selectType.length; i++) {
+                            selectType[i] = false;
+                            list.clear();
+                            typeSpinner.setText("");
+                        }
+                    }
+                });
+                builder.show();
+            }
+        });
+    }
+
+    private void almog() {
+        fAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        String userID = fAuth.getCurrentUser().getUid();
+        mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists() && dataSnapshot.getValue() != null) {
+                    if (dataSnapshot.getValue(Integer.class) == 0) {
+                        Toast.makeText(getActivity(), "Your a Student.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "Your a Teacher.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
+    public void closeLoadingDialog() {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                /* hide loading dialog (fragment resources ready) */
+                loadingDialog.cancel();
+            }
+        });
     }
 }

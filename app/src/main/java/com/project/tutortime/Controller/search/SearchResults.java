@@ -1,7 +1,5 @@
 package com.project.tutortime.Controller.search;
 
-import static com.project.tutortime.Model.firebase.FireBaseSearch.setRating;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -135,7 +133,7 @@ public class SearchResults extends Fragment {
             case 1:sortByPriceHigh();break;
         }
         if (getTeachers){
-            teachersToShow = setRating(listRating, teachersToShow, resultOfTeachers);
+            setRating();
 
             if (kindOfSort == 0)Collections.sort(teachersToShow);
             else teachersToShow.sort(Collections.reverseOrder());
@@ -151,25 +149,22 @@ public class SearchResults extends Fragment {
         return root;
     }
 
-
-
-
-//    private void setRating() {
-//        if (listRating.size() != 0){
-//            HashSet<String> used = new HashSet<>();
-//            for (int i = 0; i < listRating.size(); i++) {
-//                for (TutorAdapterItem t: resultOfTeachers) {
-//                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
-//                        if (!used.contains(t.getTeacher().getUserID())){
-//                            used.add(t.getTeacher().getUserID());
-//                            teachersToShow.add(t);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        else teachersToShow = resultOfTeachers;
-//    }
+    private void setRating() {
+        if (listRating.size() != 0){
+            HashSet<String> used = new HashSet<>();
+            for (int i = 0; i < listRating.size(); i++) {
+                for (TutorAdapterItem t: resultOfTeachers) {
+                    if (t.getTeacher().getRank().getAvgRank() >= listRating.get(i)+1 && t.getTeacher().getRank().getAvgRank() < listRating.get(i)+2){
+                        if (!used.contains(t.getTeacher().getUserID())){
+                            used.add(t.getTeacher().getUserID());
+                            teachersToShow.add(t);
+                        }
+                    }
+                }
+            }
+        }
+        else teachersToShow = resultOfTeachers;
+    }
 
     /** ///////// sort functions //////// */
 
@@ -262,6 +257,7 @@ public class SearchResults extends Fragment {
                                 }
                             }
                         }
+
                     }
                 }
             }

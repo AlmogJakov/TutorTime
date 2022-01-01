@@ -68,10 +68,8 @@ public class Login extends AppCompatActivity {
         FirebaseManager fm = new FirebaseManager();
         /* if the user already logged in */
         if (fm.isLoggedIn()) {
-            /* get user ID */
-            String userID = fAuth.getCurrentUser().getUid();
             /* redirects to the appropriate page depending on the user status */
-            fm.getInside(userID,(Activity)Login.this);
+            fm.getInside((Activity)Login.this);
             //testMessage(userID);
         }
 
@@ -125,10 +123,8 @@ public class Login extends AppCompatActivity {
                                 fAuth.signOut(); /* don't let user in */
                             } else { /* Email Verified! - let user in */
                                 Toast.makeText(Login.this, "Logged in Successfully!", Toast.LENGTH_SHORT).show();
-                                /* get user ID */
-                                String userID = fAuth.getCurrentUser().getUid();
                                 /* redirects to the appropriate page depending on the user status */
-                                fm.getInside(userID,(Activity)Login.this);
+                                fm.getInside((Activity)Login.this);
                                 //testMessage(userID);
                             }
                         } else {

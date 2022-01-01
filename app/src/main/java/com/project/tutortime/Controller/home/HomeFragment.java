@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
+import com.project.tutortime.Model.firebase.FirebaseManager;
 import com.project.tutortime.R;
 
 import androidx.annotation.NonNull;
@@ -67,8 +68,10 @@ public class HomeFragment extends Fragment {
         myProfileButton = binding.buttonProfile;
         searchButton = binding.buttonSearch;
         chatsButton = binding.buttonChats;
-        SpannableString ss = new SpannableString("(0)");
-        chatsButton.setText(ss);
+        //SpannableString ss = new SpannableString("(0)");
+        //chatsButton.setText(ss);
+        FirebaseManager fm = new FirebaseManager();
+        fm.setUnreadedChats(chatsButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -152,17 +155,6 @@ public class HomeFragment extends Fragment {
             public void onCancelled(@NonNull DatabaseError error) { }
         };
         myRef.addListenerForSingleValueEvent(listViewListener);
-//        listview.setTextFilterEnabled(true);
-//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(getActivity(), TeacherCard.class);
-//                intent.putExtra("user", tutorsToShow.get(position).getUser());
-//                intent.putExtra("teacher", tutorsToShow.get(position).getTeacher());
-//                intent.putExtra("sub", tutorsToShow.get(position).getSubName());
-//                startActivity(intent);
-//            }
-//        });
         return root;
     }
 
@@ -171,85 +163,12 @@ public class HomeFragment extends Fragment {
 
     }
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        myProfileButton = binding.buttonProfile;
-//        searchButton = binding.buttonSearch;
-//        chatsButton = binding.buttonChats;
-//        SpannableString ss = new SpannableString("(0)");
-//        chatsButton.setText(ss);
-//        searchButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Fragment fragment = new Search();
-//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//                if (savedInstanceState == null) {
-//
-//                    transaction.replace(R.id.fragment_container, fragment).commit();;
-//                    transaction.addToBackStack(null);
-//                }
-//            }
-//        });
-//        chatsButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Fragment fragment = new Chat();
-//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//                if (savedInstanceState == null) {
-//                    transaction.addToBackStack(null);
-//                    transaction.replace(R.id.fragment_container, fragment).commit();;
-//                }
-//            }
-//        });
-//        myProfileButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-//                ArrayList<Integer> arr = getActivity().getIntent().getExtras().getIntegerArrayList("status");
-//                if (arr.isEmpty() || (arr.get(0) != 0 && arr.get(0) != 1)) {
-//                    Toast.makeText(getContext(), "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
-//                int status = arr.get(0);
-//                if (status==0) {
-//                    Fragment fragment = new CustomerProfile();
-//                    if (savedInstanceState == null) {
-//                        transaction.addToBackStack(null);
-//                        transaction.replace(R.id.fragment_container, fragment).commit();;
-//                    }
-//                } else if (status==1) {
-//                    Fragment fragment = new TutorProfile();
-//                    if (savedInstanceState == null) {
-//                        transaction.addToBackStack(null);
-//                        transaction.replace(R.id.fragment_container, fragment).commit();;
-//                    }
-//                }
-//            }
-//        });
-    }
-
     @Override
     public void onDestroyView() {
         loadingDialog.dismiss();
         super.onDestroyView();
         closeLoadingDialog();
-
-//        myRef.removeEventListener(listViewListener);
-//        listViewListener=null;
-//        myRef=null;
-//        listview = binding.featuresList;
-//        listview.setAdapter(null);
-//        binding = null;
-//        adapter.killTargets();
-//        adapter = null;
     }
-
-//    public void replaceFragment(Fragment someFragment) {
-//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//        transaction.replace(R.id.frame_container, someFragment);
-//        transaction.addToBackStack(null);
-//        transaction.commit();
-//    }
 
     /* close Loading Dialog when all fragment resources ready */
     public void closeLoadingDialog() {

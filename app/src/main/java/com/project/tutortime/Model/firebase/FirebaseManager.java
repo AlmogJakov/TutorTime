@@ -2,8 +2,10 @@ package com.project.tutortime.Model.firebase;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.SpannableString;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,8 +34,9 @@ public class FirebaseManager {
     }
 
     /* after confirmed as connected this method redirects to the appropriate page depending on the user status */
-    final ArrayList<Integer> arr = new ArrayList<Integer>();
-    public void getInside(String userID, Activity c) {
+    final ArrayList<Integer> userType = new ArrayList<Integer>();
+    public void getInside(Activity c) {
+        String userID = fAuth.getCurrentUser().getUid();
         mDatabase.child("users").child(userID).child("isTeacher").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -42,9 +45,9 @@ public class FirebaseManager {
                     if (status == -1) { /* if the status is not selected */
                         c.startActivity(new Intent(c, ChooseStatus.class));
                     } else { /* status entered - pass the status to Main Activity */
-                        arr.add(dataSnapshot.getValue(Integer.class));
+                        userType.add(dataSnapshot.getValue(Integer.class));
                         Intent intent = new Intent(c, MainActivity.class);
-                        intent.putExtra("status", arr);
+                        intent.putExtra("status", userType);
                         c.startActivity(intent);
                     }
                     ((Activity) c).finish();
@@ -64,4 +67,22 @@ public class FirebaseManager {
         ((Activity) c).finish();
     }
 
+    final ArrayList<Integer> UnreadedChats = new ArrayList<Integer>();
+    public void setUnreadedChats(MaterialButton m) {
+        String userID = fAuth.getCurrentUser().getUid();
+        mDatabase.child("chats").child(userID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int result = 0;
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                    int val = ds.child("read").getValue(Integer.class);
+                    if (val==0) result++;
+                }
+                SpannableString ss = new SpannableString("("+result+")");
+                m.setText(ss);
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+    }
 }
