@@ -138,17 +138,18 @@ public class HomeFragment extends Fragment {
                         teacherObj teacher = ds.getValue(teacherObj.class);
                         userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
                         int subsNum = 0;
-                        if (teacher.getSub() != null){
-                            subsNum =teacher.getSub().size();
-                        }
+                        if (teacher.getSub() != null) {
+                            subsNum = teacher.getSub().size();
+                            Object[] subs = teacher.getSub().keySet().toArray();
+                            String sub = (String) subs[random.nextInt(subsNum)];
 
-                        Object[] subs = teacher.getSub().keySet().toArray();
-                        String sub = (String) subs[random.nextInt(subsNum)];
-                        if (user==null) {
-                            System.out.println("Found tutor without user information. Tutor ID:" + ds.getKey());
-                            continue; }
-                        TutorAdapterItem item = new TutorAdapterItem(user,teacher,sub);
-                        tutorsToShow.add(item);
+                            if (user == null) {
+                                System.out.println("Found tutor without user information. Tutor ID:" + ds.getKey());
+                                continue;
+                            }
+                            TutorAdapterItem item = new TutorAdapterItem(user, teacher, sub);
+                            tutorsToShow.add(item);
+                        }
                         /* done adding all random tutors */
                         if (data.size()==0) break;
                     }

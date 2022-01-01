@@ -277,7 +277,7 @@ public class SetTutorProfile extends AppCompatActivity {
                 }
 
                 if (pNum.charAt(0) != '0' || pNum.charAt(1) != '5' || pNum.length() != 10) {
-                    System.out.println(pNum);
+
                     PhoneNumber.setError("Invalid phoneNumber.");
                     return;
                 }
@@ -811,7 +811,6 @@ public class SetTutorProfile extends AppCompatActivity {
             }
             SetTutorProfile.AppInfoHolder finalHolder = holder;
             subjectObj s = getItem(position);
-            System.out.println(s);
             finalHolder.nameText.setText(s.getsName());
             finalHolder.typeText.setText("Type: "+s.getType());
             finalHolder.priceText.setText("Price: " +String.valueOf(s.getPrice()));

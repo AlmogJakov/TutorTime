@@ -498,11 +498,11 @@ public class TutorProfile extends Fragment {
     /* Delete cities and subjects from firebase in the tree search */
     public void DeleteTutorProfile(ArrayList <String> listCities, ArrayList <subjectObj> listSub) {
         Map<String, Object> childUpdates = new HashMap<>();
-        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                teacherID = dataSnapshot.child("users").child(userID).child("teacherID").getValue(String.class);
                 /* Delete subjects from the search tree*/
                 for(subjectObj sList : listSub) {
                     for (String rCity : listCities) {
@@ -534,7 +534,9 @@ public class TutorProfile extends Fragment {
                         child(userID).getChildren()) {
                     String title = userNotifications.child("title").getValue(String.class);
                     if (title.equals("rating received!") || title.equals("Congratulations!")) {
+                        System.out.println(userNotifications.getKey());
                         childUpdates.put("notifications/" + userID + "/" + userNotifications.getKey(), null);
+
                     }
                 }
                 myRef.updateChildren(childUpdates);
