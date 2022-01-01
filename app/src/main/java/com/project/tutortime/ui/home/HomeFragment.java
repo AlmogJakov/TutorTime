@@ -78,6 +78,7 @@ public class HomeFragment extends Fragment {
                 Fragment fragment = new Search();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 if (savedInstanceState == null) {
+                    transaction.addToBackStack(null);
                     transaction.replace(container.getId(), fragment).commit();;
                 }
             }
@@ -88,6 +89,7 @@ public class HomeFragment extends Fragment {
                 Fragment fragment = new Chat();
                 FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 if (savedInstanceState == null) {
+                    transaction.addToBackStack(null);
                     transaction.replace(container.getId(), fragment).commit();;
                 }
             }
@@ -105,11 +107,13 @@ public class HomeFragment extends Fragment {
                 if (status==0) {
                     Fragment fragment = new CustomerProfile();
                     if (savedInstanceState == null) {
+                        transaction.addToBackStack(null);
                         transaction.replace(container.getId(), fragment).commit();;
                     }
                 } else if (status==1) {
                     Fragment fragment = new TutorProfile();
                     if (savedInstanceState == null) {
+                        transaction.addToBackStack(null);
                         transaction.replace(container.getId(), fragment).commit();;
                     }
                 }
