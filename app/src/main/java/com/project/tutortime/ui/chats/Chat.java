@@ -115,17 +115,16 @@ public class Chat extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        //set the chat fragment layout and the recycler view
+        /* set the chat fragment layout and the recycler view */
         View view = inflater.inflate(R.layout.chats_fragment,container,false);
         recyclerView = view.findViewById(R.id.recycler_view_chats);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         setLastSeenStatus();
-        //init the chat list and chat adapter
+        /* init the chat list and chat adapter */
         chats = new ArrayList<>();
         chatsAdapter = new ChatsAdapter(getContext(),chats); //init the adapter
         recyclerView.setAdapter(chatsAdapter);
-
         readChats(); // read chats with listener to get the new chats
         return view;
     }
@@ -139,9 +138,12 @@ public class Chat extends Fragment {
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //add the chats to the list and notify the adapter on the changes
+                        /* add the chats to the list and notify the adapter on the changes */
                         for (DataSnapshot dss : snapshot.getChildren()) {
-                            chats.add(dss.getValue(Chat.class));
+                            Chat chat = (Chat) dss.getValue(Chat.class);
+                            if(chat != null){
+                                chats.add(chat);
+                            }
                         }
                         Collections.reverse(chats);
                         chatsAdapter.notifyDataSetChanged();

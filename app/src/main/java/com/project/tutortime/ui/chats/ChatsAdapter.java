@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -71,15 +73,15 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
             holder.UserName.setText(chat.getTeacherName());//set name
             if(chat.getImageUrl()!=null) { //this user already set profile image
-                loadUserImage(chat.getImageUrl(),holder.ProfilePicture); //load the image
+                loadUserImage(chat.getImageUrl(),holder.profilePicture); //load the image
             }
             else{ // if the teacher didn't added a profile picture set the image to default
-                holder.ProfilePicture.setImageResource(R.drawable.profile);
+                holder.profilePicture.setImageResource(R.drawable.profile);
             }
         }
         else{// this is the teacher
             holder.UserName.setText(chat.getStudentName());
-            holder.ProfilePicture.setImageResource(R.drawable.profile);
+            holder.profilePicture.setImageResource(R.drawable.profile);
         }
         holder.lastMessage.setText(chat.getLastMessage());//set the last message that sent
         //set the profile image circle to black
@@ -92,15 +94,15 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                 deleteChatDialog(chat,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
             }
         });//when click on profile picture show the user the teacher card if he is teacher
-        holder.ProfilePicture.setOnClickListener(new View.OnClickListener() {
+        holder.profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //itay add here the teacherCard fragment - only if the user is teacher !
 
 
             }
-        }); //when click on open , the chat will open
-        holder.Open.setOnClickListener(new View.OnClickListener() {
+        }); /* open the chat when click on the chat linear layout */
+        holder.chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //start the activity and pass the chat data to the message activity
@@ -132,20 +134,20 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         public TextView UserName;
         public TextView lastMessage;
         public TextView lastSeen;
-        public ImageView Open;
-        public ImageView ProfilePicture;
+        public ImageView profilePicture;
+        public ImageView deleteChat;
         public MaterialCardView userStatus;
-        public ImageButton deleteChat;
+        public LinearLayout chat;
 
         public ChatsViewHolder(@NonNull View itemView) {
             super(itemView);
             UserName = (TextView)itemView.findViewById(R.id.UserNameChat);
             lastMessage = (TextView)itemView.findViewById(R.id.last_message);
             lastSeen = (TextView)itemView.findViewById(R.id.last_seen);
-            Open = (ImageView)itemView.findViewById(R.id.open);
-            ProfilePicture = (ImageView)itemView.findViewById(R.id.profile_image_chat);
+            chat = (LinearLayout) itemView.findViewById(R.id.chat_linear_layout);
+            profilePicture = (ImageView)itemView.findViewById(R.id.profile_image_chat);
             userStatus = (MaterialCardView) itemView.findViewById(R.id.image_cv);
-            deleteChat = (ImageButton) itemView.findViewById(R.id.delete_chat);
+            deleteChat = (ImageView) itemView.findViewById(R.id.delete_chat);
 
         }
     }
@@ -173,13 +175,13 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
      */
     private void deleteChatDialog(Chat chat, int position,String userID){
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle("Delete Chat")
+        dialog.setTitle(mContext.getResources().getString(R.string.deleteChatDialog))
                 .setIcon(R.drawable.bell)
-                .setMessage("Are you sure?")
-                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                .setMessage(mContext.getResources().getString(R.string.areYouSure))
+                .setPositiveButton(mContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
                     }
-                }).setNegativeButton("Yes",new DialogInterface.OnClickListener() {
+                }).setNegativeButton(mContext.getResources().getString(R.string.yes),new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialoginterface, int i) {
                 removeChat(chat,position,userID);
             }
@@ -197,10 +199,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String status = "Offline"; // in case that the user didnt visit the chats at all
+                            String status = mContext.getResources().getString(R.string.offline); // in case that the user didnt visit the chats at all
                             try{
                                 long time = snapshot.getValue(long.class); //get the value from database
-                                 status = "last seen at:"+DateFormat.format("dd-MM-yyyy(HH:mm:ss)", time);
+                                 status = mContext.getResources().getString(R.string.lastSeen)+DateFormat.format("dd-MM(HH:mm)", time);
                             }catch (Exception e){
                                 e.printStackTrace();
                             }
@@ -219,10 +221,10 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String status = "Offline"; // in case that the user didnt visit the chats at all
+                            String status = mContext.getResources().getString(R.string.offline); // in case that the user didnt visit the chats at all
                             try{
                                 long time = snapshot.getValue(long.class); //get the value from database
-                                status = "last seen at:"+DateFormat.format("dd-MM-yyyy(HH:mm:ss)", time);
+                                status = mContext.getResources().getString(R.string.lastSeen)+DateFormat.format("dd-MM(HH:mm)", time);
                             }catch (Exception e){
                                 e.printStackTrace();
                             }

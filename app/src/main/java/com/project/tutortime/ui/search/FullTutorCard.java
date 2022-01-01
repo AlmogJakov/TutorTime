@@ -214,7 +214,7 @@ public class FullTutorCard extends AppCompatActivity {
                                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                                         String studentName = snapshot.getValue(String.class);
                                         /* send the teacher thats new chat is received */
-                                        sendNotification(user.getfName(), studentName, teacher.getUserID());
+                                        sendNotification(studentName, teacher.getUserID());
                                         /* add the chat to the database and get the chatID */
                                         String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
                                                 studentName, user.getfName(), teacher.getImgUrl());
@@ -341,13 +341,13 @@ public class FullTutorCard extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void sendNotification() {
+    private void sendNotification() {//
         HashMap<String, Object> map = new HashMap<>();
         String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).push().getKey();
         map.put("notificationID",notificationID);
-        map.put("text","You are rated! Your rating now is: "+teacher.getRank().getAvgRank()+ " Stars.");
-        map.put("title","rating received!");
-//        map.put("sentFrom",userName);
+       // map.put("text","You are rated! Your rating now is: "+teacher.getRank().getAvgRank()+ " Stars.");
+        map.put("title","Ranking");
+        //map.put("sentFrom",teacher.getRank().getAvgRank());
         map.put("read",1);
         if (notificationID != null)
             FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).child(notificationID).setValue(map);
@@ -370,13 +370,12 @@ public class FullTutorCard extends AppCompatActivity {
         }
         return null;
     }
-    private void sendNotification(String teacherName,String userName,String teacherID) {
+    private void sendNotification(String teacherName,String teacherID) {
         HashMap<String, Object> map = new HashMap<>();
         String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).push().getKey();
         map.put("notificationID",notificationID);
-        map.put("text","Chat with "+teacherName+" is active");
-        map.put("title","Chat received!");
-        map.put("sentFrom",userName);
+        map.put("title",getResources().getString(R.string.chatReceived));
+        map.put("sentFrom",teacherName);
         map.put("read",0);
         if (notificationID != null)
             FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).child(notificationID).setValue(map);

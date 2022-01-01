@@ -723,8 +723,7 @@ public class SetTutorProfile extends AppCompatActivity {
         HashMap<String, Object> map = new HashMap<>();
         String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
         map.put("notificationID",notificationID);
-        map.put("text","You are a teacher!");
-        map.put("title","Congratulations!");
+        map.put("title","TutorProfile");
         map.put("sentFrom",userName);
         map.put("read",0);
         if (notificationID != null)

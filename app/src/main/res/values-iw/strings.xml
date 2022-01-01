@@ -18,6 +18,29 @@
     <string name="registerSignUp">הירשם</string>
     <string name="registerHaveAccountLogin">יש לך חשבון? התחבר</string>
 
+    <!-- Strings chats -->
+    <string name="lastSeen">נראה לאחרונה ב:</string>
+    <string name="deleteChatDialog">מחיקת צאט</string>
+    <string name="offline">מנותק</string>
+
+    <!-- Strings notifications -->
+    <string name="deleteNotificationDialog">מחיקת התראה</string>
+    <string name="areYouSure">האם אתה בטוח?</string>
+    <string name="yes">כן</string>
+    <string name="no">לא</string>
+    <string name="chatReceived">צאט חדש התקבל!</string>
+    <string name="chatWith">צאט עם</string>
+    <string name="isActive"> פעיל</string>
+    <string name="notificationRegisterTitle"> ברוך הבא ל-TutorTime</string>
+    <string name="notificationRegisterText">הרשמתך הושלמה בהצלחה,לימוד מהנה!</string>
+    <string name="notificationTutorProfileTitle">מזל טוב!</string>
+    <string name="notificationTutorProfileText">אתה מורה!</string>
+    <string name="notificationChatTitle">צאט חדש התקבל!</string>
+    <string name="notificationChatTextWith">צאט עם </string>
+    <string name="notificationChatTextIs">פעיל</string>
+    <string name="notificationRankingTitle">דירוג חדש התקבל!</string>
+    <string name="notificationRankingText">דורגת! תוכל לראות את הדירוג בפרופיל שלך </string>
+
     <!-- Strings choose status -->
     <string name="chooseStatusTutor">מורה</string>
     <string name="chooseStatusCustomer">לקוח</string>

@@ -19,13 +19,14 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_send"
+        android:layout_marginStart="5dp"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         app:fabSize="mini"/>
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/sendBtn"
+        android:layout_toStartOf="@id/sendBtn"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
         <EditText
@@ -34,16 +35,15 @@
             android:hint="Your message..."
             android:id="@+id/input_text"/>
     </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
         android:layout_above="@id/sendBtn"
-        android:dividerHeight="15dp"
-        android:divider="@android:color/transparent"
-        android:layout_marginBottom="15dp"/>
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="15dp" />
 
 
 </RelativeLayout>

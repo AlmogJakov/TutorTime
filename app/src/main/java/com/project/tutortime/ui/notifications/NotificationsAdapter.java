@@ -1,5 +1,6 @@
 package com.project.tutortime.ui.notifications;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -55,28 +56,50 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return new NotificationsAdapter.NotificationsViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull NotificationsViewHolder holder,int position) {
 
         Notifications notifications = mNotifications.get(position);//get the current notification
-        holder.text.setText(notifications.getText());
-        holder.title.setText(notifications.getTitle());
-        //if the user didnt mark the notifcation as "read" invisible new alert
+        /* get the type of the notification and set the correct text and title */
+        switch (notifications.getTitle()){
+            case "Register":
+                holder.title.setText(mContext.getResources().getText(R.string.notificationRegisterTitle));
+                holder.text.setText(mContext.getResources().getText(R.string.notificationRegisterText));
+                break;
+            case "TutorProfile":
+                holder.title.setText(mContext.getResources().getText(R.string.notificationTutorProfileTitle));
+                holder.text.setText(mContext.getResources().getText(R.string.notificationTutorProfileText));
+                break;
+            case "Chat":
+                holder.title.setText(mContext.getResources().getText(R.string.notificationChatTitle));
+                holder.text.setText(mContext.getResources().getText(R.string.notificationChatTextWith)
+                       +" "+notifications.getSentFrom()+" "+mContext.getResources().getString(R.string.notificationChatTextIs) );
+                break;
+            case "Ranking":
+                holder.title.setText(mContext.getResources().getText(R.string.notificationRankingTitle));
+                holder.text.setText(mContext.getResources().getText(R.string.notificationRankingText));
+                break;
+        }
+        /* if the user mark the notifcation as "read" invisible new alert */
         if(notifications.getRead()==1){
             holder.newAlert.setVisibility(View.GONE);
-            holder.readBtn.setVisibility(View.GONE);
-        }// delete notifications from view and database
+            holder.readBtn.setVisibility(View.GONE); }
+        /* delete notifications from view and database */
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteDialog(notifications,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
             }
         });
+        /* mark this notification as read set the view to invisible*/
         holder.readBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference().child("notifications").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(notifications.getNotificationID())
+                FirebaseDatabase.getInstance().getReference().child("notifications")
+                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(notifications.getNotificationID())
                         .child("read").setValue(1);
+                /* set the btns to invisible */
                 holder.readBtn.setVisibility(View.GONE);
                 holder.newAlert.setVisibility(View.GONE);
             }
@@ -136,13 +159,13 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
      */
     private void deleteDialog(Notifications notifications, int position,String userID){
         AlertDialog.Builder dialog = new AlertDialog.Builder(mContext);
-        dialog.setTitle("Delete notification")
+        dialog.setTitle(mContext.getResources().getString(R.string.deleteNotificationDialog))
                 .setIcon(R.drawable.bell)
-                .setMessage("Are you sure?")
-                .setPositiveButton("No", new DialogInterface.OnClickListener() {
+                .setMessage(mContext.getResources().getString(R.string.areYouSure))
+                .setPositiveButton(mContext.getResources().getString(R.string.no), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
                     }
-                }).setNegativeButton("Yes",new DialogInterface.OnClickListener() {
+                }).setNegativeButton(mContext.getResources().getString(R.string.yes),new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialoginterface, int i) {
                 removeNotification(notifications,position,userID);
             }

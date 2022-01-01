@@ -5,7 +5,6 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,11 +39,11 @@ public class MessageListAdapter extends RecyclerView.Adapter {
             //if the message is sent the view should display it on the left side
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = LayoutInflater.from(mContext)
-                    .inflate(R.layout.item_chat_me, parent, false);
+                    .inflate(R.layout.message_item_me, parent, false);
             return new SentMessageHolder(view);
         } else{
             view = LayoutInflater.from(mContext)
-                    .inflate(R.layout.item_chat_other, parent, false);
+                    .inflate(R.layout.message_item_other, parent, false);
             return new ReceivedMessageHolder(view);
         }
     }

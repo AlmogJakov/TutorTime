@@ -62,6 +62,7 @@ public class MessageActivity extends AppCompatActivity {
                     public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                         Message messageModel = snapshot.getValue(Message.class);
                         messageList.add(messageModel);
+                        mMessageAdapter.notifyDataSetChanged();
 
                     }
 

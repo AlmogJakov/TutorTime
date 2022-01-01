@@ -254,10 +254,7 @@ public class Register extends AppCompatActivity {
     private void addNotification(String userID,String email){
         HashMap<String,Object> map = new HashMap<>();
         String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
-        map.put("TeacherEmail","");
-        map.put("TeacherName","");
-        map.put("UserEmail",email);
-        map.put("Subject","");
+        map.put("title","Register");
         map.put("FormOfLearning","");
         map.put("Remarks","Welcome to TutorTime!");
         map.put("RequestStatus","");

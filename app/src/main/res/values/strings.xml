@@ -30,6 +30,33 @@
     <string name="setTutorProfileAddSubject">Add Subject</string>
     <string name="setTutorProfileSaveprofile">Save profile</string>
 
+    <!-- Strings chats -->
+    <string name="lastSeen">last seen at:</string>
+    <string name="deleteChatDialog">Delete notification</string>
+    <string name="offline">Offline</string>
+    <string name="open_door_image_to_open_the_chat" translatable="false">open door image to open the chat</string>
+    <string name="trash_can_image_do_remove_chat" translatable="false">trash can image do remove chat</string>
+    <string name="delete_chat_icon" translatable="false" />
+    <string name="the_other_user_profile_picture" translatable="false">the other user profile picture</string>
+
+    <!-- Strings notifications -->
+    <string name="deleteNotificationDialog">Delete notification</string>
+    <string name="areYouSure">are you sure?</string>
+    <string name="yes">yes</string>
+    <string name="no">no</string>
+    <string name="chatReceived">Chat received!</string>
+    <string name="chatWith">Chat with</string>
+    <string name="isActive">is active</string>
+    <string name="notificationRegisterTitle">Welcome to TutorTime!</string>
+    <string name="notificationRegisterText">your register is completed ,enjoy learning</string>
+    <string name="notificationTutorProfileTitle">Congratulations!</string>
+    <string name="notificationTutorProfileText">you are a teacher!</string>
+    <string name="notificationChatTitle">New chat received!</string>
+    <string name="notificationChatTextWith">Chat with</string>
+    <string name="notificationChatTextIs">is active</string>
+    <string name="notificationRankingTitle">Rating received!</string>
+    <string name="notificationRankingText">You are rated! you can check your rank in your Teacher profile </string>
+
     <!-- Strings my sub list -->
     <string name="mySubListServiceCities">Service cities</string>
     <string name="mySubListSelectServiceCities">Select service cities</string>
@@ -240,4 +267,5 @@
     <string name="priceCard">Price:</string>
     <string name="learning_typeCard">Learning Type:</string>
     <string name="subjectCard">Subject:</string>
+
 </resources>

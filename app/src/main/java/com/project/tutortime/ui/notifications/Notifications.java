@@ -38,7 +38,6 @@ import java.util.List;
 
 public class Notifications extends Fragment {
     private String notificationID;
-    private String text;
     private String title;
     private String sentFrom;
     private int read;
@@ -69,14 +68,6 @@ public class Notifications extends Fragment {
 
     public void setNotificationID(String notificationID) {
         this.notificationID = notificationID;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 
     public String getTitle() {

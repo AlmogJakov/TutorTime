@@ -18,19 +18,21 @@
             android:id="@+id/profile_image_chat"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:scaleType="fitCenter" />
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/the_other_user_profile_picture" />
     </com.google.android.material.card.MaterialCardView>
 
 
     <LinearLayout
         android:id="@+id/chat_linear_layout"
-        android:layout_width="287dp"
-        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
         android:layout_marginEnd="8dp"
         android:layout_toStartOf="@id/chat_ic_layout"
         android:layout_toEndOf="@id/image_cv"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -39,29 +41,26 @@
                 android:id="@+id/UserNameChat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="UserName"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/last_seen"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:id="@+id/last_seen"
-                android:textSize="13sp"
+                android:layout_marginStart="20dp"
                 android:textColor="@color/gray"
-                android:layout_marginLeft="20dp"
-                />
-
+                android:textSize="13sp" />
 
 
         </LinearLayout>
+
         <TextView
             android:id="@+id/last_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:maxLines="1"
-            android:text="Hey how are you ? "
             android:textColor="@color/common_google_signin_btn_text_light" />
 
 
@@ -74,18 +73,11 @@
         android:layout_alignParentEnd="true">
 
         <ImageView
-            android:id="@+id/open"
-            android:layout_width="30dp"
-            android:layout_height="59dp"
-            android:layout_marginEnd="0dp"
-            android:src="@drawable/open_icon" />
-        <ImageButton
-            android:layout_width="10dp"
-            android:layout_height="20dp"
             android:id="@+id/delete_chat"
-            android:layout_marginStart="3dp"
-            android:src="@drawable/ic_delete_chat"
-            android:layout_marginTop="39dp"/>
+            android:layout_width="40dp"
+            android:layout_height="50dp"
+            android:src="@drawable/trash_can_icon"
+            android:contentDescription="@string/delete_chat_icon" />
 
     </LinearLayout>
 

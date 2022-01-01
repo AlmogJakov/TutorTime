@@ -1,5 +1,7 @@
 package com.project.tutortime.ui.chats;
 
+import java.util.Date;
+
 /**
  * This class represents message in the chat
  */
@@ -15,6 +17,8 @@ public class Message {
     public Message(){
 
     }
+
+
 
     public String getMessageText() {
         return messageText;
