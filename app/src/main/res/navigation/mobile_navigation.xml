@@ -7,31 +7,31 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.project.tutortime.ui.home.HomeFragment"
+        android:name="com.project.tutortime.Controller.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_tutor_profile"
-        android:name="com.project.tutortime.ui.tutorprofile.TutorProfile"
+        android:name="com.project.tutortime.Controller.tutorprofile.TutorProfile"
         android:label="@string/menu_tutor_profile"
         tools:layout="@layout/fragment_tutor_profile" />
 
     <fragment
         android:id="@+id/nav_my_sub_list"
-        android:name="com.project.tutortime.ui.tutorsublist.TutorSubList"
+        android:name="com.project.tutortime.Controller.tutorsublist.TutorSubList"
         android:label="My Subject List"
         tools:layout="@layout/fragment_my_sub_list" />
 
     <fragment
         android:id="@+id/nav_my_profile"
-        android:name="com.project.tutortime.ui.customerprofile.CustomerProfile"
+        android:name="com.project.tutortime.Controller.customerprofile.CustomerProfile"
         android:label="My Profile"
         tools:layout="@layout/fragment_customer_profile" />
 
     <activity
         android:id="@+id/nav_new_tutor_profile"
-        android:name="com.project.tutortime.SetTutorProfile"
+        android:name="com.project.tutortime.View.SetTutorProfile"
         android:noHistory="true"
         android:label="@string/menu_new_tutor_profile" />
 
@@ -44,18 +44,18 @@
 
     <fragment
         android:id="@+id/nav_search"
-        android:name="com.project.tutortime.ui.search.Search"
+        android:name="com.project.tutortime.Controller.search.Search"
         android:label="@string/menu_search"
         tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/nav_notifications"
-        android:name="com.project.tutortime.ui.notifications.Notifications"
+        android:name="com.project.tutortime.Controller.notifications.Notifications"
         android:label="@string/menu_notifications"
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/nav_chats"
-        android:name="com.project.tutortime.ui.chats.Chat"
+        android:name="com.project.tutortime.Controller.chats.Chat"
         android:label="Chats"
         tools:layout="@layout/chats_fragment" />
 </navigation>

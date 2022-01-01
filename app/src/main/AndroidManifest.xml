@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TutorTime">
         <activity
-            android:name=".LoadingScreen"
+            android:name=".View.LoadingScreen"
             android:exported="true">
             <intent-filter>
 
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SetTutorProfile"
+            android:name=".View.SetTutorProfile"
             android:exported="true">
             <intent-filter>
 
@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SplashScreen"
+            android:name=".View.SplashScreen"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Login"
+            android:name=".View.Login"
             android:exported="true">
             <intent-filter>
 
@@ -54,7 +54,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register"
+            android:name=".View.Register"
             android:exported="true">
             <intent-filter>
 
@@ -64,7 +64,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ChooseStatus"
+            android:name=".View.ChooseStatus"
             android:exported="true">
             <intent-filter>
 
@@ -85,10 +85,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.search.FullTutorCard"
+            android:name=".Controller.search.FullTutorCard"
             tools:ignore="Instantiatable" />
         <activity
-            android:name=".MessageActivity"
+            android:name=".View.MessageActivity"
             android:exported="true">
             <intent-filter>
 
