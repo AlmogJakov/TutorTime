@@ -186,14 +186,10 @@ public class SearchResults extends Fragment {
     /** ///////// sort functions //////// */
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void sortByPriceHigh() {
-        prices.sort(Collections.reverseOrder());
-        teachersToShow.sort(Collections.reverseOrder());
-    }
+    private void sortByPriceHigh() { prices.sort(Collections.reverseOrder()); }
 
     private void sortByPriceLow() {
         Collections.sort(prices);
-        Collections.sort(teachersToShow);
     }
 
 
@@ -201,17 +197,12 @@ public class SearchResults extends Fragment {
     /** Fills all search card  */
     private void setListview(String[] Cities){
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (chooseType[0])setBoth(dataSnapshot);
                 if (chooseType[1])setFrontal(dataSnapshot);
                 if (chooseType[2])setOnline(dataSnapshot);
                 resultOfTeachers = teachersToShow;
-                switch (kindOfSort){
-                    case 0:sortByPriceLow();break;
-                    case 1:sortByPriceHigh();break;
-                }
                 adapter = new TutorAdapter(getActivity(), teachersToShow);
                 listview.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
