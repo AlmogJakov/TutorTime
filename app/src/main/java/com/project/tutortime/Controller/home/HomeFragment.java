@@ -10,9 +10,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationView;
 import com.project.tutortime.R;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -70,30 +72,20 @@ public class HomeFragment extends Fragment {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new Search();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                // add to back stack
-                getActivity().getSupportFragmentManager().popBackStack();
-                transaction.addToBackStack(null);
-                transaction.replace(R.id.fragment_container, fragment).commit();
-
+                NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
+                navigationView.getMenu().performIdentifierAction(R.id.nav_search, 0);
             }
         });
         chatsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment fragment = new Chat();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                // add to back stack
-                getActivity().getSupportFragmentManager().popBackStack();
-                transaction.addToBackStack("null");
-                transaction.replace(R.id.fragment_container, fragment).commit();
+                NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
+                navigationView.getMenu().performIdentifierAction(R.id.nav_chats, 0);
             }
         });
         myProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                 ArrayList<Integer> arr = getActivity().getIntent().getExtras().getIntegerArrayList("status");
                 if (arr.isEmpty() || (arr.get(0) != 0 && arr.get(0) != 1)) {
                     Toast.makeText(getContext(), "Could not retrieve value from database.", Toast.LENGTH_SHORT).show();
@@ -101,17 +93,11 @@ public class HomeFragment extends Fragment {
                 }
                 int status = arr.get(0);
                 if (status==0) {
-                    Fragment fragment = new CustomerProfile();
-                    // add to back stack
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    transaction.addToBackStack("null");
-                    transaction.replace(R.id.fragment_container, fragment).commit();
+                    NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
+                    navigationView.getMenu().performIdentifierAction(R.id.nav_my_profile, 0);
                 } else if (status==1) {
-                    Fragment fragment = new TutorProfile();
-                    // add to back stack
-                    getActivity().getSupportFragmentManager().popBackStack();
-                    transaction.addToBackStack("null");
-                    transaction.replace(R.id.fragment_container, fragment).commit();
+                    NavigationView navigationView = (NavigationView)getActivity().findViewById(R.id.nav_view);
+                    navigationView.getMenu().performIdentifierAction(R.id.nav_tutor_profile, 0);
                 }
             }
         });
