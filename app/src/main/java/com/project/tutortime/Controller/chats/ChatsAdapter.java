@@ -29,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.project.tutortime.Model.firebase.FireBaseChats;
 import com.project.tutortime.View.MessageActivity;
 import com.project.tutortime.R;
 
@@ -82,7 +83,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         }
         /* set the last message to the last message that sent in this chat */
         holder.lastMessage.setText(chat.getLastMessage());
-        setLastSeen(holder.lastSeen,chat.getStudentID(),chat.getTeacherID());
+        /* set the last seen time in the chat text view */
+        FireBaseChats.setLastSeen(chat.getStudentID(), chat.getTeacherID(), mContext, holder.lastSeen);
         /* allow the user to remove the chat */
         holder.deleteChat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,7 +105,8 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         holder.chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                markAsRead(chat.getChatID());
+                /* mark the chat as read */
+                FireBaseChats.markChatAsRead(chat.getChatID(),FirebaseAuth.getInstance().getCurrentUser().getUid());
                 //start the activity and pass the chat data to the message activity
                 Intent intent = new Intent(mContext, MessageActivity.class);
                 intent.putExtra("studentName",chat.getStudentName());
@@ -162,8 +165,7 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,mChats.size());
         //remove from data base
-        FirebaseDatabase.getInstance().getReference().child("chats").child(userID)
-                .child(chat.getChatID()).removeValue();
+        FireBaseChats.removeChat(userID,chat.getChatID());
     }
 
     /**
@@ -187,58 +189,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
 
 
     /**
-     * This method check if the user is online and set the
-     * background to green or black depend on the user status
-     */
-    private void setLastSeen(TextView lastSeen, String userID, String teacherID){
-        if(FirebaseAuth.getInstance().getCurrentUser().getUid().equals(userID)) { //get the other user last seen time
-            FirebaseDatabase.getInstance().getReference().child("users").child(teacherID).child("lSeen").
-                    addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String status = mContext.getResources().getString(R.string.offline); // in case that the user didnt visit the chats at all
-                            try{
-                                long time = snapshot.getValue(long.class); //get the value from database
-                                 status = mContext.getResources().getString(R.string.lastSeen)+DateFormat.format("dd-MM(HH:mm)", time);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            /* set the status to the last seen value*/
-                            lastSeen.setText(status);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-        }
-        else{ //
-            FirebaseDatabase.getInstance().getReference().child("users").child(userID).child("lSeen")
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String status = mContext.getResources().getString(R.string.offline); // in case that the user didnt visit the chats at all
-                            try{
-                                long time = snapshot.getValue(long.class); //get the value from database
-                                status = mContext.getResources().getString(R.string.lastSeen)+DateFormat.format("dd-MM(HH:mm)", time);
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                            /* set the status to the last seen value*/
-                            lastSeen.setText(status);
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-
-                        }
-                    });
-
-        }
-    }
-
-    /**
      * This method load the user image from given url and set the imageview
      * @param url image url
      * @param image the imageview to load
@@ -258,8 +208,5 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
                     public void onLoadCleared(@Nullable Drawable placeholder) { }
                 });
         }
-        private void markAsRead(String chatID){
-            FirebaseDatabase.getInstance().getReference().child("chats").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                    .child(chatID).child("read").setValue(1);
-        }
+
 }

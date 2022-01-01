@@ -30,6 +30,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.Model.firebase.FireBaseUser;
 import com.project.tutortime.R;
 
@@ -203,7 +204,7 @@ public class Register extends AppCompatActivity {
                             String userID = fAuth.getCurrentUser().getUid();
                             u.addUserToDB(fName, lName, email, city, gender, userID);
                             /* add welcome notification to user */
-                            addNotification(userID, email);
+                            FireBaseNotifications.sendNotification(userID,"Register","");
                             fAuth.signOut();
                             // startActivity(new Intent(getApplicationContext(), ChooseOne.class));
                             startActivity(new Intent(getApplicationContext(), Login.class));
@@ -251,19 +252,6 @@ public class Register extends AppCompatActivity {
         return true;
     }
 
-    private void addNotification(String userID,String email){
-        HashMap<String,Object> map = new HashMap<>();
-        String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
-        map.put("title","Register");
-        map.put("FormOfLearning","");
-        map.put("Remarks","Welcome to TutorTime!");
-        map.put("RequestStatus","");
-        map.put("PhoneNumber","");
-        map.put("sendTo","");
-        map.put("sentFrom",fAuth.getCurrentUser().getUid());
-        map.put("NotificationKey",key);
-        if(key!=null)FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
-    }
     private void setLocale(String lang) {
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);

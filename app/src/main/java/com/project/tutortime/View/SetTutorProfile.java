@@ -54,6 +54,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.MainActivity;
+import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.Model.firebase.FireBaseTutor;
 import com.project.tutortime.Model.firebase.rankObj;
 import com.project.tutortime.Model.firebase.subjectObj;
@@ -539,7 +540,7 @@ public class SetTutorProfile extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String userName = snapshot.getValue(String.class);
-                        sendNotification(userID,userName);
+                        FireBaseNotifications.sendNotification(userID,"TutorProfile",userName);
                     }
 
                     @Override

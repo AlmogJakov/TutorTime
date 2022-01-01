@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 //import com.project.tutortime.Controller.chats.Message;
 import com.project.tutortime.Controller.chats.MessageAdapter;
 import com.project.tutortime.Controller.chats.Message;
+import com.project.tutortime.Model.firebase.FireBaseMessages;
 import com.project.tutortime.R;
 
 import java.util.ArrayList;
@@ -63,36 +64,7 @@ public class MessageActivity extends AppCompatActivity {
         mMessageAdapter = new MessageAdapter(getApplicationContext(),messageList);
         mMessageRecycler.setAdapter(mMessageAdapter);
         /* read messages from database */
-        FirebaseDatabase.getInstance().getReference().child("messages").child(chatID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Message messageModel = snapshot.getValue(Message.class);
-                        messageList.add(messageModel);
-                        mMessageAdapter.notifyDataSetChanged();
-
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+        FireBaseMessages.readMessaages(chatID,messageList,mMessageAdapter);
         /* allow the user to send his message from the send btn */
         send.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,15 +92,15 @@ public class MessageActivity extends AppCompatActivity {
     private void sendMessage(String chatID,String Text,String senderName,String studentID,String teacherID){
 
         HashMap<String,Object> messageMap = new HashMap<>();
-        String messageID = FirebaseDatabase.getInstance().getReference().child("messages").child(chatID).push().getKey();
+        String messageID = FireBaseMessages.createMessageID(chatID);
         messageMap.put("messageText",Text);
         messageMap.put("senderID",FirebaseAuth.getInstance().getCurrentUser().getUid());
         messageMap.put("senderName",senderName);
         messageMap.put("messageID",messageID);
         messageMap.put("time",new Date().getTime());
-        if(messageID!=null)FirebaseDatabase.getInstance().getReference().child("messages").child(chatID).child(messageID).setValue(messageMap);
-        FirebaseDatabase.getInstance().getReference().child("chats").child(studentID).child(chatID).child("lastMessage").setValue(Text);
-        FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).child(chatID).child("lastMessage").setValue(Text);
+        FireBaseMessages.addMessage(chatID,messageID,messageMap);
+        FireBaseMessages.updateLastMessage(studentID,chatID,Text);
+        FireBaseMessages.updateLastMessage(teacherID,chatID,Text);
     }
 
 }

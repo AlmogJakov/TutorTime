@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.tutortime.Model.firebase.FireBaseChats;
 import com.project.tutortime.R;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -133,36 +134,10 @@ public class Chat extends Fragment {
         chats = new ArrayList<>();
         chatsAdapter = new ChatsAdapter(getContext(),chats); //init the adapter
         recyclerView.setAdapter(chatsAdapter);
-        readChats(); // read chats with listener to get the new chats
+        FireBaseChats.readChats(chats,chatsAdapter,FirebaseAuth.getInstance().getCurrentUser().getUid()); // read chats with listener to get the new chats
         return view;
     }
 
-    /**
-     * This method allows to read the  chat data from the database
-     */
-    private void readChats() {
-        FirebaseDatabase.getInstance().getReference().child("chats")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        /* add the chats to the list and notify the adapter on the changes */
-                        for (DataSnapshot dss : snapshot.getChildren()) {
-                            Chat chat = (Chat) dss.getValue(Chat.class);
-                            if(chat != null){
-                                chats.add(chat);
-                            }
-                        }
-                        Collections.reverse(chats);
-                        chatsAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
 
     @Override
     public void onDestroyView() {
@@ -176,6 +151,7 @@ public class Chat extends Fragment {
         FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
                 child("lSeen").setValue(new Date().getTime());
     }
+
 
 
 }

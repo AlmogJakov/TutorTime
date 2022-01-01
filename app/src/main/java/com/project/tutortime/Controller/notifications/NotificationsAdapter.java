@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.R;
 
 import java.util.List;
@@ -83,9 +84,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         holder.readBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FirebaseDatabase.getInstance().getReference().child("notifications")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child(notifications.getNotificationID())
-                        .child("read").setValue(1);
+                FireBaseNotifications.getReadNotification(notifications.getNotificationID());
                 /* set the btns to invisible */
                 holder.readBtn.setVisibility(View.GONE);
                 holder.newAlert.setVisibility(View.GONE);
@@ -138,8 +137,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         notifyItemRemoved(position);
         notifyItemRangeChanged(position,mNotifications.size());
         //remove from data base
-        FirebaseDatabase.getInstance().getReference().child("notifications").child(userID)
-                .child(notifications.getNotificationID()).removeValue();
+        FireBaseNotifications.removeNotification(notifications.getNotificationID(),userID);
     }
 
 

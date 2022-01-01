@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.R;
 
 import java.util.ArrayList;
@@ -89,7 +90,8 @@ public class Notifications extends Fragment {
         notifications = new ArrayList<>();
         notificationsAdapter = new NotificationsAdapter(getContext(),notifications);
         recyclerView.setAdapter(notificationsAdapter);
-        readNotifications(); /* read the notifications from the database */
+        /* read the notifications from the database */
+        FireBaseNotifications.readNotifications(notifications,notificationsAdapter);
         return view;
     }
 

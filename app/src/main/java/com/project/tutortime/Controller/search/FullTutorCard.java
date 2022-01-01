@@ -32,6 +32,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.project.tutortime.Model.firebase.FireBaseChats;
+import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.View.LoadingDialog;
 import com.project.tutortime.View.MessageActivity;
 import com.project.tutortime.R;
@@ -73,7 +75,6 @@ public class FullTutorCard extends AppCompatActivity {
         loadingDialog = new LoadingDialog(this);
         loadingDialog.show();
         setContentView(R.layout.activity_full_tutor_card);
-        initThereIsChat();
 
 //        findViewById(R.id.)
         image = findViewById(R.id.profile_image);
@@ -96,6 +97,7 @@ public class FullTutorCard extends AppCompatActivity {
         user = (userObj) bundle.getSerializable("user");
         teacher = (tutorObj) bundle.getSerializable("teacher");
         sub = bundle.getString("sub");
+        FireBaseChats.thereIsChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID());
 
         phoneNum = teacher.getPhoneNum();
         if (teacher.getRank().getUserRating() == null){
@@ -177,64 +179,14 @@ public class FullTutorCard extends AppCompatActivity {
                 if(!teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     /* if the user already has chat with this teacher then open this chat  */
                     if(thereIsChat) {
-                        FirebaseDatabase.getInstance().getReference().child("chats")
-                                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        for (DataSnapshot dss : snapshot.getChildren()) {
-                                            Chat chat = (Chat) dss.getValue(Chat.class);
-                                            if (chat != null) {
-                                                /* check if this is the active chat  */
-                                                if (chat.getTeacherID().equals(teacher.getUserID())) {
-                                                    /* this is correct chat - open this chat  */
-                                                    Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
-                                                    intent.putExtra("studentName", chat.getStudentName());
-                                                    intent.putExtra("student", chat.getStudentID().toString());
-                                                    intent.putExtra("teacher", chat.getTeacherID().toString());
-                                                    intent.putExtra("chat", chat.getChatID().toString());
-                                                    startActivity(intent);
-                                                    thereIsChat = true;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
+                        FireBaseChats.openActiveChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),
+                                teacher.getUserID(),FullTutorCard.this);
+                                thereIsChat = true;
                     }
                     else{ /* there is no active chat */
-                        /* get this user name */
-                        FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                .child("fName").
-                                addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                        String studentName = snapshot.getValue(String.class);
-                                        /* send the teacher thats new chat is received */
-                                        sendNotification(studentName, teacher.getUserID());
-                                        /* add the chat to the database and get the chatID */
-                                        String chatID = addChat(FirebaseAuth.getInstance().getCurrentUser().getUid(), teacher.getUserID(),
-                                                studentName, user.getfName(), teacher.getImgUrl());
-                                        /* open the new chat */
-                                        if (chatID != null) {
-                                            thereIsChat = true;
-                                            Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
-                                            intent.putExtra("studentName", studentName);
-                                            intent.putExtra("student", FirebaseAuth.getInstance().getCurrentUser().getUid());
-                                            intent.putExtra("teacher", teacher.getUserID());
-                                            intent.putExtra("chat", chatID);
-                                            startActivity(intent);
-                                        }
-                                    }
-
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError error) {
-
-                                    }
-                                });
+                        FireBaseChats.openNewChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID(),
+                                user.getfName(),teacher.getImgUrl(),FullTutorCard.this);
+                        thereIsChat = true;
                     }
                 }
                 else{ /* The teacher is trying to send message to himself */
@@ -329,7 +281,7 @@ public class FullTutorCard extends AppCompatActivity {
                 r.setAvgRank(avg);
             }
         }
-        sendNotification();
+        FireBaseNotifications.sendNotification(teacher.getUserID(),"Ranking","");
         teacher.setRank(r);
         FirebaseDatabase.getInstance().getReference().child("teachers").child(user.getTeacherID()).setValue(teacher);
         Intent intent = new Intent(this, FullTutorCard.class);
@@ -340,73 +292,5 @@ public class FullTutorCard extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void sendNotification() {//
-        HashMap<String, Object> map = new HashMap<>();
-        String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).push().getKey();
-        map.put("notificationID",notificationID);
-       // map.put("text","You are rated! Your rating now is: "+teacher.getRank().getAvgRank()+ " Stars.");
-        map.put("title","Ranking");
-        //map.put("sentFrom",teacher.getRank().getAvgRank());
-        map.put("read",1);
-        if (notificationID != null)
-            FirebaseDatabase.getInstance().getReference().child("notifications").child(teacher.getUserID()).child(notificationID).setValue(map);
-    }
-    private String addChat(String studentID,String teacherID,String studentName,String teacherName,String imageUrl) {
-        //add chat to student and teacher
-        HashMap<String, Object> chatMap = new HashMap<>();
-        String chatID = FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).push().getKey();
-        chatMap.put("lastMessage", "Chat with " + studentName + " is active now");
-        chatMap.put("teacherID", teacherID);
-        chatMap.put("studentID", studentID);
-        chatMap.put("teacherName", teacherName);
-        chatMap.put("studentName", studentName);
-        chatMap.put("chatID", chatID);
-        chatMap.put("imageUrl", imageUrl);
-        chatMap.put("read",0);
-        if (chatID != null) {
-            FirebaseDatabase.getInstance().getReference().child("chats").child(teacherID).child(chatID).setValue(chatMap);
-            FirebaseDatabase.getInstance().getReference().child("chats").child(studentID).child(chatID).setValue(chatMap);
-            return chatID;
-        }
-        return null;
-    }
-    private void sendNotification(String teacherName,String teacherID) {
-        HashMap<String, Object> map = new HashMap<>();
-        String notificationID = FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).push().getKey();
-        map.put("notificationID",notificationID);
-        map.put("title",getResources().getString(R.string.chatReceived));
-        map.put("sentFrom",teacherName);
-        map.put("read",0);
-        if (notificationID != null)
-            FirebaseDatabase.getInstance().getReference().child("notifications").child(teacherID).child(notificationID).setValue(map);
-    }
 
-    /**
-     * This method check if this user has an active chat with this teacher
-     * if yes then set thereIsChat to true else set to false
-     */
-    private void initThereIsChat(){
-        thereIsChat = false;
-        FirebaseDatabase.getInstance().getReference().child("chats")
-                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot dss : snapshot.getChildren()) {
-                            Chat chat = (Chat) dss.getValue(Chat.class);
-                            if (chat != null) {
-                                /* check if there is an active chat */
-                                if (chat.getTeacherID().equals(teacher.getUserID())) {
-                                    thereIsChat = true;
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
-    }
 }
