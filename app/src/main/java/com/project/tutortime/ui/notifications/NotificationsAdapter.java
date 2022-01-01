@@ -52,6 +52,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         return new NotificationsAdapter.NotificationsViewHolder(view);
     }
 
+
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull NotificationsViewHolder holder,int position) {

@@ -10,7 +10,7 @@
     <string name="loginChangeLanguage">Change language</string>
 
     <!-- Strings register -->
-    <string name="registerAcount">Create a New Acount</string>
+    <string name="registerAcount">Create a New Account</string>
     <string name="registerFirstName">First Name</string>
     <string name="registerLastName">Last Name</string>
     <string name="registerEmail">Email</string>

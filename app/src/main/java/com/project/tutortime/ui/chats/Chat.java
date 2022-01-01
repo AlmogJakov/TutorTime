@@ -31,6 +31,7 @@ public class Chat extends Fragment {
     private String studentName;
     private String teacherName;
     private String imageUrl;
+    private int read;
 
     //tools
     private RecyclerView recyclerView;
@@ -50,6 +51,13 @@ public class Chat extends Fragment {
 
     }
 
+    public int getRead() {
+        return read;
+    }
+
+    public void setRead(int read) {
+        this.read = read;
+    }
 
     public String getImageUrl() {
         return imageUrl;
