@@ -161,6 +161,9 @@ public class Chat extends Fragment {
         super.onDestroyView();
     }
 
+    /**
+     * This method update the last seen status in the users database when the user enter the chats
+     */
     private void setLastSeenStatus(){
         FirebaseDatabase.getInstance().getReference().child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
                 child("lSeen").setValue(new Date().getTime());

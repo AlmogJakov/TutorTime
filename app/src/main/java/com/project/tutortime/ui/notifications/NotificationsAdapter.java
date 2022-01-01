@@ -34,24 +34,20 @@ import java.util.List;
 public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdapter.NotificationsViewHolder>{
 
     private final Context mContext;
-    private final List<Notifications> mNotifications; //list of the current notifications
-    private int unReadNotifications;
-    private DatabaseReference ref;
+    private final List<Notifications> mNotifications; //list of all the notifications
 
 
 
 
-    public NotificationsAdapter(Context mContext, List<Notifications> mNotifications,int unReadNotifications) {
+    public NotificationsAdapter(Context mContext, List<Notifications> mNotifications) {
         this.mContext = mContext;
         this.mNotifications = mNotifications;
-        this.unReadNotifications = unReadNotifications;
-        this.ref = FirebaseDatabase.getInstance().getReference();
     }
 
     @NonNull
     @Override
     public NotificationsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        //set the notification layout
+        //set the notification item layout
         View view = LayoutInflater.from(mContext).inflate(R.layout.notification_item,parent,false);
         return new NotificationsAdapter.NotificationsViewHolder(view);
     }
@@ -81,7 +77,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
                 holder.text.setText(mContext.getResources().getText(R.string.notificationRankingText));
                 break;
         }
-        /* if the user mark the notifcation as "read" invisible new alert */
+        /* if the user mark the notification as "read" - invisible new alert */
         if(notifications.getRead()==1){
             holder.newAlert.setVisibility(View.GONE);
             holder.readBtn.setVisibility(View.GONE); }
@@ -106,13 +102,18 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
         });
     }
 
+    /**
+     * This method return the amount of the notifications in the list
+     * @return amount of notifications
+     */
+
     @Override
     public int getItemCount() {
         return mNotifications.size();
     }
 
     /**
-     * This class holds the notification view objects ass well as the popup windows
+     * This class describes the notification view objects
      */
 
     public class NotificationsViewHolder extends RecyclerView.ViewHolder {
@@ -135,7 +136,7 @@ public class NotificationsAdapter extends RecyclerView.Adapter<NotificationsAdap
     }
 
     /**
-     * This method allows to remove notfication from the list view and from the database
+     * This method allows to remove notification from the list view and from the database
      * @param notifications - the notification that the user wants to remove
      * @param position - the current position in the list
      * @param userID - the id of the user

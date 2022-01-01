@@ -37,18 +37,16 @@ import java.util.List;
  */
 
 public class Notifications extends Fragment {
+    //notification data
     private String notificationID;
     private String title;
     private String sentFrom;
     private int read;
 
-
-    private NotificationsViewModel NotificationsViewModel;
-    private FragmentNotificationsBinding binding;
+    //tools
     private RecyclerView recyclerView;
     private NotificationsAdapter notificationsAdapter;
     private List<Notifications> notifications;
-    private int unReadNotifications;
 
     public Notifications(){
 
@@ -90,37 +88,37 @@ public class Notifications extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        //set the notification fragment and the recycler view
+        /* set the notifications fragment layout and the recycler view */
         View view = inflater.inflate(R.layout.fragment_notifications,container,false);
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        /* init the notifications list and notification adapter */
         notifications = new ArrayList<>();
-        notificationsAdapter = new NotificationsAdapter(getContext(),notifications,unReadNotifications);
+        notificationsAdapter = new NotificationsAdapter(getContext(),notifications);
         recyclerView.setAdapter(notificationsAdapter);
-        readNotifications(); //read each notification from the database
+        readNotifications(); /* read the notifications from the database */
         return view;
     }
 
     /**
      * This method allows to read the notification data from the database
+     * and update the notification adapter on any change
      */
     private void readNotifications() {
-        //get the value of the notification
+        /* get the data of the notification */
         FirebaseDatabase.getInstance().getReference().child("notifications")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        //if some of the notification data has changed then it will updated
+                        /* if some of the notification data has changed then it will update the adapter */
                         for (DataSnapshot dss : snapshot.getChildren()) {
                             Notifications notification = dss.getValue(Notifications.class);
-                            if(notification.getRead()==1){
-                                unReadNotifications++;
+                            if(notification != null) {
+                                notifications.add(notification);
                             }
-                            notifications.add(notification);
                         }
-                        unReadNotifications = notifications.size()-unReadNotifications;
                         Collections.reverse(notifications);
                         notificationsAdapter.notifyDataSetChanged();
                     }
@@ -136,6 +134,5 @@ public class Notifications extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding = null;
     }
 }

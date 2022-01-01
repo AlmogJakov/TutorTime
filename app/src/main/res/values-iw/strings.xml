@@ -22,6 +22,8 @@
     <string name="lastSeen">נראה לאחרונה ב:</string>
     <string name="deleteChatDialog">מחיקת צאט</string>
     <string name="offline">מנותק</string>
+    <string name="cantSendMessage">אין אפשרות לשלוח הודעה לעצמך!</string>
+    <string name="writeMessageFirst">צריך לרשום הודעה לפני השליחה!</string>
 
     <!-- Strings notifications -->
     <string name="deleteNotificationDialog">מחיקת התראה</string>
@@ -44,6 +46,13 @@
     <!-- Strings choose status -->
     <string name="chooseStatusTutor">מורה</string>
     <string name="chooseStatusCustomer">לקוח</string>
+    <!-- Strings CustomerProfile -->
+    <string name="CustomerProfileChooseGender">בחר מין</string>
+    <string name="CustomerProfileChooseCity">בחר עיר</string>
+    <string name="CustomerProfileFirstNameRequired">חובה להזין שם פרטי!</string>
+    <string name="CustomerProfileLastNameRequired">חובה להזין שם משפחה!</string>
+    <string name="CustomerProfileCityRequired">חובה להזין עיר!</string>
+    <string name="CustomerProfileGenderRequired">חובה להזין מין!</string>
 
     <!-- Strings set tutor profile -->
     <string name="setTutorProfileContactNo">מספר איש קשר</string>
@@ -52,6 +61,7 @@
     <string name="setTutorProfileSubjectList">רשימת מקצועות</string>
     <string name="setTutorProfileAddSubject">הוסף מקצוע</string>
     <string name="setTutorProfileSaveprofile">שמור פרופל</string>
+    <string name="TutorCardCantRate">אין אפשרות לדרג את עצמך!</string>
 
     <!-- Strings my sub list -->
     <string name="mySubListServiceCities">ערי שירות</string>

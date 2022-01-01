@@ -107,6 +107,7 @@
         <entry key="..\:/Users/Almog/AppData/Local/Android/Sdk/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.19655797101449277" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/chats_fragment.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/chats_item.xml" value="0.693516699410609" />
+        <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_home.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_my_sub_list.xml" value="0.4" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_notifications.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/fragment_search.xml" value="0.12291666666666666" />
@@ -114,6 +115,7 @@
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/item_chat_other.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/message_item_other.xml" value="0.12291666666666666" />
         <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/messages_list.xml" value="0.22717391304347825" />
+        <entry key="..\:/Users/Shalev Asor/AndroidStudioProjects/TutorTime/app/src/main/res/layout/notification_item.xml" value="0.12291666666666666" />
       </map>
     </option>
   </component>

@@ -221,7 +221,6 @@ public class FullTutorCard extends AppCompatActivity {
                                         /* open the new chat */
                                         if (chatID != null) {
                                             thereIsChat = true;
-                                            Toast.makeText(getApplicationContext(), "chat is open", Toast.LENGTH_LONG).show();
                                             Intent intent = new Intent(FullTutorCard.this, MessageActivity.class);
                                             intent.putExtra("studentName", studentName);
                                             intent.putExtra("student", FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -239,7 +238,7 @@ public class FullTutorCard extends AppCompatActivity {
                     }
                 }
                 else{ /* The teacher is trying to send message to himself */
-                    Toast.makeText(getApplicationContext(),"You cant send message to yourself!",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),getResources().getString(R.string.cantSendMessage),Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -263,7 +262,7 @@ public class FullTutorCard extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){
-                    Toast.makeText(FullTutorCard.this, "You can not rate yourself!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FullTutorCard.this, getResources().getString(R.string.TutorCardCantRate), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 AlertDialog.Builder builder = new AlertDialog.Builder(FullTutorCard.this);

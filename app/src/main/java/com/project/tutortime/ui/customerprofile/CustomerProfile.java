@@ -71,14 +71,14 @@ public class CustomerProfile extends Fragment {
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         String[] select_gender = getResources().getStringArray(R.array.Gender);
-        a.add("Choose Gender");
+        a.add(getResources().getString(R.string.CustomerProfileChooseGender));
         a.addAll(select_gender);
         genderSpinner.setAdapter(a);
         genderSpinner.setSelection(0); //display hint
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         String[] cities = getResources().getStringArray(R.array.Cities);
-        adapter.add("Choose City");
+        adapter.add(getResources().getString(R.string.CustomerProfileChooseCity));
         adapter.addAll(cities);
         citySpinner.setAdapter(adapter);
         citySpinner.setSelection(0); //display hint
@@ -93,19 +93,19 @@ public class CustomerProfile extends Fragment {
                 String city = citySpinner.getSelectedItem().toString();
                 String gender = genderSpinner.getSelectedItem().toString();
                 if (TextUtils.isEmpty(firstName)) {
-                    fname.setError("First name is required.");
+                    fname.setError(getResources().getString(R.string.CustomerProfileFirstNameRequired));
                     return; }
                 if (TextUtils.isEmpty(lastName)) {
-                    lname.setError("Last name is required.");
+                    lname.setError(getResources().getString(R.string.CustomerProfileLastNameRequired));
                     return; }
                 if (citySpinner.getSelectedItemPosition() == 0) {
                     TextView errorText = (TextView) citySpinner.getSelectedView();
-                    errorText.setError("City is required.");
-                    Toast.makeText(getActivity(), "City is required.",
+                    errorText.setError(getResources().getString(R.string.CustomerProfileCityRequired));
+                    Toast.makeText(getActivity(), getResources().getString(R.string.CustomerProfileCityRequired),
                             Toast.LENGTH_SHORT).show();
                     return; }
                 if (gender.equals("Choose Gender")) {
-                    Toast.makeText(getActivity(), "Gender is required.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.CustomerProfileGenderRequired), Toast.LENGTH_SHORT).show();
                     return; }
                 new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

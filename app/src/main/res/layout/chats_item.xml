@@ -12,7 +12,8 @@
         android:layout_height="60dp"
         android:id="@+id/image_cv"
         app:cardCornerRadius="45dp"
-        app:strokeWidth="4dp">
+        app:strokeWidth="4dp"
+        app:strokeColor="#040439">
 
         <ImageView
             android:id="@+id/profile_image_chat"

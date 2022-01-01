@@ -65,35 +65,35 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
      */
     @Override
     public void onBindViewHolder(@NonNull ChatsViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Chat chat = mChats.get(position); //get the current chat
+        /* get the current chat */
+        Chat chat = mChats.get(position);
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        // set the chat to the other user data
+        /* set the chat to the other user data */
         if(userID.equals(chat.getStudentID())){
-            //set lastSeen
-
-            holder.UserName.setText(chat.getTeacherName());//set name
-            if(chat.getImageUrl()!=null) { //this user already set profile image
+            /* if this user is the student then the name on the chat should be the teacher name */
+            holder.UserName.setText(chat.getTeacherName());
+            /* if the teacher already set his profile image then load it */
+            if(chat.getImageUrl()!=null) {
                 loadUserImage(chat.getImageUrl(),holder.profilePicture); //load the image
             }
-            else{ // if the teacher didn't added a profile picture set the image to default
+            else{ /* the teacher didn't set a profile picture so set the profile image to default */
                 holder.profilePicture.setImageResource(R.drawable.profile);
             }
         }
-        else{// this is the teacher
+        else{ /* this is the teacher */
             holder.UserName.setText(chat.getStudentName());
             holder.profilePicture.setImageResource(R.drawable.profile);
         }
-        holder.lastMessage.setText(chat.getLastMessage());//set the last message that sent
-        //set the profile image circle to black
-        holder.userStatus.setStrokeColor(Color.BLACK);
+        /* set the last message to the last message that sent in this chat */
+        holder.lastMessage.setText(chat.getLastMessage());
         setLastSeen(holder.lastSeen,chat.getStudentID(),chat.getTeacherID());
-        //allow the user to remove chat
+        /* allow the user to remove the chat */
         holder.deleteChat.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {//delete the chat from the view and database
+            public void onClick(View v) {/* delete the chat from the view and database */
                 deleteChatDialog(chat,holder.getAdapterPosition(),FirebaseAuth.getInstance().getCurrentUser().getUid());
             }
-        });//when click on profile picture show the user the teacher card if he is teacher
+        });/* when click on profile picture show the user the teacher card if he is teacher */
         holder.profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +136,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
         public TextView lastSeen;
         public ImageView profilePicture;
         public ImageView deleteChat;
-        public MaterialCardView userStatus;
         public LinearLayout chat;
 
         public ChatsViewHolder(@NonNull View itemView) {
@@ -146,7 +145,6 @@ public class ChatsAdapter extends RecyclerView.Adapter<ChatsAdapter.ChatsViewHol
             lastSeen = (TextView)itemView.findViewById(R.id.last_seen);
             chat = (LinearLayout) itemView.findViewById(R.id.chat_linear_layout);
             profilePicture = (ImageView)itemView.findViewById(R.id.profile_image_chat);
-            userStatus = (MaterialCardView) itemView.findViewById(R.id.image_cv);
             deleteChat = (ImageView) itemView.findViewById(R.id.delete_chat);
 
         }

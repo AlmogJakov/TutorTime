@@ -14,17 +14,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import java.util.List;
 
 /**
- * This class adapter the Messages with  the view
+ * This class communicate between  the Messages data and the ui
  * This class has two ViewHolder , 1 for received messages and 1 for sent messages
  */
-public class MessageListAdapter extends RecyclerView.Adapter {
+public class MessageAdapter extends RecyclerView.Adapter {
     private static final int VIEW_TYPE_MESSAGE_SENT = 1;
     private static final int VIEW_TYPE_MESSAGE_RECEIVED = 0;
 
     private Context mContext;
     private List<Message> mMessages;
 
-    public MessageListAdapter(Context context, List<Message> messageList) {
+    public MessageAdapter(Context context, List<Message> messageList) {
         mContext = context;
         mMessages = messageList;
     }
@@ -36,12 +36,12 @@ public class MessageListAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-            //if the message is sent the view should display it on the left side
+            /* if the message is sent by this user the view should display it on the left side */
         if (viewType == VIEW_TYPE_MESSAGE_SENT) {
             view = LayoutInflater.from(mContext)
                     .inflate(R.layout.message_item_me, parent, false);
             return new SentMessageHolder(view);
-        } else{
+        } else{ /* the message received from the other user and should display on the right side */
             view = LayoutInflater.from(mContext)
                     .inflate(R.layout.message_item_other, parent, false);
             return new ReceivedMessageHolder(view);
@@ -50,34 +50,41 @@ public class MessageListAdapter extends RecyclerView.Adapter {
 
     /**
      * This method pass the message to the ViewHolder depends on the message type
-     *
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Message message = (Message) mMessages.get(position);
-
+            /* bind the message depend on the view type */
         if(holder.getItemViewType()==1) {
-            ((SentMessageHolder) holder).bind(message);} //bind the message
+            ((SentMessageHolder) holder).bind(message);}
         else{
             ((ReceivedMessageHolder) holder).bind(message);
             }
 
         }
 
-        //return the viewType
+    /**
+     * This method return the type of specific message
+     * @param position the current position in the messages list
+     * @return 1 for sent 0 for received
+     */
     @Override
     public int getItemViewType(int position) {
         Message message = (Message) mMessages.get(position);
 
         if (message.getSenderID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-            // If the current user is the sender of the message
+            /*  the current user is the sender of the message */
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
-            // If some other user sent the message
+            /* some other user sent the message */
             return VIEW_TYPE_MESSAGE_RECEIVED;
         }
     }
-    //return messages amount
+
+    /**
+     * This method return the amount of the messages in the list
+     * @return the active messages
+     */
     @Override
     public int getItemCount() {
         return mMessages.size();
@@ -91,15 +98,15 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         TextView timeText;
 
         SentMessageHolder(View itemView) {
-            super(itemView);//init
+            super(itemView);
             messageText = (TextView) itemView.findViewById(R.id.message_text);
             timeText = (TextView) itemView.findViewById(R.id.date_text);
 
         }
         void bind(Message message) {
-            //set the message text and time
+            /* set the message text and time */
             messageText.setText(message.getMessageText());
-            timeText.setText(DateFormat.format("dd-MM-yyyy(HH:mm:ss)", message.getTime ()));
+            timeText.setText(DateFormat.format("dd-MM(HH:mm)", message.getTime ()));
         }
     }
     /**
@@ -109,22 +116,22 @@ public class MessageListAdapter extends RecyclerView.Adapter {
         TextView messageText;
         TextView timeText;
         ReceivedMessageHolder(View itemView) {
-            super(itemView);//init
+            super(itemView);
             messageText = (TextView) itemView.findViewById(R.id.message_text);
             timeText = (TextView) itemView.findViewById(R.id.date_text);
 
         }
-        void bind(Message message) {//set the text and time
+        void bind(Message message) {
+            /* set the message text and time */
             messageText.setText(message.getMessageText());
-
-            timeText.setText(DateFormat.format("dd-MM-yyyy(HH:mm:ss)", message.getTime ()));
+            timeText.setText(DateFormat.format("dd-MM(HH:mm)", message.getTime ()));
 
         }
     }
 
     /**
      * This method update the list after a change in the data base
-     * @param messages
+     * @param messages the updated messages list
      */
     public void updateList(List<Message> messages){
         this.mMessages = messages;

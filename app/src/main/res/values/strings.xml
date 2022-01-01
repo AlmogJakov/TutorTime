@@ -29,15 +29,20 @@
     <string name="setTutorProfileSubjectList">Subject List</string>
     <string name="setTutorProfileAddSubject">Add Subject</string>
     <string name="setTutorProfileSaveprofile">Save profile</string>
+    <string name="TutorCardCantRate">you cant rate yourself!</string>
+
 
     <!-- Strings chats -->
     <string name="lastSeen">last seen at:</string>
     <string name="deleteChatDialog">Delete notification</string>
     <string name="offline">Offline</string>
+    <string name="cantSendMessage">You cant send message to yourself!</string>
+    <string name="writeMessageFirst">You need to write a message first!</string>
     <string name="open_door_image_to_open_the_chat" translatable="false">open door image to open the chat</string>
     <string name="trash_can_image_do_remove_chat" translatable="false">trash can image do remove chat</string>
     <string name="delete_chat_icon" translatable="false" />
     <string name="the_other_user_profile_picture" translatable="false">the other user profile picture</string>
+
 
     <!-- Strings notifications -->
     <string name="deleteNotificationDialog">Delete notification</string>
@@ -56,6 +61,15 @@
     <string name="notificationChatTextIs">is active</string>
     <string name="notificationRankingTitle">Rating received!</string>
     <string name="notificationRankingText">You are rated! you can check your rank in your Teacher profile </string>
+
+    <!-- Strings CustomerProfile -->
+    <string name="CustomerProfileChooseGender">Choose Gender</string>
+    <string name="CustomerProfileChooseCity">Choose city</string>
+    <string name="CustomerProfileFirstNameRequired">First name is required!</string>
+    <string name="CustomerProfileLastNameRequired">Last name is required!</string>
+    <string name="CustomerProfileCityRequired">City is required!</string>
+    <string name="CustomerProfileGenderRequired">Gender is required!</string>
+
 
     <!-- Strings my sub list -->
     <string name="mySubListServiceCities">Service cities</string>
