@@ -10,8 +10,8 @@
 
 <h3>The project includes the following libraries:</h3>
 <b>Palette</b> - a library that we used for dynamic design by matching the application design to the user's image (dominant / vibrant color matching).<br />
-<b>Material</b> - A library that includes design elements such as 'TextView', etc.<br />
-<b>Glide</b> - A library that we used to save images in the cache in order to speed up the loading time of the images.<br />
+<b>Material</b> - A library that includes designed elements such as 'TextView', etc.<br />
+<b>Glide</b> - A library that we used in order to save images in the cache & speed up the loading time of the images.<br />
       
 <br />
 <b>The project follows Model-View-Controller design pattern</b><br />
