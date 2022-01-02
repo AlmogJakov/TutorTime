@@ -11,7 +11,7 @@ public class tutorObj implements Serializable {
     private rankObj rank;
     private String description;
     private String userID;
-    private List<String> serviceCities = new ArrayList<String>();
+    private List<String> serviceCities;
     String imgUrl;
 
     public tutorObj(){ }
@@ -20,7 +20,8 @@ public class tutorObj implements Serializable {
                     String imgUrl, rankObj rank) {
         this.phoneNum=phoneNum;
         this.description=description;
-        this.serviceCities = service_cities;
+        this.serviceCities = new ArrayList<String>(service_cities);
+        //this.sub = new HashMap<>();
         this.userID = userid;
         this.imgUrl=imgUrl;
         this.rank = rank;

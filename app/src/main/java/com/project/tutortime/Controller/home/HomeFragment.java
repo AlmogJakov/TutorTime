@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
         //SpannableString ss = new SpannableString("(0)");
         //chatsButton.setText(ss);
         FirebaseManager fm = new FirebaseManager();
-//        fm.setUnreadedChats(chatsButton);
+        fm.setUnreadedChats(chatsButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -80,10 +80,8 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        /* set random tutors to listview using adapter */
-        fm.setRandomTutors(getContext(),adapter,listview);
-        /* open new thread to close loadingDialog after all fragment resources ready */
-        closeLoadingDialog();
+        /* set random tutors to listview using adapter & close loading dialog on finish */
+        fm.setRandomTutorsAndCloseLoadingDialog(getContext(),adapter,listview,loadingDialog);
         return root;
     }
 
@@ -91,19 +89,8 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         loadingDialog.dismiss();
         super.onDestroyView();
-        closeLoadingDialog();
+        //closeLoadingDialog();
     }
 
-    /* close Loading Dialog when all fragment resources ready */
-    public void closeLoadingDialog() {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                /* wait until the adapter created & loaded all images */
-                while(adapter.size()==0 || !adapter.get(0).isAllResourcesReady()) { }
-                /* hide loading dialog (fragment resources ready) */
-                loadingDialog.cancel();
-            }
-        });
-    }
+
 }

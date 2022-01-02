@@ -3,8 +3,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.util.Log;
+import android.widget.Adapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ import com.project.tutortime.MainActivity;
 import com.project.tutortime.Model.adapter.TutorAdapter;
 import com.project.tutortime.Model.adapter.TutorAdapterItem;
 import com.project.tutortime.View.ChooseStatus;
+import com.project.tutortime.View.LoadingDialog;
 import com.project.tutortime.View.LoadingScreen;
 import com.project.tutortime.View.Login;
 import com.project.tutortime.View.Register;
@@ -119,7 +122,8 @@ public class FirebaseManager {
     }
 
     final int TUTORS_TO_SHOW = 5;
-    public void setRandomTutors(Context context, ArrayList<TutorAdapter> adapter, ListView listview) {
+    public void setRandomTutorsAndCloseLoadingDialog(Context context, ArrayList<TutorAdapter> adapter,
+                                              ListView listview, LoadingDialog ld) {
         ValueEventListener listViewListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -165,11 +169,25 @@ public class FirebaseManager {
                 adapter.add(new TutorAdapter(context, tutorsToShow));
                 listview.setAdapter(adapter.get(0));
                 adapter.get(0).updateListViewHeight(listview);
+                closeLoadingDialog(adapter,ld);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         };
         myRef.addListenerForSingleValueEvent(listViewListener);
+    }
+
+    /* close Loading Dialog when all fragment resources ready */
+    public void closeLoadingDialog(ArrayList<TutorAdapter> adapter, LoadingDialog ld) {
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                /* wait until the adapter created & loaded all images */
+                while(!adapter.get(0).isAllResourcesReady()) { }
+                /* hide loading dialog (fragment resources ready) */
+                ld.cancel();
+            }
+        });
     }
 
 
