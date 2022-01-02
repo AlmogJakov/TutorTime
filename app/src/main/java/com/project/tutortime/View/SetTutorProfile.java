@@ -98,7 +98,7 @@ public class SetTutorProfile extends AppCompatActivity {
 
         /* DISABLE landscape orientation  */
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        
+
         //delImage = findViewById(R.id.deleteImage);
         PhoneNumber = findViewById(R.id.editPhoneNumber);
         TextInputLayout descriptionInputLayout = findViewById(R.id.editDescription);
