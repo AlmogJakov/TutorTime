@@ -47,7 +47,7 @@ public class HomeFragment extends Fragment {
         //SpannableString ss = new SpannableString("(0)");
         //chatsButton.setText(ss);
         FirebaseManager fm = new FirebaseManager();
-        fm.setUnreadedChats(chatsButton);
+//        fm.setUnreadedChats(chatsButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

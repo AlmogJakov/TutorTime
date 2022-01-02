@@ -28,6 +28,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.MainActivity;
+import com.project.tutortime.Model.firebase.userObj;
 import com.project.tutortime.R;
 import com.project.tutortime.databinding.FragmentCustomerProfileBinding;
 import com.project.tutortime.Model.firebase.FireBaseUser;
@@ -44,8 +45,9 @@ public class CustomerProfile extends Fragment {
     EditText fname, lname;
     Spinner citySpinner, genderSpinner;
     Button saveProfile;
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
+
     String teacherID;
+    FireBaseUser fbUser = new FireBaseUser();
 
     public static CustomerProfile newInstance() {
         return new CustomerProfile();
@@ -87,7 +89,6 @@ public class CustomerProfile extends Fragment {
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String firstName = fname.getText().toString().trim();
                 String lastName = lname.getText().toString().trim();
                 String city = citySpinner.getSelectedItem().toString();
@@ -107,70 +108,37 @@ public class CustomerProfile extends Fragment {
                 if (gender.equals("Choose Gender")) {
                     Toast.makeText(getActivity(), getResources().getString(R.string.CustomerProfileGenderRequired), Toast.LENGTH_SHORT).show();
                     return; }
-                new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        /* sort the list of service cities */
-                        //Collections.sort(listCities);
-                        /* get teacher ID */
-                        teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                        /* Make a list of all the RealTime DataBase commands to execute
-                            (for the purpose of executing all the commands at once) */
-                        Map<String, Object> childUpdates = new HashMap<>();
-                        childUpdates.put("users/" + userID + "/fName", firstName);
-                        childUpdates.put("users/" + userID + "/lName", lastName);
-                        childUpdates.put("users/" + userID + "/city", city);
-                        childUpdates.put("users/" + userID + "/gender", gender);
-
-                        myRef.updateChildren(childUpdates);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) { }
-                });
+                fbUser.updateUserDetails(firstName,lastName, city, gender);
                 goToTutorMain(getActivity());
             }
         });
-
-
-
-
         return root;
     }
 
-    //    @Override
-//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-//        super.onActivityCreated(savedInstanceState);
-//        MyProfileViewModel = new ViewModelProvider(this).get(MyProfileViewModel.class);
-//        // TODO: Use the ViewModel
-//    }
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        fbUser.getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                fname.setText(dataSnapshot.child("users").child(userID).child("fName").getValue(String.class));
-                lname.setText(dataSnapshot.child("users").child(userID).child("lName").getValue(String.class));
-                teacherID = dataSnapshot.child("users").child(userID).child("teacherID").getValue(String.class);
-                String currCity = dataSnapshot.child("users").child(userID).
-                        child("city").getValue(String.class);
+                userObj user = dataSnapshot.getValue(userObj.class);
+                fname.setText(user.getfName());
+                lname.setText(user.getlName());
+                teacherID = user.getTeacherID();
+                String currCity = user.getCity();
                 String[] cities = getResources().getStringArray(R.array.Cities);
                 for (int i = 0; i < cities.length; i++) {
                     /* adding +1 to citySpinner position since the first item is the Hint */
-                    if (citySpinner.getItemAtPosition(i+1).equals(currCity)) {
-                        citySpinner.setSelection(i+1);
+                    if (citySpinner.getItemAtPosition(i + 1).equals(currCity)) {
+                        citySpinner.setSelection(i + 1);
                         break;
                     }
                 }
-                String currGender = dataSnapshot.child("users").child(userID).
-                        child("gender").getValue(String.class);
+                String currGender = user.getGender();
                 String[] arrGender = getResources().getStringArray(R.array.Gender);
                 for (int i = 0; i < arrGender.length; i++) {
                     /* adding +1 to genderSpinner position since the first item is the Hint */
-                    if (genderSpinner.getItemAtPosition(i+1).equals(currGender)) {
-                        genderSpinner.setSelection(i+1);
+                    if (genderSpinner.getItemAtPosition(i + 1).equals(currGender)) {
+                        genderSpinner.setSelection(i + 1);
                         break;
                     }
                 }
