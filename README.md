@@ -27,21 +27,20 @@
     
       
 
-
 | Home Screen | Menu |
 | :---: | :---: |
-| <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/home.png" width="350"></a> | <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/menu.png" width="350"></a> |
+| <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/home.png" width="370"></a> | <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/menu.png" width="370"></a> |     
 
 
 | Search Results | Full Tutor Profile View |
 | :---: | :---: |
-| <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/searchresults.png" width="350"></a> | <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/full_card.png" width="350"></a> |
+| <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/searchresults.png" width="370"></a> | <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/full_card.png" width="370"></a> |
 
 
 
 | Tutor Subject List Editor | Tutor Profile Editor |
 | :---: | :---: |
-| <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/sublist.png" width="350"></a> | <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/tutorprofile.png" width="350"></a> |
+| <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/sublist.png" width="370"></a> | <a href="#"><img src="https://github.com/AlmogJakov/TutorTime/blob/main/images/tutorprofile.png" width="370"></a> |
 
 
 -----  
