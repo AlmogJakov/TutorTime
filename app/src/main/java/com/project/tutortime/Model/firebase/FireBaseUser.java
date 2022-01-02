@@ -5,12 +5,7 @@ import com.google.firebase.database.DatabaseReference;
 
 public class FireBaseUser extends FirebaseManager {
     FirebaseAuth fAuth;
-    public void addUserToDB(String fName, String lName, String email, String city, String gender, String id){
-        writeNewUser(fName,lName,email,city, gender, id);
-    }
-
-    public void writeNewUser(String fName, String lName, String email, String city, String gender, String id){
-        userObj user = new userObj(fName,lName,email, city, gender);
+    public void addUserToDB(String id, userObj user){
         myRef.child("users").child(id).setValue(user);
     }
 

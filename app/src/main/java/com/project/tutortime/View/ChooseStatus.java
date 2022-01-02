@@ -17,6 +17,7 @@ package com.project.tutortime.View;
         import com.google.firebase.database.DatabaseReference;
         import com.google.firebase.database.FirebaseDatabase;
         import com.project.tutortime.MainActivity;
+        import com.project.tutortime.Model.firebase.FirebaseManager;
         import com.project.tutortime.R;
 
         import java.util.ArrayList;
@@ -26,41 +27,29 @@ package com.project.tutortime.View;
 
 public class ChooseStatus extends AppCompatActivity {
     Button teacher, student;
-    FirebaseAuth fAuth;
-    private DatabaseReference mDatabase;
     CardView tutor, customer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_status);
-
         /* DISABLE landscape orientation  */
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        fAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        //teacher = findViewById(R.id.btnTeacher);
-        //student = findViewById(R.id.btnStudent);
         tutor = findViewById(R.id.cardViewTutor);
         customer = findViewById(R.id.cardViewCustomer);
-
         tutor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(getApplicationContext(), SetTutorProfile.class);
-                /* prevent going back to the SetTutorProfile screen (from the next screen) */
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                //startActivity(intent);
                 startActivity(new Intent(getApplicationContext(), SetTutorProfile.class));
             }
         });
-
         customer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = fAuth.getCurrentUser().getUid();
-                mDatabase.child("users").child(userID).child("isTeacher").setValue(0);
+                //String userID = fAuth.getCurrentUser().getUid();
+                //mDatabase.child("users").child(userID).child("isTeacher").setValue(0);
+                FirebaseManager fm = new FirebaseManager();
+                fm.setUserType(0);
                 /* were logging in as customer (customer status value = 0).
                      pass 'Status' value (0) to MainActivity. */
                 final ArrayList<Integer> arr = new ArrayList<Integer>();
@@ -85,9 +74,8 @@ public class ChooseStatus extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
         final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
-
-        langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
-
+        // TODO: https://stackoverflow.com/questions/32813934/save-language-chosen-by-user-android
+        langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener() {
             @Override
             public void onToggleSwitchChangeListener(int position, boolean isChecked) {
                 if(position==0){
@@ -102,7 +90,6 @@ public class ChooseStatus extends AppCompatActivity {
                 }
             }
         });
-
         return true;
     }
 
