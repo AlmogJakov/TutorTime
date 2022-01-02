@@ -60,11 +60,7 @@ public class FullTutorCard extends AppCompatActivity {
     tutorObj teacher;
     String sub;
     int kindOfRank = -1, editRank = -1;
-    //chat data
-    boolean thereIsChat = true;
-    boolean firstTimeSending = true;
-    String studentName;
-    String chatID;
+    boolean activeChat = false;
 
 
     @SuppressLint("SetTextI18n")
@@ -97,7 +93,8 @@ public class FullTutorCard extends AppCompatActivity {
         user = (userObj) bundle.getSerializable("user");
         teacher = (tutorObj) bundle.getSerializable("teacher");
         sub = bundle.getString("sub");
-        FireBaseChats.thereIsChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID());
+        thereIsChat();
+        //thereIsChat = FireBaseChats.thereIsChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID());
 
         phoneNum = teacher.getPhoneNum();
         if (teacher.getRank().getUserRating() == null){
@@ -178,15 +175,15 @@ public class FullTutorCard extends AppCompatActivity {
                 /* verify that the user dont sending message to himself */
                 if(!teacher.getUserID().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
                     /* if the user already has chat with this teacher then open this chat  */
-                    if(thereIsChat) {
+                    if(activeChat) {
                         FireBaseChats.openActiveChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),
                                 teacher.getUserID(),FullTutorCard.this);
-                                thereIsChat = true;
+                        activeChat = true;
                     }
                     else{ /* there is no active chat */
                         FireBaseChats.openNewChat(FirebaseAuth.getInstance().getCurrentUser().getUid(),teacher.getUserID(),
                                 user.getfName(),teacher.getImgUrl(),FullTutorCard.this);
-                        thereIsChat = true;
+                        activeChat = true;
                     }
                 }
                 else{ /* The teacher is trying to send message to himself */
@@ -290,6 +287,30 @@ public class FullTutorCard extends AppCompatActivity {
         intent.putExtra("sub", sub);
         finish();
         startActivity(intent);
+    }
+    private void thereIsChat(){
+        FirebaseDatabase.getInstance().getReference().child("chats")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot dss : snapshot.getChildren()) {
+                            Chat chat = (Chat) dss.getValue(Chat.class);
+                            if (chat != null) {
+                                /* check if there is an active chat */
+                                if (chat.getTeacherID().equals(teacher.getUserID())) {
+                                    activeChat = true;
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
     }
 
 
