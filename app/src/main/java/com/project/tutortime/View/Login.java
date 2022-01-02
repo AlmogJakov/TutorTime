@@ -47,8 +47,7 @@ public class Login extends AppCompatActivity {
     EditText mEmail,mPassword;
     Button mLoginBtn;
     TextView mRegisterBtn, mResetPass;
-    FirebaseAuth fAuth;
-    private DatabaseReference mDatabase;
+    private FirebaseManager fm = new FirebaseManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,77 +61,27 @@ public class Login extends AppCompatActivity {
         mPassword = findViewById(R.id.mypass);
         mRegisterBtn = findViewById(R.id.registerPage);
         mLoginBtn = findViewById(R.id.btnlogin);
-        fAuth = FirebaseAuth.getInstance();
         mResetPass = findViewById(R.id.resetpass);
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        FirebaseManager fm = new FirebaseManager();
         /* if the user already logged in */
         if (fm.isLoggedIn()) {
             /* redirects to the appropriate page depending on the user status */
-            fm.getInside((Activity)Login.this);
-            //testMessage(userID);
+            fm.getUserInsideApp((Activity)Login.this);
         }
-
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-
                 if (TextUtils.isEmpty(email)) {
                     mEmail.setError("email is required.");
                     return;
                 }
-
                 if (TextUtils.isEmpty(password)) {
                     mPassword.setError("password is required.");
                     return;
                 }
-                fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            final FirebaseUser user = fAuth.getCurrentUser();
-                            if (!user.isEmailVerified()) { /* Email Not Verified! - alert the user */
-                                final AlertDialog.Builder emailVerification = new AlertDialog.Builder(Login.this);
-                                emailVerification.setTitle("You need to verify your email.");
-                                emailVerification.setMessage("Re-send email verification?");
-                                /* manage buttons */
-                                emailVerification.setPositiveButton("RE-SEND", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                Toast.makeText(Login.this, "Verification email has been sent.", Toast.LENGTH_SHORT).show();
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(Login.this,"Error! email not sent" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                });
-                                emailVerification.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {/* close dialog */}
-                                });
-                                emailVerification.create().show();
-                                fAuth.signOut(); /* don't let user in */
-                            } else { /* Email Verified! - let user in */
-                                Toast.makeText(Login.this, "Logged in Successfully!", Toast.LENGTH_SHORT).show();
-                                /* redirects to the appropriate page depending on the user status */
-                                fm.getInside((Activity)Login.this);
-                                //testMessage(userID);
-                            }
-                        } else {
-                            Toast.makeText(Login.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
+                fm.signInWithEmailAndPassword(Login.this, email, password);
             }
         });
 
@@ -156,17 +105,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String mail = resetMail.getText().toString();
-                        fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void unused) {
-                                Toast.makeText(Login.this, "Reset link send to your mail.", Toast.LENGTH_SHORT).show();
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(Login.this,"Error! The password was not sent" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        fm.sendPasswordResetEmail(Login.this,mail);
                     }
                 });
                 PasswordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -187,25 +126,20 @@ public class Login extends AppCompatActivity {
         final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
         // TODO: https://stackoverflow.com/questions/32813934/save-language-chosen-by-user-android
         langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
-
             @Override
             public void onToggleSwitchChangeListener(int position, boolean isChecked) {
-                if(position==0){
-                    //English
+                if(position==0) { // English
                     setLocale("en");
                     recreate();
                 }
-                if(position==1){
-                    //Hebrew
+                if(position==1) { // Hebrew
                     setLocale("iw");
                     recreate();
                 }
             }
         });
-
         return true;
     }
-
 
     private void setLocale(String lang) {
         Locale locale = new Locale(lang);
@@ -218,6 +152,4 @@ public class Login extends AppCompatActivity {
         editor.putString("My_Lang", lang);
         editor.apply();
     }
-
-
 }

@@ -54,7 +54,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.MainActivity;
-import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.Model.firebase.FireBaseTutor;
 import com.project.tutortime.Model.firebase.rankObj;
 import com.project.tutortime.Model.firebase.subjectObj;
@@ -75,7 +74,6 @@ public class SetTutorProfile extends AppCompatActivity {
     TextView citySpinner;
     EditText PhoneNumber, description;
     Button profile, addSub, addImage;
-    //Spinner citySpinner;
     ImageView img;
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
@@ -114,28 +112,14 @@ public class SetTutorProfile extends AppCompatActivity {
         img = findViewById(R.id.imageView);
         citySpinner = findViewById(R.id.txtCities);
         subjectList = (ListView) findViewById(R.id.subList);
-//        ArrayAdapter a = new ArrayAdapter(this, android.R.layout.simple_list_item_1, list);
-//        subjectList.setAdapter(a);
-//        a.notifyDataSetChanged();
         sLstAd = new SubListAdapter(this, R.layout.single_sub_row, list, teacherID);
         subjectList.setAdapter(sLstAd);
         sLstAd.notifyDataSetChanged();
-
 
         String[] cities = getResources().getStringArray(R.array.Cities);
         boolean[] selectCities = new boolean[cities.length];
         ArrayList<Integer> listCitiesNum = new ArrayList<>();
         setSpinnerCity(citySpinner, selectCities, listCitiesNum, cities);
-
-
-//        PhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus) PhoneNumber.setHint("");
-//                else PhoneNumber.setHint("Enter Phone Number");
-//            }
-//        });
-
 
         PhoneNumber.setHint("Enter Phone Number");
         PhoneNumber.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -145,54 +129,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 else PhoneNumber.setHint("Enter Phone Number");
             }
         });
-
-//        /* Select City Spinner Code () */
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
-//            @Override
-//            public View getView(int position, View convertView, ViewGroup parent) {
-//                View v = super.getView(position, convertView, parent);
-//                if (position == 0) { // Hint
-//                    ((TextView)v.findViewById(android.R.id.text1)).setText("");
-//                    ((TextView)v.findViewById(android.R.id.text1)).setHint(getItem(0)); }
-//                return v; }
-//            @Override
-//            public int getCount() { return super.getCount(); }
-//            @Override /* Disable selection of the Hint (first selection) */
-//            public boolean isEnabled(int position) { return ((position == 0) ? false : true); }
-//            @Override /* Set the color of the Hint (first selection) to Grey */
-//            public View getDropDownView(int position, View convertView, ViewGroup parent) {
-//                View view = super.getDropDownView(position, convertView, parent);
-//                TextView tv = (TextView)view;
-//                if (position == 0) tv.setTextColor(Color.GRAY); else tv.setTextColor(Color.BLACK);
-//                return view; }
-//        };
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        String[] cities = getResources().getStringArray(R.array.Cities);
-//        adapter.add("Choose City");
-//        adapter.addAll(cities);
-//        citySpinner.setAdapter(adapter);
-//        citySpinner.setSelection(0); //display hint
-//        /* END Select City Spinner Code () */
-
-//        delImage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                    StorageReference photoRef = FirebaseStorage.getInstance().getReferenceFromUrl(imgURL);
-//                    photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-//                        @Override
-//                        public void onSuccess(Void aVoid) {
-//                            // File deleted successfully
-//                            Log.d("Picture", "onSuccess: deleted file");
-//                        }
-//                    }).addOnFailureListener(new OnFailureListener() {
-//                        @Override
-//                        public void onFailure(@NonNull Exception exception) {
-//                            // Uh-oh, an error occurred!
-//                            Log.d("Picture", "onFailure: did not delete file");
-//                        }
-//                    });
-//                }
-//        });
 
         addImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -259,12 +195,10 @@ public class SetTutorProfile extends AppCompatActivity {
                 String userID = fAuth.getCurrentUser().getUid();
                 String pNum = PhoneNumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
-
                 if (TextUtils.isEmpty(pNum)) {
                     PhoneNumber.setError("PhoneNumber is required.");
                     return;
                 }
-
                 if (pNum.charAt(0) != '0' || pNum.charAt(1) != '5' || pNum.length() != 10) {
 
                     PhoneNumber.setError("Invalid phoneNumber.");
@@ -296,7 +230,6 @@ public class SetTutorProfile extends AppCompatActivity {
 
                 /* add rank */
                 rankObj rank = new rankObj(new HashMap<>(), 0);
-
                 FireBaseTutor t = new FireBaseTutor();
                 /* set isTeacher to teacher status (1=teacher,0=customer) */
                 mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
@@ -317,8 +250,6 @@ public class SetTutorProfile extends AppCompatActivity {
     /* Creating a dialogue for choosing cities where the teacher tutor */
     private void setSpinnerCity(TextView citySpinner, boolean[] selectCities,
                                 ArrayList<Integer> listCitiesNum, String[] cities) {
-        ArrayList<String> addTempCities = new ArrayList<>();
-        ArrayList<String> removeTempCities = new ArrayList<>();
         citySpinner.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -331,12 +262,10 @@ public class SetTutorProfile extends AppCompatActivity {
                         if (isChecked) {
                             listCitiesNum.add(which);
                             listCities.add(cities[which]);
-                            // addTempCities.add(cities[which]);
                             Collections.sort(listCitiesNum);
                         } else {
                             listCitiesNum.remove((Integer) which);
                             listCities.remove(cities[which]);
-                            //removeTempCities.add(cities[which]);
                         }
                     }
                 });
@@ -346,14 +275,10 @@ public class SetTutorProfile extends AppCompatActivity {
                         if(listCities.isEmpty()){
                             citySpinner.setTextColor(Color.GRAY);
                             citySpinner.setText("Select service cities");
-                            //removeServiceCities(removeTempCities);
-                        }
-                        else{
+                        } else {
                             citySpinner.setTextColor(Color.BLACK);
                             Collections.sort(listCities);
                             citySpinner.setText(printList(listCities));
-                            //addServiceCities(addTempCities);
-                            //removeServiceCities(removeTempCities);
                         }
                     }
                 });
@@ -447,7 +372,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 list.add(s);
                 subjectList.setAdapter(sLstAd);
                 sLstAd.notifyDataSetChanged();
-
                 listSub.add(nameSub);
                 d.dismiss();
             }
@@ -458,7 +382,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
                 subjectList.setAdapter(sLstAd);
                 sLstAd.notifyDataSetChanged();
-
                 d.dismiss();
             }
         });
@@ -480,16 +403,13 @@ public class SetTutorProfile extends AppCompatActivity {
         closeBtn = d.findViewById(R.id.btnClose);
         deleteBtn = d.findViewById(R.id.btnDelete);
         nameSpinner = d.findViewById(R.id.spinSubName);
-
         priceEdit.setAdapter(new ArrayAdapter<>
                 (this, android.R.layout.simple_spinner_item, subjectObj.Prices.values()));
-
         ArrayAdapter nameAd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 subjectObj.SubName.values());
         nameSpinner.setAdapter(nameAd);
         nameSpinner.setSelection(subjectObj.SubName.valueOf(currSub.getsName().
                 replaceAll("\\s+","")).ordinal());
-
         ArrayAdapter typeAd = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,
                 subjectObj.Type.values());
         typeSpinner = d.findViewById(R.id.spinType);
@@ -499,7 +419,6 @@ public class SetTutorProfile extends AppCompatActivity {
         //priceEdit.setText(Integer.toString((currSub.getPrice())));
         priceEdit.setSelection(currSub.getPricesEnumPosition(currSub.getPrice()));
         expEdit.setText((currSub.getExperience()));
-
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -533,16 +452,14 @@ public class SetTutorProfile extends AppCompatActivity {
                 sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
                 subjectList.setAdapter(sLstAd);
                 sLstAd.notifyDataSetChanged();
-
                 //sent notification to user
                 String userID= fAuth.getCurrentUser().getUid();
                 myRef.child("users").child(userID).child("fName").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         String userName = snapshot.getValue(String.class);
-                        FireBaseNotifications.sendNotification(userID,"TutorProfile",userName);
+                        sendNotification(userID,userName);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
 
@@ -568,7 +485,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
                 subjectList.setAdapter(sLstAd);
                 sLstAd.notifyDataSetChanged();
-
                 d.dismiss();
             }
         });
@@ -580,18 +496,15 @@ public class SetTutorProfile extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
         final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
-
+        // TODO: https://stackoverflow.com/questions/32813934/save-language-chosen-by-user-android
         langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
-
             @Override
             public void onToggleSwitchChangeListener(int position, boolean isChecked) {
-                if(position==0){
-                    //English
+                if(position==0) { // English
                     setLocale("en");
                     recreate();
                 }
-                if(position==1){
-                    //Hebrew
+                if(position==1) { // Hebrew
                     setLocale("iw");
                     recreate();
                 }
@@ -612,22 +525,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 selectedImage = getResizedBitmap(selectedImage, 200);// 400 is for example, replace with desired size
                 /* show the new image on screen */
                 img.setImageBitmap(selectedImage);
-
-
-//                File tempDir= Environment.getExternalStorageDirectory();
-//                tempDir=new File(tempDir.getAbsolutePath()+"/.temp/");
-//                tempDir.mkdir();
-//                File tempFile = File.createTempFile("some", ".jpg", tempDir);
-//                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-//                selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-//                byte[] bitmapData = bytes.toByteArray();
-//                //write the bytes in file
-//                FileOutputStream fos = new FileOutputStream(tempFile);
-//                fos.write(bitmapData);
-//                fos.flush();
-//                fos.close();
-//                imageData = Uri.fromFile(tempFile);
-
 
                 /* convert the new bmp to Uri & assign the new Uri to 'imageData' */
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -668,12 +565,6 @@ public class SetTutorProfile extends AppCompatActivity {
     }
 
     private void uploadImageAndGoToMain(String teacherID) {
-//        /* if no image to upload */
-//        if (imageData==null) {
-//            goToTutorMain();
-//            return;
-//        }
-//        /* else - upload the image and go to main */
         imgURL = System.currentTimeMillis()+"."+getExtension(imageData);
         StorageReference Ref= FirebaseStorage.getInstance().getReference().child(imgURL);
         Ref.putFile(imageData)
@@ -804,10 +695,7 @@ public class SetTutorProfile extends AppCompatActivity {
             finalHolder.typeText.setText("Type: "+s.getType());
             finalHolder.priceText.setText("Price: " +String.valueOf(s.getPrice()));
             finalHolder.expText.setText("Experience: " +s.getExperience());
-
-
             row.setOnClickListener(new View.OnClickListener() {
-
                 @Override
                 public void onClick(View v) {
                     createEditDialog(s);
@@ -815,9 +703,6 @@ public class SetTutorProfile extends AppCompatActivity {
             });
             return row;
         }
-
-
-
     }
     static class AppInfoHolder {
         TextView nameText, typeText, priceText, expText;

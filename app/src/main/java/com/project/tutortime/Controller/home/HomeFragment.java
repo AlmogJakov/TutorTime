@@ -2,7 +2,6 @@ package com.project.tutortime.Controller.home;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,46 +14,23 @@ import com.project.tutortime.Model.firebase.FirebaseManager;
 import com.project.tutortime.R;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.project.tutortime.View.LoadingDialog;
 import com.project.tutortime.Model.adapter.TutorAdapter;
-
-import com.project.tutortime.Model.adapter.TutorAdapterItem;
 import com.project.tutortime.databinding.FragmentHomeBinding;
-import com.project.tutortime.Model.firebase.tutorObj;
-import com.project.tutortime.Model.firebase.userObj;
-import com.project.tutortime.Controller.chats.Chat;
-import com.project.tutortime.Controller.customerprofile.CustomerProfile;
-import com.project.tutortime.Controller.search.Search;
-import com.project.tutortime.Controller.tutorprofile.TutorProfile;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
 
 public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private FragmentHomeBinding binding;
-    final int TUTORS_TO_SHOW = 5;
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     ListView listview;
-    ValueEventListener listViewListener;
-    TutorAdapter adapter;
+    /* final value to pass the adapter to ValueEventListener in external class */
+    final ArrayList<TutorAdapter> adapter = new ArrayList<>();
     LoadingDialog loadingDialog;
     MaterialButton myProfileButton, searchButton, chatsButton;
-    List<TutorAdapterItem> tutorsToShow = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
@@ -104,63 +80,11 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
-        listViewListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                /* Init 'TutorAdapterItem' list for the adapter */
-                tutorsToShow = new ArrayList<>();
-                Random random = new Random();
-                int tutorsNum = (int)dataSnapshot.child("teachers").getChildrenCount();
-                /* Init set to store 3 random numbers */
-                Set<Integer> data = new LinkedHashSet<>();
-                /* add 3 random numbers in range (0,teachersNum) [each indicates tutor index] */
-                while (data.size()<TUTORS_TO_SHOW && tutorsNum>data.size()) {
-                    int rand = random.nextInt(tutorsNum);
-                    data.add(rand);
-                }
-                int counter = 0;
-                for (DataSnapshot ds : dataSnapshot.child("teachers").getChildren()) {
-                    /* If the pointer indicates one of the random numbers - add the tutor to the list */
-                    if (data.contains(counter)) {
-                        data.remove(counter);
-                        tutorObj teacher = ds.getValue(tutorObj.class);
-                        userObj user = dataSnapshot.child("users").child(teacher.getUserID()).getValue(userObj.class);
-                        int subsNum = 0;
-                        if (teacher.getSub() != null) {
-                            subsNum = teacher.getSub().size();
-                            Object[] subs = teacher.getSub().keySet().toArray();
-                            String sub = (String) subs[random.nextInt(subsNum)];
-
-                            if (user == null) {
-                                System.out.println("Found tutor without user information. Tutor ID:" + ds.getKey());
-                                continue;
-                            }
-                            TutorAdapterItem item = new TutorAdapterItem(user, teacher, sub);
-                            tutorsToShow.add(item);
-                        }
-                        /* done adding all random tutors */
-                        if (data.size()==0) break;
-                    }
-                    counter++;
-                }
-                /* Shuffle the chronological order (of the tutors' keys) */
-                Collections.shuffle(tutorsToShow);
-                /* init the adapter with the 'tutorsToShow' list */
-                adapter = new TutorAdapter(getContext(), tutorsToShow);
-                listview.setAdapter(adapter);
-                adapter.updateListViewHeight(listview);
-                closeLoadingDialog();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        };
-        myRef.addListenerForSingleValueEvent(listViewListener);
+        /* set random tutors to listview using adapter */
+        fm.setRandomTutors(getContext(),adapter,listview);
+        /* open new thread to close loadingDialog after all fragment resources ready */
+        closeLoadingDialog();
         return root;
-    }
-
-
-    public void getRandomTutors() {
-
     }
 
     @Override
@@ -175,8 +99,8 @@ public class HomeFragment extends Fragment {
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                /* wait until the adapter loaded all images */
-                while(!adapter.isAllResourcesReady()) { }
+                /* wait until the adapter created & loaded all images */
+                while(adapter.size()==0 || !adapter.get(0).isAllResourcesReady()) { }
                 /* hide loading dialog (fragment resources ready) */
                 loadingDialog.cancel();
             }

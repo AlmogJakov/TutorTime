@@ -30,8 +30,9 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
-import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.Model.firebase.FireBaseUser;
+import com.project.tutortime.Model.firebase.FirebaseManager;
+import com.project.tutortime.Model.firebase.userObj;
 import com.project.tutortime.R;
 
 import java.util.HashMap;
@@ -44,7 +45,7 @@ public class Register extends AppCompatActivity {
     Button mRegisterBtn;
     Spinner mCityspinner, mGenderspinner;
     TextView mLoginBtn;
-    FirebaseAuth fAuth;
+    private FirebaseManager fm = new FirebaseManager();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +61,6 @@ public class Register extends AppCompatActivity {
         mPassword = findViewById(R.id.editPass);
         mCityspinner = (Spinner)findViewById(R.id.selectCity);
         mGenderspinner = (Spinner)findViewById(R.id.selectGender);
-
-//        ArrayAdapter<CharSequence> a = ArrayAdapter.createFromResource(this, R.array.Gender, android.R.layout.simple_spinner_item);
-//        a.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        mGenderspinner.setAdapter(a);
 
         /* Select Gender Spinner Code () */
         ArrayAdapter<String> a = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
@@ -92,7 +89,6 @@ public class Register extends AppCompatActivity {
         mGenderspinner.setAdapter(a);
         mGenderspinner.setSelection(0); //display hint
         /* END Select City Spinner Code () */
-
 
         /* Select City Spinner Code () */
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item) {
@@ -123,29 +119,24 @@ public class Register extends AppCompatActivity {
         /* END Select City Spinner Code () */
 
 
-
         mRegisterBtn = findViewById(R.id.buttonAcount);
         mLoginBtn = findViewById(R.id.loginPage);
-        fAuth = FirebaseAuth.getInstance();
 
         /* if the user already logged in */
-        if (fAuth.getCurrentUser() != null) {
+        if (fm.isLoggedIn()) {
             startActivity(new Intent(getApplicationContext(), ChooseStatus.class));
             finish();
         }
 
         mRegisterBtn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 String fName = mFName.getText().toString().trim();
                 String lName = mLName.getText().toString().trim();
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
-                //String city = mCity.getText().toString().trim();
                 String city = mCityspinner.getSelectedItem().toString();
                 String gender = mGenderspinner.getSelectedItem().toString();
-
                 if (TextUtils.isEmpty(fName)) {
                     mFName.setError("First name is required.");
                     return; }
@@ -161,7 +152,6 @@ public class Register extends AppCompatActivity {
                 if (password.length() < 6) {
                     mPassword.setError("Password must contains at least 6 digits.");
                     return; }
-
                 /* if Gender Box == Gender Hint then the user didn't choose gender */
                 if (TextUtils.equals(gender,"Choose Gender")) {
                     Toast.makeText(Register.this, "Gender is required. ", Toast.LENGTH_SHORT).show();
@@ -170,7 +160,6 @@ public class Register extends AppCompatActivity {
                     errorText.setTextColor(Color.RED);//just to highlight that this is an error
                     return;
                 }
-
                 /* if City Box == City Hint then the user didn't choose city */
                 if (TextUtils.equals(city,"Choose City")) {
                     Toast.makeText(Register.this, "City is required. ", Toast.LENGTH_SHORT).show();
@@ -180,40 +169,8 @@ public class Register extends AppCompatActivity {
                     //errorText.setText("City is required");
                     return;
                 }
-
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isComplete()&&task.isSuccessful()) {
-                            Toast.makeText(Register.this, "User Created", Toast.LENGTH_SHORT).show();
-                            /* send verification link */
-                            FirebaseUser user = fAuth.getCurrentUser();
-                            user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(Register.this, "Verification email has been sent.", Toast.LENGTH_SHORT).show();
-                                }
-                            }).addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.d("myTAG","onFailure: email not sent. " + e.getMessage());
-                                }
-                            });
-                            /* END send verification link */
-                            FireBaseUser u = new FireBaseUser();
-                            String userID = fAuth.getCurrentUser().getUid();
-                            u.addUserToDB(fName, lName, email, city, gender, userID);
-                            /* add welcome notification to user */
-                            FireBaseNotifications.sendNotification(userID,"Register","");
-                            fAuth.signOut();
-                            // startActivity(new Intent(getApplicationContext(), ChooseOne.class));
-                            startActivity(new Intent(getApplicationContext(), Login.class));
-                        } else {
-                            Toast.makeText(Register.this, "Error! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
+                userObj userObject = new userObj(fName,lName,email, city, gender);
+                fm.createUserWithEmailAndPassword(Register.this,userObject,email,password);
             }
         });
 
@@ -231,18 +188,15 @@ public class Register extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         final MenuItem toggleservice = menu.findItem(R.id.lang_switch);
         final ToggleSwitch langSwitch = toggleservice.getActionView().findViewById(R.id.lan);
-
+        // TODO: https://stackoverflow.com/questions/32813934/save-language-chosen-by-user-android
         langSwitch.setOnToggleSwitchChangeListener(new ToggleSwitch.OnToggleSwitchChangeListener(){
-
             @Override
             public void onToggleSwitchChangeListener(int position, boolean isChecked) {
-                if(position==0){
-                    //English
+                if(position==0) { // English
                     setLocale("en");
                     recreate();
                 }
-                if(position==1){
-                    //Hebrew
+                if(position==1) { // Hebrew
                     setLocale("iw");
                     recreate();
                 }
