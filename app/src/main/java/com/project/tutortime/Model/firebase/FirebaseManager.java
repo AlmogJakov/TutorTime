@@ -256,7 +256,7 @@ public class FirebaseManager {
                     String userID = fAuth.getCurrentUser().getUid();
                     u.addUserToDB(userID, userObject);
                     /* add welcome notification to user */
-                    addNotification(userID, email);
+                    FireBaseNotifications.sendNotification(userID,"Register","");
                     fAuth.signOut();
                     // startActivity(new Intent(getApplicationContext(), ChooseOne.class));
                     activity.startActivity(new Intent(activity, Login.class));
@@ -265,19 +265,5 @@ public class FirebaseManager {
                 }
             }
         });
-    }
-
-    private void addNotification(String userID,String email){
-        HashMap<String,Object> map = new HashMap<>();
-        String key = FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).push().getKey();
-        map.put("title","Register");
-        map.put("FormOfLearning","");
-        map.put("Remarks","Welcome to TutorTime!");
-        map.put("RequestStatus","");
-        map.put("PhoneNumber","");
-        map.put("sendTo","");
-        map.put("sentFrom",fAuth.getCurrentUser().getUid());
-        map.put("NotificationKey",key);
-        if(key!=null)FirebaseDatabase.getInstance().getReference().child("notifications").child(userID).child(key).setValue(map);
     }
 }
