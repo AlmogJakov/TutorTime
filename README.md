@@ -3,9 +3,14 @@
 
 -----  
 
+<p align='center'><a href="#"><img align='center' src="https://github.com/AlmogJakov/TutorTime/blob/main/images/app_header.jpg" width="100%"></a></p>          
+
+
+-----
+<br />
 📙 <b>   Supports both Hebrew and English.</b>         
       
-<a href="#"><img align='left' src="https://github.com/AlmogJakov/TutorTime/blob/main/images/firebase.png" width="20"></a>
+<br /><a href="#"><img align='left' src="https://github.com/AlmogJakov/TutorTime/blob/main/images/firebase.png" width="20"></a>
 <b>Using firebase</b>
 
 <h3>The project includes the following libraries:</h3>
