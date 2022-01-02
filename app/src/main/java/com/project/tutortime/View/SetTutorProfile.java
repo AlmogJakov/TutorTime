@@ -56,6 +56,7 @@ import com.google.firebase.storage.UploadTask;
 import com.project.tutortime.MainActivity;
 import com.project.tutortime.Model.firebase.FireBaseNotifications;
 import com.project.tutortime.Model.firebase.FireBaseTutor;
+import com.project.tutortime.Model.firebase.FirebaseManager;
 import com.project.tutortime.Model.firebase.rankObj;
 import com.project.tutortime.Model.firebase.subjectObj;
 import com.project.tutortime.R;
@@ -79,17 +80,14 @@ public class SetTutorProfile extends AppCompatActivity {
     ListView subjectList;
     ArrayList<subjectObj> list = new ArrayList<>();
     ArrayList<String> listSub = new ArrayList<>();
-    FirebaseAuth fAuth;
     Uri imageData;
     String imgURL;
-    private DatabaseReference mDatabase;
     private static final int GALLERY_REQUEST_COD = 1;
     boolean del = false;
-    // List of mountains that the teacher tutor
     ArrayList<String> listCities = new ArrayList<>();
-    DatabaseReference myRef = FirebaseDatabase.getInstance().getReference();
     String teacherID;
     SubListAdapter sLstAd;
+    private FirebaseManager fm = new FirebaseManager();
 
 
 
@@ -100,9 +98,7 @@ public class SetTutorProfile extends AppCompatActivity {
 
         /* DISABLE landscape orientation  */
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
-        fAuth = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        
         //delImage = findViewById(R.id.deleteImage);
         PhoneNumber = findViewById(R.id.editPhoneNumber);
         TextInputLayout descriptionInputLayout = findViewById(R.id.editDescription);
@@ -193,7 +189,7 @@ public class SetTutorProfile extends AppCompatActivity {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String userID = fAuth.getCurrentUser().getUid();
+                //String userID = fm.getCurrentUserID();
                 String pNum = PhoneNumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
                 if (TextUtils.isEmpty(pNum)) {
@@ -233,10 +229,11 @@ public class SetTutorProfile extends AppCompatActivity {
                 rankObj rank = new rankObj(new HashMap<>(), 0);
                 FireBaseTutor t = new FireBaseTutor();
                 /* set isTeacher to teacher status (1=teacher,0=customer) */
-                mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
+                fm.setUserType(1);
+                //mDatabase.child("users").child(userID).child("isTeacher").setValue(1);
                 /* add the teacher to database */
                 /* img=null because there is no need to store url before the image was successfully uploaded */
-                String teacherID = t.addTeacherToDB(pNum, descrip, userID, listCities, list, null, rank); // imgURL
+                String teacherID = t.addTeacherToDB(pNum, descrip, listCities, list, null, rank); // imgURL
                 /* upload the image and ON SUCCESS store url on the teacher database */
                 /* if no image to upload */
                 if (imageData==null) {
@@ -454,18 +451,16 @@ public class SetTutorProfile extends AppCompatActivity {
                 subjectList.setAdapter(sLstAd);
                 sLstAd.notifyDataSetChanged();
                 //sent notification to user
-                String userID= fAuth.getCurrentUser().getUid();
-                myRef.child("users").child(userID).child("fName").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        String userName = snapshot.getValue(String.class);
-                        FireBaseNotifications.sendNotification(userID,"TutorProfile",userName);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
-                });
+                //String userID= fAuth.getCurrentUser().getUid();
+//                myRef.child("users").child(userID).child("fName").addListenerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        String userName = snapshot.getValue(String.class);
+//                        FireBaseNotifications.sendNotification(userID,"TutorProfile",userName);
+//                    }
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError error) { }
+//                });
                 d.dismiss();
             }
         });
@@ -476,7 +471,6 @@ public class SetTutorProfile extends AppCompatActivity {
                 sLstAd = new SubListAdapter(SetTutorProfile.this, R.layout.single_sub_row, list, teacherID);
                 subjectList.setAdapter(sLstAd);
                 sLstAd.notifyDataSetChanged();
-
                 d.dismiss();
             }
         });
@@ -587,7 +581,8 @@ public class SetTutorProfile extends AppCompatActivity {
                     @Override // on success set image URL on tutor database & go to main
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         /* Set the image URL AFTER After the image has been successfully uploaded */
-                        mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
+                        //mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
+                        fm.setImageURL(teacherID,imgURL);
                         /* remove the cropped image from gallery */
                         if (imageData!=null) getApplicationContext().getContentResolver().delete(imageData, null, null);
                         goToTutorMain();

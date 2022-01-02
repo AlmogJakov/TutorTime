@@ -1,5 +1,6 @@
 package com.project.tutortime.Model.firebase;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -11,9 +12,11 @@ import java.util.Map;
 
 public class FireBaseTutor extends FirebaseManager {
     FireBaseUser u = new FireBaseUser();
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
 
-    public String addTeacherToDB(String phoneNum, String description, String userid, List<String> serviceCities,
+    public String addTeacherToDB(String phoneNum, String description, List<String> serviceCities,
                                  List<subjectObj> sub, String imgUrl, rankObj rank){
+        String userid = fAuth.getCurrentUser().getUid();
         //writeNewTeacher(phoneNum, description, userid, sub,  imgUrl);
         tutorObj teacher = new tutorObj(phoneNum, description, userid, serviceCities, imgUrl, rank);
         String teacherId = myRef.push().getKey();

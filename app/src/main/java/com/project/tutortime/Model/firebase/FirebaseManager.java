@@ -42,7 +42,7 @@ import java.util.Set;
 
 public class FirebaseManager {
     protected DatabaseReference myRef;
-    static FirebaseAuth fAuth = FirebaseAuth.getInstance();
+    private FirebaseAuth fAuth = FirebaseAuth.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();;
 
     public FirebaseManager(){
@@ -56,6 +56,10 @@ public class FirebaseManager {
     public void setUserType(int type) {
         String userID = fAuth.getCurrentUser().getUid();
         mDatabase.child("users").child(userID).child("isTeacher").setValue(type);
+    }
+
+    public void setImageURL(String teacherID, String imgURL) {
+        mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
     }
 
     public String getCurrentUserID() {
