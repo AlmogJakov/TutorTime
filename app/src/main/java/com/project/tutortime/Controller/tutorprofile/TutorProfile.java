@@ -46,9 +46,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.project.tutortime.Model.firebase.FireBaseTutor;
-import com.project.tutortime.Model.firebase.tutorObj;
-import com.project.tutortime.Model.firebase.userObj;
 import com.project.tutortime.View.LoadingDialog;
 import com.project.tutortime.View.LoadingScreen;
 import com.project.tutortime.MainActivity;
@@ -62,9 +59,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.EnumMap;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TutorProfile extends Fragment {
@@ -85,10 +80,8 @@ public class TutorProfile extends Fragment {
     boolean del = false;
     LoadingDialog loadingDialog;
     ArrayList<subjectObj> list = new ArrayList<>();
-    List<String> listSub = new ArrayList<>();
+    ArrayList<String> listSub = new ArrayList<>();
     ArrayList<String> listCities = new ArrayList<>();
-    FireBaseUser fbUser = new FireBaseUser();
-    FireBaseTutor fbTutor = new FireBaseTutor();
 
     private static final int GALLERY_REQUEST_COD = 1;
 
@@ -200,6 +193,7 @@ public class TutorProfile extends Fragment {
         saveProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 String pNum = pnumber.getText().toString().trim();
                 String descrip = description.getText().toString().trim();
                 String firstName = fname.getText().toString().trim();
@@ -223,14 +217,49 @@ public class TutorProfile extends Fragment {
                     Toast.makeText(getActivity(), "City is required.",
                             Toast.LENGTH_SHORT).show();
                     return; }
-                fbTutor.updateTutorDetails(requireActivity(),del, imgURL, pNum, descrip);
-                if (del) {
-                    imgURL = null;
-                }
-                fbUser.updateUserDetails(firstName,lastName,city,"");
+                new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        /* sort the list of service cities */
+                        //Collections.sort(listCities);
+                        /* get teacher ID */
+                        teacherID = dataSnapshot.child("teacherID").getValue(String.class);
+                        /* Make a list of all the RealTime DataBase commands to execute
+                            (for the purpose of executing all the commands at once) */
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        if (imgURL != null)
+                            childUpdates.put("teachers/" + teacherID + "/imgUrl", imgURL);
+                        childUpdates.put("teachers/" + teacherID + "/phoneNum", pNum);
+                        childUpdates.put("teachers/" + teacherID + "/description", descrip);
+                        childUpdates.put("users/" + userID + "/fName", firstName);
+                        childUpdates.put("users/" + userID + "/lName", lastName);
+                        childUpdates.put("users/" + userID + "/city", city);
+                        /* If the user deleted the image - delete it from the storage and add
+                            a delete command to childUpdates (to delete it URL from the RealTime DataBase) */
+                        if (del) {
+                            if (imgURL != null)
+                                childUpdates.put("teachers/" + teacherID + "/imgUrl", null);
+                            FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
+                            StorageReference storageReference = firebaseStorage.getReference(imgURL);
+                            storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.e("Picture", "#deleted");
+                                    imgURL = null;
+                                }
+                            });
+                        }
+                        /* Finally, execute all RealTime DataBase commands in one command (safely). */
+                        myRef.updateChildren(childUpdates);
+                    }
 
-                if (imageData !=  null) {
-                     uploadImageAndGoToMain(teacherID); }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) { }
+                });
+
+
+                if (imageData == null) { goToTutorMain(requireActivity());
+                } else { uploadImageAndGoToMain(teacherID); }
             }
         });
 
@@ -247,8 +276,8 @@ public class TutorProfile extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                                 dialog.cancel();
-                                fbTutor.DeleteTutorProfile(listCities,list);
-                                goToTutorMain();
+                                DeleteTutorProfile(listCities,list);
+                                //goToTutorMain();
                           }
                         })
 
@@ -270,7 +299,7 @@ public class TutorProfile extends Fragment {
 
 
     /* get fragment activity (to do actions on the activity) */
-    public static void goToTutorMain(Activity currentActivity) {
+    private void goToTutorMain(Activity currentActivity) {
         //Activity currentActivity = getContext();
         /* were logging in as tutor (tutor status value = 1).
          * therefore, pass 'Status' value (1) to MainActivity. */
@@ -295,14 +324,14 @@ public class TutorProfile extends Fragment {
         super.onCreate(savedInstanceState);
         String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-       myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                userObj user = dataSnapshot.child("users").child(userID).getValue(userObj.class);
-                fname.setText(user.getfName());
-                lname.setText(user.getlName());
-                teacherID = user.getTeacherID();
-                String currCity =user.getCity();
+                fname.setText(dataSnapshot.child("users").child(userID).child("fName").getValue(String.class));
+                lname.setText(dataSnapshot.child("users").child(userID).child("lName").getValue(String.class));
+                teacherID = dataSnapshot.child("users").child(userID).child("teacherID").getValue(String.class);
+                String currCity = dataSnapshot.child("users").child(userID).
+                        child("city").getValue(String.class);
                 String[] cities = getResources().getStringArray(R.array.Cities);
                 for (int i = 0; i < cities.length; i++) {
                     if (citySpinner.getItemAtPosition(i).equals(currCity)) {
@@ -310,11 +339,14 @@ public class TutorProfile extends Fragment {
                         break;
                     }
                 }
-                tutorObj tutor = dataSnapshot.child("teachers").child(teacherID).getValue(tutorObj.class);
-                pnumber.setText(tutor.getPhoneNum());
-                description.setText(tutor.getDescription());
 
-                imgURL = tutor.getImgUrl();
+                pnumber.setText(dataSnapshot.child("teachers").child(teacherID).
+                        child("phoneNum").getValue(String.class));
+                description.setText(dataSnapshot.child("teachers").child(teacherID).
+                        child("description").getValue(String.class));
+
+                imgURL = dataSnapshot.child("teachers").child(teacherID).child("imgUrl").getValue(String.class);
+                System.out.println(imgURL);
 
                 if (imgURL != null) { /* The image exists! */
                     StorageReference storageReference = storage.getReference().child(imgURL);
@@ -328,16 +360,21 @@ public class TutorProfile extends Fragment {
 
 
                 /* Get my service cities from firebase */
-                listCities = new ArrayList<>(tutor.getServiceCities());
-
-
+                for (DataSnapshot citySnapsot : dataSnapshot.child("teachers").child(teacherID).
+                        child("serviceCities").getChildren()) {
+                    String serviceCity = citySnapsot.getValue(String.class);
+                    listCities.add(serviceCity);
+                }
                 /* Get my subject list from firebase */
-
-                for (Map.Entry<String,subjectObj> sub : tutor.getSub().entrySet()) {
-                    subjectObj s = sub.getValue();
-                    s.setKey(s.getsName());
-                   list.add(sub.getValue());
-                   listSub.add(sub.getKey());
+                for (DataSnapshot subSnapsot : dataSnapshot.child("teachers").child(teacherID).
+                        child("sub").getChildren()) {
+                    subjectObj sub = new subjectObj(subSnapsot.child("sName").getValue(String.class),
+                            subSnapsot.child("type").getValue(String.class),
+                            subSnapsot.child("price").getValue(Integer.class),
+                            subSnapsot.child("experience").getValue(String.class));
+                    sub.setKey(subSnapsot.getKey());
+                    list.add(sub);
+                    listSub.add(sub.getsName());
                 }
 
             }
@@ -437,7 +474,7 @@ public class TutorProfile extends Fragment {
                     @Override // on success set image URL on tutor database & go to main
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         /* Set the image URL AFTER After the image has been successfully uploaded */
-                        fbTutor.setImgUrl(teacherID,imgURL);
+                        mDatabase.child("teachers").child(teacherID).child("imgUrl").setValue(imgURL);
                         /* remove the cropped image from gallery */
                         if (imageData!=null) currentActivity.getContentResolver().delete(imageData, null, null);
                         /* pass the activity forward */
@@ -450,7 +487,61 @@ public class TutorProfile extends Fragment {
                         Toast.makeText(getContext(), "Upload image Failed", Toast.LENGTH_LONG).show(); }
                 });
     }
+    /* Delete cities and subjects from firebase in the tree search */
+    public void DeleteTutorProfile(ArrayList <String> listCities, ArrayList <subjectObj> listSub) {
+        Map<String, Object> childUpdates = new HashMap<>();
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String userID = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                teacherID = dataSnapshot.child("users").child(userID).child("teacherID").getValue(String.class);
+                /* Delete subjects from the search tree*/
+                for(subjectObj sList : listSub) {
+                    for (String rCity : listCities) {
+                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
+                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                    + "/" + rCity + "/" + sList.getPrice() + "/" + teacherID, null);
+                        }
+                    }
+                    if(sList.getType().equals("online")){
+                        childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
+                                + "/" + sList.getPrice() + "/" + teacherID, null);
+                    }
+                }
+                childUpdates.put("teachers/" + teacherID , null);
+                childUpdates.put("users/" + userID + "/teacherID/", null);
+                childUpdates.put("users/" + userID + "/isTeacher/", 0);
+                /* Delete all chats where the teacher is appeared */
+                for (DataSnapshot userChat : dataSnapshot.child("chats").child(userID).getChildren()) {
+                    if (userChat.child("teacherID").getValue(String.class).equals(userID)) {
+                        childUpdates.put("chats/" + userID + "/" + userChat.getKey(), null);
+                        childUpdates.put("chats/" + userChat.child("studentID").getValue(String.class)
+                                + "/" + userChat.getKey(), null);
+                        childUpdates.put("messages/" + userChat.getKey(), null);
+                    }
+                }
 
+                /* Delete all notifications related to the teacher */
+                for (DataSnapshot userNotifications : dataSnapshot.child("notifications").
+                        child(userID).getChildren()) {
+                    String title = userNotifications.child("title").getValue(String.class);
+                    if (title.equals("rating received!") || title.equals("Congratulations!")) {
+                        System.out.println(userNotifications.getKey());
+                        childUpdates.put("notifications/" + userID + "/" + userNotifications.getKey(), null);
+
+                    }
+                }
+                myRef.updateChildren(childUpdates);
+                /* finishAffinity to force reload the app with default user interface */
+                getActivity().finishAffinity();
+                goToTutorMain();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) { }
+        });
+//        LoadingDialog ld = new LoadingDialog(getContext());
+//        ld.show();
+    }
     private void goToTutorMain() {
         /* were logging in as tutor (tutor status value = 1).
          * therefore, pass 'Status' value (1) to MainActivity. */
