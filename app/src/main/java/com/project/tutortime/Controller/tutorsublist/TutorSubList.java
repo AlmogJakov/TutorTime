@@ -33,6 +33,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.project.tutortime.Model.firebase.FireBaseTutor;
 import com.project.tutortime.R;
 
 
@@ -63,6 +64,7 @@ public class TutorSubList extends Fragment {
     boolean[] selectCities ;
     ArrayList<Integer> listCitiesNum = new ArrayList<>();
     SubListAdapter sLstAd;
+    FireBaseTutor fbTutor = new FireBaseTutor();
 
 
     public static TutorSubList newInstance() {
@@ -239,8 +241,10 @@ public class TutorSubList extends Fragment {
                                     buildCityDialog(true);
                                     subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                                     list.add(newSub);
-                                    updateList(null,newSub,listCities);
+                                    fbTutor.updateList(null,newSub,listCities);
                                     listSub.add(nameSub);
+                                    sLstAd.notifyDataSetChanged();
+
                                     d.dismiss();
                                     return;
                                 }
@@ -259,8 +263,10 @@ public class TutorSubList extends Fragment {
                 }
                 subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                 list.add(newSub);
-                updateList(null,newSub,listCities);
+                fbTutor.updateList(null,newSub,listCities);
                 listSub.add(nameSub);
+                sLstAd.notifyDataSetChanged();
+
                 d.dismiss();
             }
         });
@@ -347,9 +353,10 @@ public class TutorSubList extends Fragment {
                                     list.remove(currSub);
                                     /*  */
                                     list.add(newSub);
-                                    updateList(currSub,newSub,listCities);
+                                    fbTutor.updateList(currSub,newSub,listCities);
                                     listSub.remove(currSub.getsName());
                                     listSub.add(nameSub);
+                                    sLstAd.notifyDataSetChanged();
                                     d.dismiss();
                                     return;
                                 }
@@ -390,16 +397,18 @@ public class TutorSubList extends Fragment {
                                     listCities.clear();
                                     serviceCitiesSpinner.setTextColor(Color.GRAY);
                                     serviceCitiesSpinner.setText("Select service cities");
-                                    removeServiceCities(removeTempCities, listCities);
+                                    fbTutor.removeServiceCities(removeTempCities, listCities,list);
 
                                     subjectObj newSub = new subjectObj(nameSub, type, Integer.parseInt(price), exp);
                                     /* remove the last entry (before the edit) */
                                     list.remove(currSub);
                                     /*  */
                                     list.add(newSub);
-                                    updateList(currSub,newSub,oldCities);
+                                    fbTutor.updateList(currSub,newSub,oldCities);
                                     listSub.remove(currSub.getsName());
                                     listSub.add(nameSub);
+                                    sLstAd.notifyDataSetChanged();
+
                                     d.dismiss();
                                 }
                   })
@@ -422,7 +431,8 @@ public class TutorSubList extends Fragment {
                 list.remove(currSub);
                 /*  */
                 list.add(newSub);
-                updateList(currSub,newSub,listCities);
+                fbTutor.updateList(currSub,newSub,listCities);
+                sLstAd.notifyDataSetChanged();
                 listSub.remove(currSub.getsName());
                 listSub.add(nameSub);
                 d.dismiss();
@@ -465,10 +475,10 @@ public class TutorSubList extends Fragment {
                                     listCities.clear();
                                     serviceCitiesSpinner.setTextColor(Color.GRAY);
                                     serviceCitiesSpinner.setText("Select service cities");
-                                    removeServiceCities(removeTempCities, listCities);
+                                    fbTutor.removeServiceCities(removeTempCities, listCities,list);
                                     list.remove(currSub);
                                     listSub.remove(currSub.getsName());
-                                    updateList(currSub,null,oldServiceCities);
+                                    fbTutor.updateList(currSub,null,oldServiceCities);
                                     sLstAd.notifyDataSetChanged();
                                     d.dismiss();
                                     return;
@@ -488,7 +498,7 @@ public class TutorSubList extends Fragment {
                 }
                 list.remove(currSub);
                 listSub.remove(currSub.getsName());
-                updateList(currSub,null,listCities);
+                fbTutor.updateList(currSub,null,listCities);
                 sLstAd.notifyDataSetChanged();
                 d.dismiss();
             }
@@ -503,65 +513,6 @@ public class TutorSubList extends Fragment {
         d.show();
     }
 
-    /* Subject Update - update a subject according to the previous subject and a new subject.
-     * Subject Addition - addition of a new subject ('prevSub'=null when calling the method)
-     * Subject Deletion - deletion of an old subject ('newSub'=null when calling the method) */
-    public void updateList(subjectObj prevSub,subjectObj newSub, ArrayList<String> oldListCities) {
-        /* Make a list of all the RealTime DataBase commands to execute
-         * (for the purpose of executing all the commands at once) */
-        Map<String, Object> childUpdates = new HashMap<>();
-        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                if (prevSub!=null) {
-                    /* (add a command) delete the subject from the Search Tree */
-                    if(prevSub.getType().equals("online")) {
-                        childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
-                                + "/" + prevSub.getPrice() + "/" + teacherID, null);
-                    }
-                    else{
-                        for (String sCity : oldListCities) {
-                            childUpdates.put("search/" + prevSub.getType() + "/" + prevSub.getsName()
-                                    + "/" + sCity + "/" + prevSub.getPrice() + "/" + teacherID, null);
-                        }
-                    }
-                    /* (add a command) delete the subject from the current teacher object */
-                    childUpdates.put("teachers/" + teacherID + "/sub/" + prevSub.getsName(), null);
-                }
-                if (newSub!=null) {
-                    /* (add a command) add the subject to the Search Tree */
-                    if(newSub.getType().equals("online")){
-                        childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
-                                + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
-                    }
-                    else{
-                        for(String sCity : listCities) {
-                            childUpdates.put("search/" + newSub.getType() + "/" + newSub.getsName()
-                                    + "/" + sCity + "/" + newSub.getPrice() + "/" + teacherID, teacherID);
-                        }
-                    }
-
-                    /* (add a command) add the subject to the current teacher object */
-                    childUpdates.put("teachers/" + teacherID + "/sub/" + newSub.getsName(), newSub);
-                }
-                /* Finally, execute all RealTime DataBase commands in one command (safely). */
-                myRef.updateChildren(childUpdates);
-                //new FireBaseTeacher().setSubList(teacherID, list);
-                //myRef.child("teachers").child(teacherID).child("sub").setValue(listSub);
-//                ArrayAdapter a = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, list);
-//                subjectList.setAdapter(a);
-//                a.notifyDataSetChanged();
-                sLstAd = new SubListAdapter(TutorSubList.this.getActivity(), R.layout.single_sub_row, list, teacherID);
-                subjectList.setAdapter(sLstAd);
-                sLstAd.notifyDataSetChanged();
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-    }
 
 
     private void setCitySpinner(TextView citySpinner, boolean[] selectCities, ArrayList<Integer> listCitiesNum,
@@ -586,60 +537,7 @@ public class TutorSubList extends Fragment {
         return s;
     }
 
-    /* Delete cities and subjects from firebase in the tree search */
-    public ArrayList<String> removeServiceCities(ArrayList < String > removeList, ArrayList < String > currentList) {
-        Collections.sort(removeList);
-        Map<String, Object> childUpdates = new HashMap<>();
-        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                for(subjectObj sList : list) {
-                    for (String rCity : removeList) {
-                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
-                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                    + "/" + rCity + "/" + sList.getPrice() + "/" + teacherID, null);
-                        }
-                    }
-                }
-                childUpdates.put("teachers/" + teacherID + "/serviceCities", currentList);
-                myRef.updateChildren(childUpdates);
-                removeList.clear();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return removeList;
-    }
 
-    /* Add cities and subjects to firebase in the tree search */
-    public ArrayList<String> addServiceCities(ArrayList < String > addList, ArrayList < String > currentList) {
-        Collections.sort(addList);
-        Map<String, Object> childUpdates = new HashMap<>();
-        new FireBaseUser().getUserRef().addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                teacherID = dataSnapshot.child("teacherID").getValue(String.class);
-                for(subjectObj sList : list) {
-                    for (String aCity : addList) {
-                        if(sList.getType().equals("frontal") || sList.getType().equals("both")) {
-                            childUpdates.put("search/" + sList.getType() + "/" + sList.getsName()
-                                    + "/" + aCity + "/" + sList.getPrice() + "/" + teacherID, teacherID);
-                        }
-                    }
-                }
-
-                childUpdates.put("teachers/" + teacherID + "/serviceCities", currentList);
-                myRef.updateChildren(childUpdates);
-                addList.clear();
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
-        return addList;
-    }
     public void buildCityDialog(boolean fromEditSub){
         ArrayList<String> addTempCities = new ArrayList<>();
         ArrayList<String> removeTempCities = new ArrayList<>();
@@ -677,7 +575,7 @@ public class TutorSubList extends Fragment {
                         Toast.makeText(getActivity(), "You must choose at least one service city",
                                 Toast.LENGTH_SHORT).show();
                         error =true;
-                        removeServiceCities(removeTempCities, listCities);
+                        fbTutor.removeServiceCities(removeTempCities, listCities,list);
                     }
                 }
 
@@ -691,12 +589,12 @@ public class TutorSubList extends Fragment {
                     if (listCities.isEmpty()) {
                         serviceCitiesSpinner.setTextColor(Color.GRAY);
                         serviceCitiesSpinner.setText("Select service cities");
-                        removeServiceCities(removeTempCities, listCities);
+                        fbTutor.removeServiceCities(removeTempCities, listCities,list);
                     } else {
                         serviceCitiesSpinner.setTextColor(Color.BLACK);
                         serviceCitiesSpinner.setText(printList(listCities));
-                        addServiceCities(addTempCities, listCities);
-                        removeServiceCities(removeTempCities, listCities);
+                        fbTutor.addServiceCities(addTempCities, listCities,list);
+                        fbTutor.removeServiceCities(removeTempCities, listCities,list);
                     }
                 }
                 else{
@@ -706,12 +604,7 @@ public class TutorSubList extends Fragment {
             }
         });
 
-//                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                });
+
 
         builder.setNeutralButton("Clear All", new DialogInterface.OnClickListener() {
             @Override
@@ -735,7 +628,7 @@ public class TutorSubList extends Fragment {
                     listCities.clear();
                     serviceCitiesSpinner.setTextColor(Color.GRAY);
                     serviceCitiesSpinner.setText("Select service cities");
-                    removeServiceCities(removeTempCities, listCities);
+                    fbTutor.removeServiceCities(removeTempCities, listCities,list);
                 }
                 else{
                     builder.show();
