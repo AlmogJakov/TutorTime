@@ -129,20 +129,23 @@ public class FireBaseTutor extends FirebaseManager {
                     if (imgURL != null)
                         childUpdates.put("teachers/" + teacherID + "/imgUrl", null);
 
-                    /* Finally, execute all RealTime DataBase commands in one command (safely). */
-                    myRef.updateChildren(childUpdates);
                     FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
                     StorageReference storageReference = firebaseStorage.getReference(imgURL);
                     storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.e("Picture", "#deleted");
-                            TutorProfile.goToTutorMain(context);
                         }
                     });
-
-
                 }
+                /* Finally, execute all RealTime DataBase commands in one command (safely). */
+                myRef.updateChildren(childUpdates).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("Profile", "#updated");
+                        TutorProfile.goToTutorMain(context);
+                    }
+                });
             }
 
             @Override
